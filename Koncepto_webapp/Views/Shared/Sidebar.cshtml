@@ -1,0 +1,152 @@
+﻿
+@{
+    Layout = null;
+}
+<!-- sidebar -->
+<aside id="main-sidebar" class="dt-sidebar">
+    <!-- Sidebar Header -->
+    <div class="dt-sidebar__header">
+        <!-- Brand -->
+        <div class="dt-brand">
+
+            <!-- Brand logo -->
+            <span class="dt-brand__logo">
+                <a class="dt-brand__logo-link" href="index.html">
+                    <label class="dt-brand__logo-img" style="font-size:23px; color:white; font-weight:bolder">KONCEPTO</label>
+                    <img class="dt-brand__logo-symbol" src="~/Content/assets/images/koncepto/logowithoutbackground.png" alt="Drift">
+                </a>
+            </span>
+            <!-- /brand logo -->
+
+        </div>
+        <!-- /brand -->
+    </div>
+    <!-- /sidebar header -->
+    <!-- Sidebar Container -->
+    <div class="dt-sidebar__container">
+
+        <!-- Sidebar Notification -->
+        <div class="dt-sidebar__notification">
+            <!-- Dropdown -->
+            <div class="dropdown mb-6">
+
+                <!-- Dropdown Link -->
+                <div class="dt-avatar-wrapper text-white">
+                  
+                    <img class="dt-avatar" src="https://via.placeholder.com/150x150" alt="Domnic Harris">
+                    <span class="dt-avatar-info">
+                        <span class="dt-avatar-name">Nombre de usuario</span>
+                    </span>
+                </div>
+                <!-- /dropdown link -->
+                <!-- Dropdown Option -->
+
+                <!-- /dropdown option -->
+
+            </div>
+            <!-- /dropdown -->
+
+
+
+        </div>
+        <!-- /sidebar notification -->
+        <!-- Sidebar Navigation -->
+        <ul class="dt-side-nav">
+            <li class="dt-side-nav__item">
+                <a href="@Url.Action("Index","Home")" class="dt-side-nav__link"
+                   title="New Dashboard">
+                    <i class="icon icon-dashboard3 icon-fw icon-lg"></i> <span class="dt-side-nav__text">Dashboard</span>
+                </a>
+            </li>
+            <li class="dt-side-nav__item dt-side-nav__header">
+                <span class="dt-side-nav__text">Facturacion</span>
+            </li>
+            <!-- /menu header -->
+            <!-- Menu Item -->
+
+
+            <li class="dt-side-nav__item">
+                <a href="javascript:void(0)" class="dt-side-nav__link dt-side-nav__arrow" title="Dashboard">
+                    <i class="icon icon-invoice-new icon-fw icon-lg"></i> <span class="dt-side-nav__text">Facturacion</span>
+                </a>
+
+                <!-- Sub-menu -->
+                <ul class="dt-side-nav__sub-menu">
+
+
+                    <li class="dt-side-nav__item">
+                        <a href="#" class="dt-side-nav__link"
+                           title="Overall">
+                            <i class="icon icon-forms-basic icon-fw icon-lg"></i> <span class="dt-side-nav__text">Devoluciones</span>
+                        </a>
+                    </li>
+
+                    <li class="dt-side-nav__item">
+                        <a href="#" class="dt-side-nav__link" title="Traffic">
+                            <i class="icon icon-datatable icon-fw icon-lg"></i>
+                            <span class="dt-side-nav__text">Historial</span>
+                        </a>
+                    </li>
+
+                    <li class="dt-side-nav__item">
+                        <a href="@Url.Action("Invoice_process","Invoices")" class="dt-side-nav__link"
+                           title="Revenue">
+                            <i class="icon icon-addnew icon-fw icon-lg"></i> <span class="dt-side-nav__text">Nueva Factura</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- /sub-menu -->
+
+            </li>
+
+
+            <!-- /menu item -->
+            <!-- Menu Header -->
+            <li class="dt-side-nav__item dt-side-nav__header">
+                <span class="dt-side-nav__text">Configuracion</span>
+            </li>
+            <!-- /menu header -->
+            <!-- Menu Item -->
+            <li class="dt-side-nav__item">
+                <a href="javascript:void(0)" class="dt-side-nav__link dt-side-nav__arrow" title="Dashboard">
+                    <i class="icon icon-settings icon-fw icon-lg"></i> <span class="dt-side-nav__text">Mantenimiento</span>
+                </a>
+
+                <!-- Sub-menu -->
+                <ul class="dt-side-nav__sub-menu">
+
+
+                    <li class="dt-side-nav__item">
+                        <a href="#" class="dt-side-nav__link"
+                           title="Revenue">
+                            <i class="icon icon-star-fill icon-fw icon-lg"></i> <span class="dt-side-nav__text">Clientes</span>
+                        </a>
+                    </li>
+
+                    <li class="dt-side-nav__item">
+                        <a href="#" class="dt-side-nav__link"
+                           title="Overall">
+                            <i class="icon icon-orders-new icon-fw icon-lg"></i> <span class="dt-side-nav__text">Productos</span>
+                        </a>
+                    </li>
+                    <li class="dt-side-nav__item">
+                        <a href="#" class="dt-side-nav__link" title="Traffic">
+                            <i class="icon icon-users icon-fw icon-lg"></i>
+                            <span class="dt-side-nav__text">Usuarios</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- /sub-menu -->
+
+            </li>
+
+            <!-- /menu header -->
+
+
+        </ul>
+        <!-- /sidebar navigation -->
+
+    </div>
+    <!-- /sidebar container -->
+</aside>
+<!-- /sidebar -->

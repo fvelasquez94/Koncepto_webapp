@@ -1,0 +1,224 @@
+﻿@{
+    ViewBag.Title = "Sign in";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Drift - A fully responsive, HTML5 based admin template">
+    <meta name="keywords" content="Responsive, HTML5, admin theme, business, professional, jQuery, web design, CSS3, sass">
+    <!-- /meta tags -->
+    <title>Koncepto - Sign in</title>
+
+    <!-- Site favicon -->
+    <link rel="shortcut icon" href="~/Content/assets/images/favicon.ico" type="image/x-icon">
+    <!-- /site favicon -->
+    <!-- Font Icon Styles -->
+    <link rel="stylesheet" href="~/Content/node_modules/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="~/Content/vendors/gaxon-icon/styles.css">
+    <!-- /font icon Styles -->
+    <!-- Perfect Scrollbar stylesheet -->
+    <link rel="stylesheet" href="~/Content/node_modules/perfect-scrollbar/css/perfect-scrollbar.css">
+    <!-- /perfect scrollbar stylesheet -->
+    <!-- Load Styles -->
+    <link rel="stylesheet" href="~/Content/assets/css/semidark-style-1.min.css">
+
+    <!-- /load styles -->
+
+</head>
+<body class="dt-sidebar--fixed dt-header--fixed">
+
+    <!-- Loader -->
+    <div class="dt-loader-container">
+        <div class="dt-loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+            </svg>
+        </div>
+    </div>
+    <!-- /loader -->
+    <!-- Root -->
+    <div class="dt-root">
+        <div class="dt-root__inner">
+
+            <!-- Login Container -->
+            <div class="dt-login--container">
+
+                <!-- Login Content -->
+                <div class="dt-login__content-wrapper">
+
+                    <!-- Login Background Section -->
+                    <div class="dt-login__bg-section" style="background-image:url(/Content/assets/images/koncepto/logokoncepto.png) !important">
+
+                        <div class="dt-login__bg-content">
+                            <!-- Login Title -->
+                            <h1 class="dt-login__title">Inicio de sesion</h1>
+                            <!-- /login title -->
+
+                            <p class="f-16">Introduce tus datos de usuario para utilizar la aplicacion.</p>
+                        </div>
+
+
+                        <!-- Brand logo -->
+                        <div class="dt-login__logo">
+
+                        </div>
+                        <!-- /brand logo -->
+
+                    </div>
+                    <!-- /login background section -->
+                    <!-- Login Content Section -->
+                    <div class="dt-login__content">
+
+                        <!-- Login Content Inner -->
+                        <div class="dt-login__content-inner">
+
+                            <!-- Form -->
+                            @using (Html.BeginForm("Sign_in", "Home", FormMethod.Post,
+                                       new { enctype = "multipart/form-data" }))
+                            {
+
+                                <!-- Form Group -->
+                                <div class="form-group">
+                                    <label class="sr-only" for="email-1">Correo</label>
+                                    <input type="email" class="form-control" id="email" name="email" aria-describedby="email"
+                                           placeholder="Correo" required>
+                                </div>
+                                <!-- /form group -->
+                                <!-- Form Group -->
+                                <div class="form-group">
+                                    <label class="sr-only" for="password-1">Contrasena</label>
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Contrasena" required>
+                                </div>
+                                <!-- /form group -->
+                                <!-- Form Group -->
+                                <div class="dt-checkbox d-block mb-6">
+                                    @Html.CheckBox("sesionactiva", (bool)ViewBag.remember)
+                                    <label class="dt-checkbox-content" for="checkbox-1">
+                                        Mantener sesion activa
+                                    </label>
+                                </div>
+                                <!-- /form group -->
+                                <!-- Form Group -->
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary text-uppercase">Iniciar</button>
+
+                                </div>
+                                <!-- /form group -->
+
+
+
+                            }
+                            <!-- /form -->
+
+                        </div>
+                        <!-- /login content inner -->
+                        <!-- Login Content Footer -->
+                        <div class="dt-login__content-footer">
+                            <a href="page-forgot-password.html">No puedes ingresar a tu cuenta?</a>
+                        </div>
+                        <!-- /login content footer -->
+
+                    </div>
+                    <!-- /login content section -->
+
+                </div>
+                <!-- /login content -->
+
+            </div>
+            <!-- /login container -->
+
+        </div>
+    </div>
+    <!-- /root -->
+    <!-- Optional JavaScript -->
+    <script src="~/Content/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="~/Content/node_modules/moment/moment.js"></script>
+    <script src="~/Content/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Perfect Scrollbar jQuery -->
+    <script src="~/Content/node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+    <!-- /perfect scrollbar jQuery -->
+    <!-- masonry script -->
+    <script src="~/Content/node_modules/masonry-layout/dist/masonry.pkgd.min.js"></script>
+    <script src="~/Content/node_modules/sweetalert2/dist/sweetalert2.js"></script>
+    <script src="~/Content/assets/js/functions.js"></script>
+    <script src="~/Content/assets/js/customizer.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="~/Content/assets/js/script.js"></script>
+    <!-- Sweet Alert -->
+    <script src="~/Content/assets/js/custom/notification-alert.js"></script>
+
+</body>
+</html>
+<!--NOTIFICACIONES GLOBALES-->
+
+@if (TempData["error"] != null)
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            var toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            toast({
+                type: 'danger',
+                title: '@(TempData["error"])'
+            });
+   
+        };
+    </script>
+}
+
+
+@if (TempData["advertencia"] != null)
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            toast({
+                type: 'info',
+                title: '@(TempData["advertencia"])'
+            });
+
+
+        });
+    </script>
+}
+
+
+@if (TempData["exito"] != null)
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+
+
+        toast({
+            type: 'success',
+            title: '@(TempData["exito"])'
+        });
+        });
+    </script>
+}

@@ -1,31 +1,281 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model List<Koncepto_webapp.Models.BI_Facturas_Encabezado>
+@{
+    ViewBag.Title = "Dashboard";
+    List<Koncepto_webapp.Models.BI_Facturas_Encabezado> lstInvoices_Ant = ViewBag.earlier_lstInvoices;
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+<!-- Site Content Wrapper -->
+<div class="dt-content-wrapper">
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    <!-- Site Content -->
+    <div class="dt-content">
+
+        <!-- Brand tool -->
+        <div class="dt-brand__tool mb-8 d-lg-none" data-toggle="main-sidebar">
+            <div class="hamburger-inner"></div>
+        </div>
+        <!-- /brand tool -->
+        <!-- Page Header -->
+        <div class="dt-page__header">
+            <h1 class="dt-page__title">Dashboard</h1>
+        </div>
+        <!-- /page header -->
+        <!-- Grid -->
+        <div class="row">
+            <div class="col-xl-1">
+            </div>
+            <!-- Grid Item -->
+            <div class="col-xl-2 col-sm-6">
+                <!-- Card -->
+                <div class="dt-card">
+
+                    <!-- Card Body -->
+                    <div class="dt-card__body d-flex flex-sm-column">
+                        <div class="mb-sm-7 mr-7 mr-sm-0">
+                            <i class="icon icon-revenue2 dt-icon-bg bg-success text-success"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="h2 mb-0 font-weight-500 mr-2">$@Model.Sum(c => c.DocTotal).Value.ToString("N2")</span>
+                                @if (((((Model.Sum(c => c.DocTotal).Value / lstInvoices_Ant.Sum(c => c.DocTotal).Value) * 100) - 100)) < 0)
+        {
+                        <span class="d-inline-flex text-danger">
+
+                            <i class="icon icon-loss icon-fw"></i>  @((((Model.Sum(c => c.DocTotal).Value / lstInvoices_Ant.Sum(c => c.DocTotal).Value) * 100) - 100).ToString("N0"))%
+                        </span>
+}
+else
+{
+                        <span class="d-inline-flex text-success">
+
+                            <i class="icon icon-profit icon-fw"></i>  @((((Model.Sum(c => c.DocTotal).Value / lstInvoices_Ant.Sum(c => c.DocTotal).Value) * 100) - 100).ToString("N0"))%
+                        </span>
+}
+                            </div>
+                            <div class="h5 mb-2">Total de Venta</div>
+                            <p class="card-text text-light-gray f-12">Anterior: $@lstInvoices_Ant.Sum(c => c.DocTotal).Value.ToString("N2")</p>
+                        </div>
+            </div>
+            <!-- /card body -->
+
+        </div>
+        <!-- /card -->
+        </div>
+        <!-- /grid item -->
+        <!-- Grid Item -->
+        <div class="col-xl-2 col-sm-6">
+            <!-- Card -->
+            <div class="dt-card">
+
+                <!-- Card Body -->
+                <div class="dt-card__body d-flex flex-sm-column">
+                    <div class="mb-sm-7 mr-7 mr-sm-0">
+                        <i class="icon icon-dashboard3 dt-icon-bg bg-primary text-primary"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="h2 mb-0 font-weight-500 mr-2">%50</span>
+                            <span class="d-inline-flex text-danger">
+                                <i class="icon icon-loss icon-fw"></i>
+                            </span>
+                        </div>
+                        <div class="h5 mb-2">Ventas vs Meta</div>
+                        <p class="card-text text-light-gray f-12">Anterior: </p>
+                    </div>
+                </div>
+                <!-- /card body -->
+
+            </div>
+            <!-- /card -->
+        </div>
+        <!-- /grid item -->
+        <!-- Grid Item -->
+        <div class="col-xl-2 col-sm-4">
+            <!-- Card -->
+            <div class="dt-card">
+
+                <!-- Card Body -->
+                <div class="dt-card__body d-flex flex-sm-column">
+                    <div class="mb-sm-7 mr-7 mr-sm-0">
+                        <i class="icon icon-user-add dt-icon-bg bg-warning text-warning"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="h2 mb-0 font-weight-500 mr-2">58</span>
+                            <span class="d-inline-flex text-danger">
+                                <i class="icon icon-loss icon-fw"></i>-5%
+                            </span>
+                        </div>
+                        <div class="h5 mb-2">Clientes nuevos</div>
+                        <p class="card-text text-light-gray f-12">Anterior: </p>
+                    </div>
+                </div>
+                <!-- /card body -->
+
+            </div>
+            <!-- /card -->
+        </div>
+        <!-- /grid item -->
+        <!-- Grid Item -->
+        <div class="col-xl-2 col-sm-4">
+            <!-- Card -->
+            <div class="dt-card">
+
+                <!-- Card Body -->
+                <div class="dt-card__body d-flex flex-sm-column">
+                    <div class="mb-sm-7 mr-7 mr-sm-0">
+                        <i class="icon icon-customer dt-icon-bg bg-danger text-danger"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="h2 mb-0 font-weight-500 mr-2">@Model.Select(c => c.CardCode).Distinct().Count()</span>
+
+                            @if ((((Convert.ToDecimal(Model.Select(c => c.CardCode).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.CardCode).Distinct().Count())) * 100) - 100) < 0)
+        {
+                    <span class="d-inline-flex text-danger">
+                        <i class="icon icon-loss icon-fw"></i> @((((Convert.ToDecimal(Model.Select(c => c.CardCode).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.CardCode).Distinct().Count())) * 100) - 100).ToString("N0"))%
+                    </span>
+}
+else
+{
+                    <span class="d-inline-flex text-success">
+                        <i class="icon icon-profit icon-fw"></i> @((((Convert.ToDecimal(Model.Select(c => c.CardCode).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.CardCode).Distinct().Count())) * 100) - 100).ToString("N0"))%
+                    </span>
+}
+
+                        </div>
+                        <div class="h5 mb-2">Clientes</div>
+                        <p class="card-text text-light-gray f-12">Anterior: @lstInvoices_Ant.Select(c => c.CardCode).Distinct().Count() </p>
+                       
+                    </div>
+                </div>
+                <!-- /card body -->
+
+            </div>
+            <!-- /card -->
+        </div>
+        <!-- /grid item -->
+        <!-- Grid Item -->
+        <div class="col-xl-2 col-sm-4">
+            <!-- Card -->
+            <div class="dt-card">
+
+                <!-- Card Body -->
+                <div class="dt-card__body d-flex flex-sm-column">
+                    <div class="mb-sm-7 mr-7 mr-sm-0">
+                        <i class="icon icon-invoice dt-icon-bg bg-secondary text-secondary"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="h2 mb-0 font-weight-500 mr-2">@Model.Count()</span>
+
+                            @if ((((Convert.ToDecimal(Model.Count()) / Convert.ToDecimal(lstInvoices_Ant.Count())) * 100) - 100) < 0)
+    {
+                        <span class="d-inline-flex text-danger">
+                            <i class="icon icon-loss icon-fw"></i> @((((Convert.ToDecimal(Model.Count()) / Convert.ToDecimal(lstInvoices_Ant.Count())) * 100) - 100).ToString("N0"))%
+                        </span>
+}
+else
+{
+                        <span class="d-inline-flex text-success">
+                            <i class="icon icon-profit icon-fw"></i> @((((Convert.ToDecimal(Model.Count()) / Convert.ToDecimal(lstInvoices_Ant.Count())) * 100) - 100).ToString("N0"))%
+                        </span>
+}
+
+                        </div>
+                        <div class="h5 mb-2">Total de facturas</div>
+                        <p class="card-text text-light-gray f-12">Anterior: @lstInvoices_Ant.Count()</p>
+                    </div>
+                </div>
+                <!-- /card body -->
+
+            </div>
+            <!-- /card -->
+        </div>
+        <!-- /grid item -->
+        <div class="col-xl-1">
+        </div>
+        </div>
+            <!-- Grid -->
+            <div class="row">
+
+                <!-- Grid Item -->
+                <div class="col-xl-12">
+
+                    <!-- Entry Header -->
+                    <div class="dt-entry__header">
+
+                        <!-- Entry Heading -->
+                        <div class="dt-entry__heading">
+                            <h3 class="dt-entry__title">Historial de facturacion</h3>
+                        </div>
+                        <!-- /entry heading -->
+
+                    </div>
+                    <!-- /entry header -->
+                    <!-- Card -->
+                    <div class="dt-card overflow-hidden" style="box-shadow:none !important;">
+
+                        <!-- Card Body -->
+                        <div class="dt-card__body p-0">
+
+                            <!-- Tables -->
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="table_facturas">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-uppercase" scope="col"># Factura</th>
+                                            <th class="text-uppercase" scope="col">Fecha</th>
+                                            <th class="text-uppercase" scope="col">Cliente</th>
+                                            <th class="text-uppercase" scope="col">Sucursal</th>
+                                            <th class="text-uppercase" scope="col">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var factura in Model)
+                                    {
+                                        <tr>
+                                            <td data-label="# FACTURA">@factura.DocNum</td>
+                                            <td data-label="FECHA">
+                                                @factura.DocDate.Value.ToString("dd/MM/yyyy")
+                                            @if (Convert.ToString(factura.dochour).Length > 3)
+                                        {<label>@Convert.ToString(factura.dochour).Substring(0, 2):@Convert.ToString(factura.dochour).Substring(2, 2)</label>
+                                }
+                                else
+                                {
+                                    <label>@Convert.ToString(factura.dochour).Substring(0, 1):@Convert.ToString(factura.dochour).Substring(1, 2)</label>
+                            }
+                                        </td>
+                                        <td data-label="CLIENTE">@factura.CardCode - @factura.CardName</td>
+                                        <td data-label="SUCURSAL">@factura.Sucursal</td>
+                                    <td data-label="TOTAL">$@factura.DocTotal.Value.ToString("N2")</td>
+                                </tr>
+                        }
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /tables -->
+
+                        </div>
+                        <!-- /card body -->
+
+                    </div>
+                    <!-- /card -->
+
+
+                </div>
+                <!-- /grid item -->
+
+            </div>
+            <!-- /grid -->
+
+        </div>
+        <!-- /site content -->
+        <!-- Footer -->
+        @Html.Partial("~/Views/Shared/Footer.cshtml")
+        <!-- /footer -->
+
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+<!-- /site content wrapper -->

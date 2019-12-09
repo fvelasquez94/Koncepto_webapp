@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DB_KONCEPTOModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Facturas_Detalle' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BI_Facturas_Detalle">
+          <Key>
+            <PropertyRef Name="DocEntry" />
+          </Key>
+          <Property Name="DocEntry" Type="int" Nullable="false" />
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="Dscription" Type="nvarchar" MaxLength="100" />
+          <Property Name="Quantity" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Price" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="DiscPrcnt" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="PriceBefDi" Type="numeric" Precision="19" Scale="6" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Facturas_Encabezado' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BI_Facturas_Encabezado">
+          <Key>
+            <PropertyRef Name="DocEntry" />
+            <PropertyRef Name="Sucursal" />
+          </Key>
+          <Property Name="DocEntry" Type="int" Nullable="false" />
+          <Property Name="DocNum" Type="int" />
+          <Property Name="DocDate" Type="datetime" />
+          <Property Name="CardCode" Type="nvarchar" MaxLength="15" />
+          <Property Name="CardName" Type="nvarchar" MaxLength="100" />
+          <Property Name="DocTotal" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="SlpCode" Type="int" />
+          <Property Name="DocStatus" Type="char" MaxLength="1" />
+          <Property Name="ID_sucursal" Type="nvarchar" MaxLength="10" />
+          <Property Name="tipoDocumento" Type="nvarchar" MaxLength="10" />
+          <Property Name="dochour" Type="smallint" />
+          <Property Name="Sucursal" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="DB_KONCEPTOModelStoreContainer">
+          <EntitySet Name="BI_Facturas_Detalle" EntityType="Self.BI_Facturas_Detalle" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BI_Facturas_Detalle].[DocEntry] AS [DocEntry], 
+    [BI_Facturas_Detalle].[ItemCode] AS [ItemCode], 
+    [BI_Facturas_Detalle].[Dscription] AS [Dscription], 
+    [BI_Facturas_Detalle].[Quantity] AS [Quantity], 
+    [BI_Facturas_Detalle].[Price] AS [Price], 
+    [BI_Facturas_Detalle].[DiscPrcnt] AS [DiscPrcnt], 
+    [BI_Facturas_Detalle].[PriceBefDi] AS [PriceBefDi]
+    FROM [dbo].[BI_Facturas_Detalle] AS [BI_Facturas_Detalle]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BI_Facturas_Encabezado" EntityType="Self.BI_Facturas_Encabezado" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BI_Facturas_Encabezado].[DocEntry] AS [DocEntry], 
+    [BI_Facturas_Encabezado].[DocNum] AS [DocNum], 
+    [BI_Facturas_Encabezado].[DocDate] AS [DocDate], 
+    [BI_Facturas_Encabezado].[CardCode] AS [CardCode], 
+    [BI_Facturas_Encabezado].[CardName] AS [CardName], 
+    [BI_Facturas_Encabezado].[DocTotal] AS [DocTotal], 
+    [BI_Facturas_Encabezado].[SlpCode] AS [SlpCode], 
+    [BI_Facturas_Encabezado].[DocStatus] AS [DocStatus], 
+    [BI_Facturas_Encabezado].[ID_sucursal] AS [ID_sucursal], 
+    [BI_Facturas_Encabezado].[tipoDocumento] AS [tipoDocumento], 
+    [BI_Facturas_Encabezado].[dochour] AS [dochour], 
+    [BI_Facturas_Encabezado].[Sucursal] AS [Sucursal]
+    FROM [dbo].[BI_Facturas_Encabezado] AS [BI_Facturas_Encabezado]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DB_KONCEPTOModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BI_Facturas_Detalle">
+          <Key>
+            <PropertyRef Name="DocEntry" />
+          </Key>
+          <Property Name="DocEntry" Type="Int32" Nullable="false" />
+          <Property Name="ItemCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Dscription" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="DiscPrcnt" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="PriceBefDi" Type="Decimal" Precision="19" Scale="6" />
+        </EntityType>
+        <EntityType Name="BI_Facturas_Encabezado">
+          <Key>
+            <PropertyRef Name="DocEntry" />
+            <PropertyRef Name="Sucursal" />
+          </Key>
+          <Property Name="DocEntry" Type="Int32" Nullable="false" />
+          <Property Name="DocNum" Type="Int32" />
+          <Property Name="DocDate" Type="DateTime" Precision="3" />
+          <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="CardName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DocTotal" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="SlpCode" Type="Int32" />
+          <Property Name="DocStatus" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="ID_sucursal" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="tipoDocumento" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="dochour" Type="Int16" />
+          <Property Name="Sucursal" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="DB_KONCEPTOEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BI_Facturas_Detalle" EntityType="Self.BI_Facturas_Detalle" />
+          <EntitySet Name="BI_Facturas_Encabezado" EntityType="Self.BI_Facturas_Encabezado" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DB_KONCEPTOModelStoreContainer" CdmEntityContainer="DB_KONCEPTOEntities">
+          <EntitySetMapping Name="BI_Facturas_Detalle">
+            <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Facturas_Detalle">
+              <MappingFragment StoreEntitySet="BI_Facturas_Detalle">
+                <ScalarProperty Name="DocEntry" ColumnName="DocEntry" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="Dscription" ColumnName="Dscription" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="DiscPrcnt" ColumnName="DiscPrcnt" />
+                <ScalarProperty Name="PriceBefDi" ColumnName="PriceBefDi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BI_Facturas_Encabezado">
+            <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Facturas_Encabezado">
+              <MappingFragment StoreEntitySet="BI_Facturas_Encabezado">
+                <ScalarProperty Name="Sucursal" ColumnName="Sucursal" />
+                <ScalarProperty Name="dochour" ColumnName="dochour" />
+                <ScalarProperty Name="tipoDocumento" ColumnName="tipoDocumento" />
+                <ScalarProperty Name="ID_sucursal" ColumnName="ID_sucursal" />
+                <ScalarProperty Name="DocEntry" ColumnName="DocEntry" />
+                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="CardName" ColumnName="CardName" />
+                <ScalarProperty Name="DocTotal" ColumnName="DocTotal" />
+                <ScalarProperty Name="SlpCode" ColumnName="SlpCode" />
+                <ScalarProperty Name="DocStatus" ColumnName="DocStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
