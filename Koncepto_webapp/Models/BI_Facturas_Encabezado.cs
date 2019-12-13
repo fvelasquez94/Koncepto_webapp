@@ -14,17 +14,26 @@ namespace Koncepto_webapp.Models
     
     public partial class BI_Facturas_Encabezado
     {
-        public int DocEntry { get; set; }
-        public Nullable<int> DocNum { get; set; }
-        public Nullable<System.DateTime> DocDate { get; set; }
-        public string CardCode { get; set; }
-        public string CardName { get; set; }
-        public Nullable<decimal> DocTotal { get; set; }
-        public Nullable<int> SlpCode { get; set; }
-        public string DocStatus { get; set; }
-        public string ID_sucursal { get; set; }
-        public string tipoDocumento { get; set; }
-        public Nullable<short> dochour { get; set; }
+        public Nullable<int> DocEntry { get; set; }
+        public Nullable<System.DateTime> Fecha { get; set; }
+        public Nullable<int> NoDoc { get; set; }
+        public string Tipo { get; set; }
+        public Nullable<int> Id_Serie { get; set; }
+        public string Serie { get; set; }
+        public string Id_Cliente { get; set; }
+        public Nullable<decimal> Total_Sin_Imp { get; set; }
+        public Nullable<decimal> Descuento { get; set; }
+        public Nullable<decimal> IVA { get; set; }
+        public Nullable<decimal> Percepcion { get; set; }
+        public Nullable<decimal> Total_Doc { get; set; }
+        public string Tipo_Doc { get; set; }
+        public Nullable<int> Id_Vendedor { get; set; }
+        public string Cancelado { get; set; }
+        public string Id_Sucursal { get; set; }
         public string Sucursal { get; set; }
+        public string Id_TipoDoc_Interno { get; set; }
+        public string TipoDoc_Interno { get; set; }
+        public string Cliente { get; set; }
+        public Nullable<short> Hora_Fac { get; set; }
     }
 }

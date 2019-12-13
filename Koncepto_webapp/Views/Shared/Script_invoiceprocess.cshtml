@@ -1,0 +1,537 @@
+﻿
+@{
+    Layout = null;
+  
+}
+
+<script>
+    var categoria = "";
+    var subcategoria = "";
+
+
+    function seleccionarContribuyente(id) {
+        if (id == '1') {
+            document.getElementById("personaNatural").style.display = "block";
+            document.getElementById("personaJuridica").style.display = "none";
+        } else if (id == '2') {
+            document.getElementById("personaJuridica").style.display = "block";
+            document.getElementById("personaNatural").style.display = "none";
+        }
+    }
+
+    function enviarDatos() {
+        //funcion para guardar Cliente en tiempo real
+        var nombre = $("#name").val();
+        var correo = $("#email").val();
+        var telefono = $("#telephone").val();
+        var direccion = $("#direccion").val();
+        var departamento = $("#departamento").val();
+        var tipoContribuyente = $("#tipoContribuyente").val();
+
+        var dui = "";
+        var nrc = "";
+        var contribuyente = "";
+        var nit = "";
+        var flag = 0;//Si la bandera es 0, no se valida.
+
+        if (tipoContribuyente == "1") {
+            nrc = "";
+            contribuyente = "";
+            nit = "";
+
+            dui = $("#dui").val();
+
+            if (nombre != "" && correo != "" && telefono != "" && direccion != "" && departamento != "" && tipoContribuyente != "" && dui != "") {
+                flag = 1;
+            }
+
+        } else if (tipoContribuyente == "2") {
+            dui = "";
+            nrc = $("#nrc").val();
+            contribuyente = $("#contribuyente").val();
+            nit = $("#nit").val();
+
+            if (nombre != "" && correo != "" && telefono != "" && direccion != "" && departamento != "" && tipoContribuyente != "" && nrc != "" && contribuyente != "" && nit != "") {
+                flag = 1;
+            }
+        }
+
+
+        if (flag == 1) {
+            //ejecutamos AJAX
+            $.ajax
+                ({
+                    url: '/Invoices/Save_newCustomer',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        nombre: nombre,
+                        correo: correo,
+                        telefono: telefono,
+                        direccion: direccion,
+                        departamento: departamento,
+                        tipoContribuyente: tipoContribuyente,
+                        dui: dui,
+                        nrc: nrc,
+                        contribuyente: contribuyente,
+                        nit: nit
+                    }),
+                    success: function (result) {
+                        //result.flag - result.lstNuevoCliente
+                        if (result.flag == "Success") {
+
+                            $.each($.parseJSON(result.lstNuevoCliente), function (i, nuevocliente) {
+                                $("#cliente").append($('<option selected></option>').val(nuevocliente.ID_customer).html("DUI: " + nuevocliente.DUI + " - NRC: " + nuevocliente.NRC + "- NOMBRE: " + nuevocliente.Nombre + ""));
+
+                            }
+                            )
+                            var toastsuccess = swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                            toastsuccess({
+                                type: 'success',
+                                title: 'Cliente creado exitosamente.'
+                            });
+
+                            $('#form-modal').modal('hide');
+                            document.getElementById("clientenoexiste").style.display = "none";
+                        } else { //Error try catch
+                            var toasterror = swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                            toasterror({
+                                type: 'info',
+                                title: 'Ocurrio un error. ' + result.flag 
+                            });
+                        }
+
+
+                    },
+                    error: function () {
+                        var toasterror = swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+
+                        toasterror({
+                            type: 'info',
+                            title: 'Algo salio mal, favor intentar nuevamente.'
+                        });
+                    },
+                });
+        } else {
+
+            var toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            toast({
+                type: 'info',
+                title: 'Por favor, complete todos los campos.'
+            });
+        }
+     
+
+     
+    }
+
+    //BUSQUEDA DE PRODUCTOS
+    //Buscar por SKU
+    function buscarProducto() {
+
+        var sku = $("#codigosku").val();
+        var descripcionprod = $("#descripcionprod").val();
+        var codigobarras = $("#codigobarras").val();
+
+        //SKU
+        if (sku != "") {
+            //ejecutamos AJAX
+            $.ajax
+                ({
+                    url: '/Invoices/product_searchsku',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        sku: sku
+                    }),
+                    success: function (result) {
+                        //result.flag - result.lstNuevoCliente
+                        if (result.flag == "Success") {
+                            $("#listaproductos").html("");
+                            
+                            $.each($.parseJSON(result.lstProducts), function (i, producto) {
+                                var estructura = "";
+
+                                estructura += '<div class="col-xl-2 col-md-3 col-sm-6">'
+                                estructura += '<div class="dt-card text-center">'
+                                estructura += '<div class="dt-card__header px-5 mb-4">'
+                                estructura += '<div class="dt-card__heading text-center">'
+                                estructura += '<div class="dt-separator-h-v1 mb-2"></div>'
+                                estructura += '<h3 class="mb-1">' + producto.Nombre_Producto + '</h3>'
+                                estructura += '<span class="d-inline-block text-primary">$' + producto.Costo + '</span>'
+                                estructura += '</div>'
+                                estructura += '</div>'
+                                estructura += '<div class="dt-card__body px-5">'
+                                estructura += '<img class="img-fluid mb-7" src="~/Content/assets/images/widget/camera.jpg" alt="' + producto.Id_Producto +'">'
+                                estructura += '<div>'
+                                estructura += '<a href="javascript:void(0)" class="btn bg-brown text-uppercase text-white btn-sm">Add to Cart</a>'
+                                estructura += '</div>'
+                                estructura += '</div>'
+                                estructura += '</div>'
+                                estructura += '</div>'
+
+                                $("#listaproductos").append(estructura);
+
+                            }
+                            )
+
+                        } else { //Error try catch
+                            var toasterror = swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                            toasterror({
+                                type: 'info',
+                                title: 'Ocurrio un error. ' + result.flag
+                            });
+                        }
+
+
+                    },
+                    error: function () {
+                        var toasterror = swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+
+                        toasterror({
+                            type: 'info',
+                            title: 'Algo salio mal, favor intentar nuevamente.'
+                        });
+                    },
+                });
+        }
+
+        //Buscar por Descripcion
+        if (descripcionprod != "") {
+            //ejecutamos AJAX
+            $.ajax
+                ({
+                    url: '/Invoices/product_searchdescription',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        description: descripcionprod
+                    }),
+                    success: function (result) {
+                        //result.flag - result.lstNuevoCliente
+                        if (result.flag == "Success") {
+                            $("#listaproductos").html("");
+
+                            $.each($.parseJSON(result.lstProducts), function (i, producto) {
+                                var estructura = "";
+
+                                estructura += '<div class="col-xl-3 col-md-3 col-sm-6">'
+                                estructura += '<div class="dt-card text-center">'
+                                estructura += '<div class="dt-card__header px-5 mb-4">'
+                                estructura += '<div class="dt-card__heading text-center">'
+                                estructura += '<div class="dt-separator-h-v1 mb-2"></div>'
+                                estructura += '<h3 class="mb-1">' + producto.Nombre_Producto + '</h3>'
+                                estructura += '<span class="d-inline-block text-primary">$' + producto.Costo + '</span>'
+                                estructura += '</div>'
+                                estructura += '</div>'
+                                estructura += '<div class="dt-card__body px-5">'
+                                estructura += '<img class="img-fluid mb-7" src="~/Content/assets/images/widget/camera.jpg" alt="' + producto.Id_Producto + '">'
+                                estructura += '<div>'
+                                estructura += '<a href="javascript:void(0)" class="btn bg-brown text-uppercase text-white btn-sm">Add to Cart</a>'
+                                estructura += '</div>'
+                                estructura += '</div>'
+                                estructura += '</div>'
+                                estructura += '</div>'
+
+                                $("#listaproductos").append(estructura);
+
+                            }
+                            )
+
+                        } else { //Error try catch
+                            var toasterror = swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                            toasterror({
+                                type: 'info',
+                                title: 'Ocurrio un error. ' + result.flag
+                            });
+                        }
+
+
+                    },
+                    error: function () {
+                        var toasterror = swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+
+                        toasterror({
+                            type: 'info',
+                            title: 'Algo salio mal, favor intentar nuevamente.'
+                        });
+                    },
+                });
+        }
+
+        //Buscar por Codigo de barras        
+        if (codigobarras != "") {
+            //ejecutamos AJAX
+            $.ajax
+                ({
+                    url: '/Invoices/product_searchcodigobarras',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        codigobarras: codigobarras
+                    }),
+                    success: function (result) {
+                        //result.flag - result.lstNuevoCliente
+                        if (result.flag == "Success") {
+                            $("#listaproductos").html("");
+
+                            $.each($.parseJSON(result.lstProducts), function (i, producto) {
+                                var estructura = "";
+
+                                estructura += '<div class="col-xl-2 col-md-3 col-sm-6">'
+                                estructura += '<div class="dt-card text-center">'
+                                estructura += '<div class="dt-card__header px-5 mb-4">'
+                                estructura += '<div class="dt-card__heading text-center">'
+                                estructura += '<div class="dt-separator-h-v1 mb-2"></div>'
+                                estructura += '<h3 class="mb-1">' + producto.Nombre_Producto + '</h3>'
+                                estructura += '<span class="d-inline-block text-primary">$' + producto.Costo + '</span>'
+                                estructura += '</div>'
+                                estructura += '</div>'
+                                estructura += '<div class="dt-card__body px-5">'
+                                estructura += '<img class="img-fluid mb-7" src="~/Content/assets/images/widget/camera.jpg" alt="' + producto.Id_Producto + '">'
+                                estructura += '<div>'
+                                estructura += '<a href="javascript:void(0)" class="btn bg-brown text-uppercase text-white btn-sm">Add to Cart</a>'
+                                estructura += '</div>'
+                                estructura += '</div>'
+                                estructura += '</div>'
+                                estructura += '</div>'
+
+                                $("#listaproductos").append(estructura);
+
+                            }
+                            )
+
+                        } else { //Error try catch
+                            var toasterror = swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                            toasterror({
+                                type: 'info',
+                                title: 'Ocurrio un error. ' + result.flag
+                            });
+                        }
+
+
+                    },
+                    error: function () {
+                        var toasterror = swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+
+                        toasterror({
+                            type: 'info',
+                            title: 'Algo salio mal, favor intentar nuevamente.'
+                        });
+                    },
+                });
+
+        }
+
+    }
+
+    //Buscar por Asistente
+    function borrar1() {
+        $("#descripcionprod").val("");
+        $("#codigobarras").val("");
+    }    function borrar2() {
+        $("#codigosku").val("");
+        $("#codigobarras").val("");
+    }    function borrar3() {
+        $("#codigosku").val("");
+        $("#descripcionprod").val("");
+    }
+    //Filtros de categoria
+    function filter(clicked_id) {
+        $("#mainsub > *").css('display', 'none')
+        var x = document.getElementById(clicked_id);
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+        brandfilter_clear();
+        subfilter_clear();
+
+        $("#mainbrands > *").css('display', 'none')
+
+        $('.subbtnsl').removeClass('btnsel');
+        $('.brandbtnsl').removeClass('btnsubsel');
+        //$("#subfilter").css('display', 'block')
+
+        categoria = clicked_id;
+
+    }
+
+    function filter_clear() {
+        $("#mainsub > *").css('display', 'none')
+        $("#mainbrands > *").css('display', 'none')
+        $('.btnsl').removeClass('brandsbtnsl');
+        $('.subbtnsl').removeClass('btnsel');
+        $('.brandbtnsl').removeClass('btnsubsel');
+    }
+    function subfilter_clear() {
+        $('.subbtnsl').removeClass('btnsel');
+    }
+
+    function subfilter(clicked_id) {
+        $("#mainbrands > *").css('display', 'none')
+        var x = document.getElementById(clicked_id);
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+        $('.brandbtnsl').removeClass('btnsubsel');
+        brandfilter_clear();
+        subcategoria = clicked_id;
+    }
+
+    function brandfilter(clicked_id) {
+        $('.brandbtnsl').removeClass('btnsubsel');
+
+        //ejecutamos ajax
+        var brand = clicked_id;
+
+        //ejecutamos AJAX
+        $.ajax
+            ({
+                url: '/Invoices/product_searchasistente',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    categoria: categoria,
+                    subcategoria: subcategoria,
+                    marca: brand
+                }),
+                success: function (result) {
+                    //result.flag - result.lstNuevoCliente
+                    if (result.flag == "Success") {
+                        $("#listaproductos").html("");
+
+                        $.each($.parseJSON(result.lstProducts), function (i, producto) {
+                            var estructura = "";
+
+                            estructura += '<div class="col-xl-2 col-md-3 col-sm-6">'
+                            estructura += '<div class="dt-card text-center">'
+                            estructura += '<div class="dt-card__header px-5 mb-4">'
+                            estructura += '<div class="dt-card__heading text-center">'
+                            estructura += '<div class="dt-separator-h-v1 mb-2"></div>'
+                            estructura += '<h3 class="mb-1">' + producto.Nombre_Producto + '</h3>'
+                            estructura += '<span class="d-inline-block text-primary">$' + producto.Costo + '</span>'
+                            estructura += '</div>'
+                            estructura += '</div>'
+                            estructura += '<div class="dt-card__body px-5">'
+                            estructura += '<img class="img-fluid mb-7" src="~/Content/assets/images/widget/camera.jpg" alt="' + producto.Id_Producto + '">'
+                            estructura += '<div>'
+                            estructura += '<a href="javascript:void(0)" class="btn bg-brown text-uppercase text-white btn-sm">Add to Cart</a>'
+                            estructura += '</div>'
+                            estructura += '</div>'
+                            estructura += '</div>'
+                            estructura += '</div>'
+
+                            $("#listaproductos").append(estructura);
+
+                        }
+                        )
+
+                    } else { //Error try catch
+                        var toasterror = swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+
+                        toasterror({
+                            type: 'info',
+                            title: 'Ocurrio un error. ' + result.flag
+                        });
+                    }
+
+
+                },
+                error: function () {
+                    var toasterror = swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+
+                    toasterror({
+                        type: 'info',
+                        title: 'Algo salio mal, favor intentar nuevamente.'
+                    });
+                },
+            });
+
+    }
+
+    function brandfilter_clear() {
+        $('.brandbtnsl').removeClass('btnsubsel');
+    }
+
+
+    $(document).ready(function () {
+        $("#mainsub > *").css('display', 'none')
+        $("#mainbrands > *").css('display', 'none')
+    });
+
+</script>

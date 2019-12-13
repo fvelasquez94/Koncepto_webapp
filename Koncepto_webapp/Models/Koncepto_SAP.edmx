@@ -6,140 +6,563 @@
     <edmx:StorageModels>
     <Schema Namespace="DB_KONCEPTOModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Cuentas_por_cobrar' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BI_Cuentas_por_cobrar">
+          <Key>
+            <PropertyRef Name="Tipo" />
+            <PropertyRef Name="DocNum" />
+          </Key>
+          <Property Name="DocNum" Type="int" Nullable="false" />
+          <Property Name="DocDate" Type="datetime" />
+          <Property Name="CardCode" Type="nvarchar" MaxLength="15" />
+          <Property Name="DocTotal" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Abonos" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Saldo" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="Tipo" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="FechaPago" Type="datetime" />
+          <Property Name="DiasTranscurridos" Type="int" />
+          <Property Name="Dif" Type="int" />
+          <Property Name="GroupNum" Type="smallint" />
+          <Property Name="ExtraDays" Type="smallint" />
+          <Property Name="Antiguedad" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Dim_Customers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BI_Dim_Customers">
+          <Key>
+            <PropertyRef Name="Id_Cliente" />
+            <PropertyRef Name="Saldo" />
+            <PropertyRef Name="Id_Tipo_Contribuyente" />
+          </Key>
+          <Property Name="Id_Cliente" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="Nombre_Cliente" Type="nvarchar" MaxLength="100" />
+          <Property Name="Id_Grupo_Clientes" Type="smallint" />
+          <Property Name="Grupo_Clientes" Type="nvarchar" MaxLength="20" />
+          <Property Name="Correo" Type="nvarchar" MaxLength="100" />
+          <Property Name="Telefono" Type="nvarchar" MaxLength="20" />
+          <Property Name="Id_Termino_Pago" Type="smallint" />
+          <Property Name="Termino_Pago" Type="nvarchar" MaxLength="100" />
+          <Property Name="Limite_Credito" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Saldo" Type="numeric" Precision="38" Scale="6" Nullable="false" />
+          <Property Name="Direccion" Type="nvarchar" MaxLength="100" />
+          <Property Name="Ciudad" Type="nvarchar" MaxLength="100" />
+          <Property Name="Pais" Type="nvarchar" MaxLength="3" />
+          <Property Name="DUI" Type="nvarchar" MaxLength="10" />
+          <Property Name="NIT" Type="nvarchar" MaxLength="17" />
+          <Property Name="NRC" Type="nvarchar" MaxLength="10" />
+          <Property Name="Id_Tipo_Contribuyente" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="Tipo_Contribuyente" Type="nvarchar" MaxLength="254" />
+          <Property Name="Activo" Type="char" MaxLength="1" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Dim_Empleados' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BI_Dim_Empleados">
+          <Key>
+            <PropertyRef Name="Id_Vendedor" />
+            <PropertyRef Name="Vendedor" />
+            <PropertyRef Name="Tipo_Empleado" />
+            <PropertyRef Name="Comision_Especial" />
+          </Key>
+          <Property Name="Id_Vendedor" Type="int" Nullable="false" />
+          <Property Name="Vendedor" Type="nvarchar" MaxLength="155" Nullable="false" />
+          <Property Name="Comision" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Activo" Type="char" MaxLength="1" />
+          <Property Name="Tipo_Empleado" Type="varchar" MaxLength="9" Nullable="false" />
+          <Property Name="Comision_Especial" Type="varchar" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Dim_Productos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BI_Dim_Productos">
+          <Key>
+            <PropertyRef Name="Id_Producto" />
+            <PropertyRef Name="Ruta_Imagen" />
+          </Key>
+          <Property Name="Id_Producto" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Nombre_Producto" Type="nvarchar" MaxLength="100" />
+          <Property Name="Codigo_Barras" Type="nvarchar" MaxLength="254" />
+          <Property Name="Id_Grupo_Productos" Type="smallint" />
+          <Property Name="Grupo_Productos" Type="nvarchar" MaxLength="20" />
+          <Property Name="Inventario" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Id_Proveedor" Type="nvarchar" MaxLength="15" />
+          <Property Name="Proveedor" Type="nvarchar" MaxLength="100" />
+          <Property Name="Imagen" Type="nvarchar" MaxLength="200" />
+          <Property Name="Ruta_Imagen" Type="varchar" MaxLength="39" Nullable="false" />
+          <Property Name="Costo" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Id_Linea" Type="nvarchar" MaxLength="50" />
+          <Property Name="Linea" Type="nvarchar" MaxLength="100" />
+          <Property Name="Codigo_Anterior" Type="nvarchar" MaxLength="20" />
+          <Property Name="Codigo_Producto_Proveedor" Type="nvarchar" MaxLength="30" />
+          <Property Name="Id_Marca" Type="nvarchar" MaxLength="50" />
+          <Property Name="Marca" Type="nvarchar" MaxLength="100" />
+          <Property Name="Activo" Type="char" MaxLength="1" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Facturas_Detalle' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BI_Facturas_Detalle">
           <Key>
-            <PropertyRef Name="DocEntry" />
+            <PropertyRef Name="UdM_Compra" />
           </Key>
-          <Property Name="DocEntry" Type="int" Nullable="false" />
-          <Property Name="ItemCode" Type="nvarchar" MaxLength="50" />
-          <Property Name="Dscription" Type="nvarchar" MaxLength="100" />
-          <Property Name="Quantity" Type="numeric" Precision="19" Scale="6" />
-          <Property Name="Price" Type="numeric" Precision="19" Scale="6" />
-          <Property Name="DiscPrcnt" Type="numeric" Precision="19" Scale="6" />
-          <Property Name="PriceBefDi" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="DocEntry" Type="int" />
+          <Property Name="Id_Producto" Type="nvarchar" MaxLength="50" />
+          <Property Name="Unidades" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="UdM_Compra" Type="numeric" Precision="19" Scale="6" Nullable="false" />
+          <Property Name="Unidades_Venta" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Total_Venta" Type="numeric" Precision="38" Scale="10" />
+          <Property Name="Total_Ganancia" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Total_Costo" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Precio_Venta" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Descuento_Porcentaje" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Precio_Sin_Desc" Type="numeric" Precision="19" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Facturas_Encabezado' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BI_Facturas_Encabezado">
           <Key>
-            <PropertyRef Name="DocEntry" />
-            <PropertyRef Name="Sucursal" />
+            <PropertyRef Name="Tipo" />
           </Key>
-          <Property Name="DocEntry" Type="int" Nullable="false" />
-          <Property Name="DocNum" Type="int" />
-          <Property Name="DocDate" Type="datetime" />
-          <Property Name="CardCode" Type="nvarchar" MaxLength="15" />
-          <Property Name="CardName" Type="nvarchar" MaxLength="100" />
-          <Property Name="DocTotal" Type="numeric" Precision="19" Scale="6" />
-          <Property Name="SlpCode" Type="int" />
-          <Property Name="DocStatus" Type="char" MaxLength="1" />
-          <Property Name="ID_sucursal" Type="nvarchar" MaxLength="10" />
-          <Property Name="tipoDocumento" Type="nvarchar" MaxLength="10" />
-          <Property Name="dochour" Type="smallint" />
-          <Property Name="Sucursal" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="DocEntry" Type="int" />
+          <Property Name="Fecha" Type="datetime" />
+          <Property Name="NoDoc" Type="int" />
+          <Property Name="Tipo" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="Id_Serie" Type="int" />
+          <Property Name="Serie" Type="nvarchar" MaxLength="8" />
+          <Property Name="Id_Cliente" Type="nvarchar" MaxLength="15" />
+          <Property Name="Total_Sin_Imp" Type="numeric" Precision="22" Scale="6" />
+          <Property Name="Descuento" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="IVA" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Percepcion" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Total_Doc" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Tipo_Doc" Type="char" MaxLength="1" />
+          <Property Name="Id_Vendedor" Type="int" />
+          <Property Name="Cancelado" Type="char" MaxLength="1" />
+          <Property Name="Id_Sucursal" Type="nvarchar" MaxLength="10" />
+          <Property Name="Sucursal" Type="nvarchar" MaxLength="100" />
+          <Property Name="Id_TipoDoc_Interno" Type="nvarchar" MaxLength="10" />
+          <Property Name="TipoDoc_Interno" Type="nvarchar" MaxLength="254" />
+          <Property Name="Cliente" Type="nvarchar" MaxLength="100" />
+          <Property Name="Hora_Fac" Type="smallint" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BI_Series">
+          <Key>
+            <PropertyRef Name="Id_Serie" />
+            <PropertyRef Name="Cod_Serie" />
+            <PropertyRef Name="Tipo_Doc" />
+          </Key>
+          <Property Name="Id_Serie" Type="int" Nullable="false" />
+          <Property Name="Cod_Serie" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="Serie" Type="nvarchar" MaxLength="50" />
+          <Property Name="Tipo_Doc" Type="varchar" MaxLength="3" Nullable="false" />
         </EntityType>
         <EntityContainer Name="DB_KONCEPTOModelStoreContainer">
+          <EntitySet Name="BI_Cuentas_por_cobrar" EntityType="Self.BI_Cuentas_por_cobrar" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BI_Cuentas_por_cobrar].[DocNum] AS [DocNum], 
+    [BI_Cuentas_por_cobrar].[DocDate] AS [DocDate], 
+    [BI_Cuentas_por_cobrar].[CardCode] AS [CardCode], 
+    [BI_Cuentas_por_cobrar].[DocTotal] AS [DocTotal], 
+    [BI_Cuentas_por_cobrar].[Abonos] AS [Abonos], 
+    [BI_Cuentas_por_cobrar].[Saldo] AS [Saldo], 
+    [BI_Cuentas_por_cobrar].[Tipo] AS [Tipo], 
+    [BI_Cuentas_por_cobrar].[FechaPago] AS [FechaPago], 
+    [BI_Cuentas_por_cobrar].[DiasTranscurridos] AS [DiasTranscurridos], 
+    [BI_Cuentas_por_cobrar].[Dif] AS [Dif], 
+    [BI_Cuentas_por_cobrar].[GroupNum] AS [GroupNum], 
+    [BI_Cuentas_por_cobrar].[ExtraDays] AS [ExtraDays], 
+    [BI_Cuentas_por_cobrar].[Antiguedad] AS [Antiguedad]
+    FROM [dbo].[BI_Cuentas_por_cobrar] AS [BI_Cuentas_por_cobrar]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BI_Dim_Customers" EntityType="Self.BI_Dim_Customers" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BI_Dim_Customers].[Id_Cliente] AS [Id_Cliente], 
+    [BI_Dim_Customers].[Nombre_Cliente] AS [Nombre_Cliente], 
+    [BI_Dim_Customers].[Id_Grupo_Clientes] AS [Id_Grupo_Clientes], 
+    [BI_Dim_Customers].[Grupo_Clientes] AS [Grupo_Clientes], 
+    [BI_Dim_Customers].[Correo] AS [Correo], 
+    [BI_Dim_Customers].[Telefono] AS [Telefono], 
+    [BI_Dim_Customers].[Id_Termino_Pago] AS [Id_Termino_Pago], 
+    [BI_Dim_Customers].[Termino_Pago] AS [Termino_Pago], 
+    [BI_Dim_Customers].[Limite_Credito] AS [Limite_Credito], 
+    [BI_Dim_Customers].[Saldo] AS [Saldo], 
+    [BI_Dim_Customers].[Direccion] AS [Direccion], 
+    [BI_Dim_Customers].[Ciudad] AS [Ciudad], 
+    [BI_Dim_Customers].[Pais] AS [Pais], 
+    [BI_Dim_Customers].[DUI] AS [DUI], 
+    [BI_Dim_Customers].[NIT] AS [NIT], 
+    [BI_Dim_Customers].[NRC] AS [NRC], 
+    [BI_Dim_Customers].[Id_Tipo_Contribuyente] AS [Id_Tipo_Contribuyente], 
+    [BI_Dim_Customers].[Tipo_Contribuyente] AS [Tipo_Contribuyente], 
+    [BI_Dim_Customers].[Activo] AS [Activo]
+    FROM [dbo].[BI_Dim_Customers] AS [BI_Dim_Customers]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BI_Dim_Empleados" EntityType="Self.BI_Dim_Empleados" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BI_Dim_Empleados].[Id_Vendedor] AS [Id_Vendedor], 
+    [BI_Dim_Empleados].[Vendedor] AS [Vendedor], 
+    [BI_Dim_Empleados].[Comision] AS [Comision], 
+    [BI_Dim_Empleados].[Activo] AS [Activo], 
+    [BI_Dim_Empleados].[Tipo_Empleado] AS [Tipo_Empleado], 
+    [BI_Dim_Empleados].[Comision_Especial] AS [Comision_Especial]
+    FROM [dbo].[BI_Dim_Empleados] AS [BI_Dim_Empleados]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BI_Dim_Productos" EntityType="Self.BI_Dim_Productos" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BI_Dim_Productos].[Id_Producto] AS [Id_Producto], 
+    [BI_Dim_Productos].[Nombre_Producto] AS [Nombre_Producto], 
+    [BI_Dim_Productos].[Codigo_Barras] AS [Codigo_Barras], 
+    [BI_Dim_Productos].[Id_Grupo_Productos] AS [Id_Grupo_Productos], 
+    [BI_Dim_Productos].[Grupo_Productos] AS [Grupo_Productos], 
+    [BI_Dim_Productos].[Inventario] AS [Inventario], 
+    [BI_Dim_Productos].[Id_Proveedor] AS [Id_Proveedor], 
+    [BI_Dim_Productos].[Proveedor] AS [Proveedor], 
+    [BI_Dim_Productos].[Imagen] AS [Imagen], 
+    [BI_Dim_Productos].[Ruta_Imagen] AS [Ruta_Imagen], 
+    [BI_Dim_Productos].[Costo] AS [Costo], 
+    [BI_Dim_Productos].[Id_Linea] AS [Id_Linea], 
+    [BI_Dim_Productos].[Linea] AS [Linea], 
+    [BI_Dim_Productos].[Codigo_Anterior] AS [Codigo_Anterior], 
+    [BI_Dim_Productos].[Codigo_Producto_Proveedor] AS [Codigo_Producto_Proveedor], 
+    [BI_Dim_Productos].[Id_Marca] AS [Id_Marca], 
+    [BI_Dim_Productos].[Marca] AS [Marca], 
+    [BI_Dim_Productos].[Activo] AS [Activo]
+    FROM [dbo].[BI_Dim_Productos] AS [BI_Dim_Productos]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="BI_Facturas_Detalle" EntityType="Self.BI_Facturas_Detalle" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [BI_Facturas_Detalle].[DocEntry] AS [DocEntry], 
-    [BI_Facturas_Detalle].[ItemCode] AS [ItemCode], 
-    [BI_Facturas_Detalle].[Dscription] AS [Dscription], 
-    [BI_Facturas_Detalle].[Quantity] AS [Quantity], 
-    [BI_Facturas_Detalle].[Price] AS [Price], 
-    [BI_Facturas_Detalle].[DiscPrcnt] AS [DiscPrcnt], 
-    [BI_Facturas_Detalle].[PriceBefDi] AS [PriceBefDi]
+    [BI_Facturas_Detalle].[Id_Producto] AS [Id_Producto], 
+    [BI_Facturas_Detalle].[Unidades] AS [Unidades], 
+    [BI_Facturas_Detalle].[UdM_Compra] AS [UdM_Compra], 
+    [BI_Facturas_Detalle].[Unidades_Venta] AS [Unidades_Venta], 
+    [BI_Facturas_Detalle].[Total_Venta] AS [Total_Venta], 
+    [BI_Facturas_Detalle].[Total_Ganancia] AS [Total_Ganancia], 
+    [BI_Facturas_Detalle].[Total_Costo] AS [Total_Costo], 
+    [BI_Facturas_Detalle].[Precio_Venta] AS [Precio_Venta], 
+    [BI_Facturas_Detalle].[Descuento_Porcentaje] AS [Descuento_Porcentaje], 
+    [BI_Facturas_Detalle].[Precio_Sin_Desc] AS [Precio_Sin_Desc]
     FROM [dbo].[BI_Facturas_Detalle] AS [BI_Facturas_Detalle]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="BI_Facturas_Encabezado" EntityType="Self.BI_Facturas_Encabezado" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [BI_Facturas_Encabezado].[DocEntry] AS [DocEntry], 
-    [BI_Facturas_Encabezado].[DocNum] AS [DocNum], 
-    [BI_Facturas_Encabezado].[DocDate] AS [DocDate], 
-    [BI_Facturas_Encabezado].[CardCode] AS [CardCode], 
-    [BI_Facturas_Encabezado].[CardName] AS [CardName], 
-    [BI_Facturas_Encabezado].[DocTotal] AS [DocTotal], 
-    [BI_Facturas_Encabezado].[SlpCode] AS [SlpCode], 
-    [BI_Facturas_Encabezado].[DocStatus] AS [DocStatus], 
-    [BI_Facturas_Encabezado].[ID_sucursal] AS [ID_sucursal], 
-    [BI_Facturas_Encabezado].[tipoDocumento] AS [tipoDocumento], 
-    [BI_Facturas_Encabezado].[dochour] AS [dochour], 
-    [BI_Facturas_Encabezado].[Sucursal] AS [Sucursal]
+    [BI_Facturas_Encabezado].[Fecha] AS [Fecha], 
+    [BI_Facturas_Encabezado].[NoDoc] AS [NoDoc], 
+    [BI_Facturas_Encabezado].[Tipo] AS [Tipo], 
+    [BI_Facturas_Encabezado].[Id_Serie] AS [Id_Serie], 
+    [BI_Facturas_Encabezado].[Serie] AS [Serie], 
+    [BI_Facturas_Encabezado].[Id_Cliente] AS [Id_Cliente], 
+    [BI_Facturas_Encabezado].[Total_Sin_Imp] AS [Total_Sin_Imp], 
+    [BI_Facturas_Encabezado].[Descuento] AS [Descuento], 
+    [BI_Facturas_Encabezado].[IVA] AS [IVA], 
+    [BI_Facturas_Encabezado].[Percepcion] AS [Percepcion], 
+    [BI_Facturas_Encabezado].[Total_Doc] AS [Total_Doc], 
+    [BI_Facturas_Encabezado].[Tipo_Doc] AS [Tipo_Doc], 
+    [BI_Facturas_Encabezado].[Id_Vendedor] AS [Id_Vendedor], 
+    [BI_Facturas_Encabezado].[Cancelado] AS [Cancelado], 
+    [BI_Facturas_Encabezado].[Id_Sucursal] AS [Id_Sucursal], 
+    [BI_Facturas_Encabezado].[Sucursal] AS [Sucursal], 
+    [BI_Facturas_Encabezado].[Id_TipoDoc_Interno] AS [Id_TipoDoc_Interno], 
+    [BI_Facturas_Encabezado].[TipoDoc_Interno] AS [TipoDoc_Interno], 
+    [BI_Facturas_Encabezado].[Cliente] AS [Cliente], 
+    [BI_Facturas_Encabezado].[Hora_Fac] AS [Hora_Fac]
     FROM [dbo].[BI_Facturas_Encabezado] AS [BI_Facturas_Encabezado]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BI_Series" EntityType="Self.BI_Series" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BI_Series].[Id_Serie] AS [Id_Serie], 
+    [BI_Series].[Cod_Serie] AS [Cod_Serie], 
+    [BI_Series].[Serie] AS [Serie], 
+    [BI_Series].[Tipo_Doc] AS [Tipo_Doc]
+    FROM [dbo].[BI_Series] AS [BI_Series]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DB_KONCEPTOModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DB_KONCEPTOEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BI_Cuentas_por_cobrar" EntityType="DB_KONCEPTOModel.BI_Cuentas_por_cobrar" />
+          <EntitySet Name="BI_Dim_Customers" EntityType="DB_KONCEPTOModel.BI_Dim_Customers" />
+          <EntitySet Name="BI_Dim_Empleados" EntityType="DB_KONCEPTOModel.BI_Dim_Empleados" />
+          <EntitySet Name="BI_Dim_Productos" EntityType="DB_KONCEPTOModel.BI_Dim_Productos" />
+          <EntitySet Name="BI_Facturas_Detalle" EntityType="DB_KONCEPTOModel.BI_Facturas_Detalle" />
+          <EntitySet Name="BI_Facturas_Encabezado" EntityType="DB_KONCEPTOModel.BI_Facturas_Encabezado" />
+          <EntitySet Name="BI_Series" EntityType="DB_KONCEPTOModel.BI_Series" />
+        </EntityContainer>
+        <EntityType Name="BI_Cuentas_por_cobrar">
+          <Key>
+            <PropertyRef Name="Tipo" />
+            <PropertyRef Name="DocNum" />
+          </Key>
+          <Property Name="DocNum" Type="Int32" Nullable="false" />
+          <Property Name="DocDate" Type="DateTime" Precision="3" />
+          <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="DocTotal" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Abonos" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Saldo" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="Tipo" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="FechaPago" Type="DateTime" Precision="3" />
+          <Property Name="DiasTranscurridos" Type="Int32" />
+          <Property Name="Dif" Type="Int32" />
+          <Property Name="GroupNum" Type="Int16" />
+          <Property Name="ExtraDays" Type="Int16" />
+          <Property Name="Antiguedad" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BI_Dim_Customers">
+          <Key>
+            <PropertyRef Name="Id_Cliente" />
+            <PropertyRef Name="Saldo" />
+            <PropertyRef Name="Id_Tipo_Contribuyente" />
+          </Key>
+          <Property Name="Id_Cliente" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Nombre_Cliente" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Id_Grupo_Clientes" Type="Int16" />
+          <Property Name="Grupo_Clientes" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Correo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Telefono" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Id_Termino_Pago" Type="Int16" />
+          <Property Name="Termino_Pago" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Limite_Credito" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Saldo" Type="Decimal" Nullable="false" Precision="38" Scale="6" />
+          <Property Name="Direccion" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Ciudad" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Pais" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="DUI" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="NIT" Type="String" MaxLength="17" FixedLength="false" Unicode="true" />
+          <Property Name="NRC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Id_Tipo_Contribuyente" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="Tipo_Contribuyente" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="Activo" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BI_Dim_Empleados">
+          <Key>
+            <PropertyRef Name="Id_Vendedor" />
+            <PropertyRef Name="Vendedor" />
+            <PropertyRef Name="Tipo_Empleado" />
+            <PropertyRef Name="Comision_Especial" />
+          </Key>
+          <Property Name="Id_Vendedor" Type="Int32" Nullable="false" />
+          <Property Name="Vendedor" Type="String" Nullable="false" MaxLength="155" FixedLength="false" Unicode="true" />
+          <Property Name="Comision" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Activo" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Tipo_Empleado" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="Comision_Especial" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BI_Dim_Productos">
+          <Key>
+            <PropertyRef Name="Id_Producto" />
+            <PropertyRef Name="Ruta_Imagen" />
+          </Key>
+          <Property Name="Id_Producto" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Nombre_Producto" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Codigo_Barras" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="Id_Grupo_Productos" Type="Int16" />
+          <Property Name="Grupo_Productos" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Inventario" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Id_Proveedor" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Proveedor" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Imagen" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Ruta_Imagen" Type="String" Nullable="false" MaxLength="39" FixedLength="false" Unicode="false" />
+          <Property Name="Costo" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Id_Linea" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Linea" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Codigo_Anterior" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Codigo_Producto_Proveedor" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Id_Marca" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Marca" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Activo" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+        </EntityType>
         <EntityType Name="BI_Facturas_Detalle">
           <Key>
-            <PropertyRef Name="DocEntry" />
+            <PropertyRef Name="UdM_Compra" />
           </Key>
-          <Property Name="DocEntry" Type="Int32" Nullable="false" />
-          <Property Name="ItemCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Dscription" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Quantity" Type="Decimal" Precision="19" Scale="6" />
-          <Property Name="Price" Type="Decimal" Precision="19" Scale="6" />
-          <Property Name="DiscPrcnt" Type="Decimal" Precision="19" Scale="6" />
-          <Property Name="PriceBefDi" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="DocEntry" Type="Int32" />
+          <Property Name="Id_Producto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Unidades" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="UdM_Compra" Type="Decimal" Nullable="false" Precision="19" Scale="6" />
+          <Property Name="Unidades_Venta" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Total_Venta" Type="Decimal" Precision="38" Scale="10" />
+          <Property Name="Total_Ganancia" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Total_Costo" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Precio_Venta" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Descuento_Porcentaje" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Precio_Sin_Desc" Type="Decimal" Precision="19" Scale="6" />
         </EntityType>
         <EntityType Name="BI_Facturas_Encabezado">
           <Key>
-            <PropertyRef Name="DocEntry" />
-            <PropertyRef Name="Sucursal" />
+            <PropertyRef Name="Tipo" />
           </Key>
-          <Property Name="DocEntry" Type="Int32" Nullable="false" />
-          <Property Name="DocNum" Type="Int32" />
-          <Property Name="DocDate" Type="DateTime" Precision="3" />
-          <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="CardName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="DocTotal" Type="Decimal" Precision="19" Scale="6" />
-          <Property Name="SlpCode" Type="Int32" />
-          <Property Name="DocStatus" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="ID_sucursal" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="tipoDocumento" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="dochour" Type="Int16" />
-          <Property Name="Sucursal" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DocEntry" Type="Int32" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="NoDoc" Type="Int32" />
+          <Property Name="Tipo" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="Id_Serie" Type="Int32" />
+          <Property Name="Serie" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Id_Cliente" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Total_Sin_Imp" Type="Decimal" Precision="22" Scale="6" />
+          <Property Name="Descuento" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="IVA" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Percepcion" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Total_Doc" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Tipo_Doc" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Id_Vendedor" Type="Int32" />
+          <Property Name="Cancelado" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Id_Sucursal" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Sucursal" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Id_TipoDoc_Interno" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TipoDoc_Interno" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="Cliente" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Hora_Fac" Type="Int16" />
         </EntityType>
-        <EntityContainer Name="DB_KONCEPTOEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="BI_Facturas_Detalle" EntityType="Self.BI_Facturas_Detalle" />
-          <EntitySet Name="BI_Facturas_Encabezado" EntityType="Self.BI_Facturas_Encabezado" />
-        </EntityContainer>
+        <EntityType Name="BI_Series">
+          <Key>
+            <PropertyRef Name="Id_Serie" />
+            <PropertyRef Name="Cod_Serie" />
+            <PropertyRef Name="Tipo_Doc" />
+          </Key>
+          <Property Name="Id_Serie" Type="Int32" Nullable="false" />
+          <Property Name="Cod_Serie" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Serie" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Tipo_Doc" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="DB_KONCEPTOModelStoreContainer" CdmEntityContainer="DB_KONCEPTOEntities">
+          <EntitySetMapping Name="BI_Cuentas_por_cobrar">
+            <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Cuentas_por_cobrar">
+              <MappingFragment StoreEntitySet="BI_Cuentas_por_cobrar">
+                <ScalarProperty Name="Antiguedad" ColumnName="Antiguedad" />
+                <ScalarProperty Name="ExtraDays" ColumnName="ExtraDays" />
+                <ScalarProperty Name="GroupNum" ColumnName="GroupNum" />
+                <ScalarProperty Name="Dif" ColumnName="Dif" />
+                <ScalarProperty Name="DiasTranscurridos" ColumnName="DiasTranscurridos" />
+                <ScalarProperty Name="FechaPago" ColumnName="FechaPago" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="Saldo" ColumnName="Saldo" />
+                <ScalarProperty Name="Abonos" ColumnName="Abonos" />
+                <ScalarProperty Name="DocTotal" ColumnName="DocTotal" />
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BI_Dim_Customers">
+            <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Dim_Customers">
+              <MappingFragment StoreEntitySet="BI_Dim_Customers">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="Tipo_Contribuyente" ColumnName="Tipo_Contribuyente" />
+                <ScalarProperty Name="Id_Tipo_Contribuyente" ColumnName="Id_Tipo_Contribuyente" />
+                <ScalarProperty Name="NRC" ColumnName="NRC" />
+                <ScalarProperty Name="NIT" ColumnName="NIT" />
+                <ScalarProperty Name="DUI" ColumnName="DUI" />
+                <ScalarProperty Name="Pais" ColumnName="Pais" />
+                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Saldo" ColumnName="Saldo" />
+                <ScalarProperty Name="Limite_Credito" ColumnName="Limite_Credito" />
+                <ScalarProperty Name="Termino_Pago" ColumnName="Termino_Pago" />
+                <ScalarProperty Name="Id_Termino_Pago" ColumnName="Id_Termino_Pago" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Grupo_Clientes" ColumnName="Grupo_Clientes" />
+                <ScalarProperty Name="Id_Grupo_Clientes" ColumnName="Id_Grupo_Clientes" />
+                <ScalarProperty Name="Nombre_Cliente" ColumnName="Nombre_Cliente" />
+                <ScalarProperty Name="Id_Cliente" ColumnName="Id_Cliente" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BI_Dim_Empleados">
+            <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Dim_Empleados">
+              <MappingFragment StoreEntitySet="BI_Dim_Empleados">
+                <ScalarProperty Name="Comision_Especial" ColumnName="Comision_Especial" />
+                <ScalarProperty Name="Tipo_Empleado" ColumnName="Tipo_Empleado" />
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="Comision" ColumnName="Comision" />
+                <ScalarProperty Name="Vendedor" ColumnName="Vendedor" />
+                <ScalarProperty Name="Id_Vendedor" ColumnName="Id_Vendedor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BI_Dim_Productos">
+            <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Dim_Productos">
+              <MappingFragment StoreEntitySet="BI_Dim_Productos">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="Marca" ColumnName="Marca" />
+                <ScalarProperty Name="Id_Marca" ColumnName="Id_Marca" />
+                <ScalarProperty Name="Codigo_Producto_Proveedor" ColumnName="Codigo_Producto_Proveedor" />
+                <ScalarProperty Name="Codigo_Anterior" ColumnName="Codigo_Anterior" />
+                <ScalarProperty Name="Linea" ColumnName="Linea" />
+                <ScalarProperty Name="Id_Linea" ColumnName="Id_Linea" />
+                <ScalarProperty Name="Costo" ColumnName="Costo" />
+                <ScalarProperty Name="Ruta_Imagen" ColumnName="Ruta_Imagen" />
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+                <ScalarProperty Name="Proveedor" ColumnName="Proveedor" />
+                <ScalarProperty Name="Id_Proveedor" ColumnName="Id_Proveedor" />
+                <ScalarProperty Name="Inventario" ColumnName="Inventario" />
+                <ScalarProperty Name="Grupo_Productos" ColumnName="Grupo_Productos" />
+                <ScalarProperty Name="Id_Grupo_Productos" ColumnName="Id_Grupo_Productos" />
+                <ScalarProperty Name="Codigo_Barras" ColumnName="Codigo_Barras" />
+                <ScalarProperty Name="Nombre_Producto" ColumnName="Nombre_Producto" />
+                <ScalarProperty Name="Id_Producto" ColumnName="Id_Producto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="BI_Facturas_Detalle">
             <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Facturas_Detalle">
               <MappingFragment StoreEntitySet="BI_Facturas_Detalle">
+                <ScalarProperty Name="Precio_Sin_Desc" ColumnName="Precio_Sin_Desc" />
+                <ScalarProperty Name="Descuento_Porcentaje" ColumnName="Descuento_Porcentaje" />
+                <ScalarProperty Name="Precio_Venta" ColumnName="Precio_Venta" />
+                <ScalarProperty Name="Total_Costo" ColumnName="Total_Costo" />
+                <ScalarProperty Name="Total_Ganancia" ColumnName="Total_Ganancia" />
+                <ScalarProperty Name="Total_Venta" ColumnName="Total_Venta" />
+                <ScalarProperty Name="Unidades_Venta" ColumnName="Unidades_Venta" />
+                <ScalarProperty Name="UdM_Compra" ColumnName="UdM_Compra" />
+                <ScalarProperty Name="Unidades" ColumnName="Unidades" />
+                <ScalarProperty Name="Id_Producto" ColumnName="Id_Producto" />
                 <ScalarProperty Name="DocEntry" ColumnName="DocEntry" />
-                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
-                <ScalarProperty Name="Dscription" ColumnName="Dscription" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="DiscPrcnt" ColumnName="DiscPrcnt" />
-                <ScalarProperty Name="PriceBefDi" ColumnName="PriceBefDi" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="BI_Facturas_Encabezado">
             <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Facturas_Encabezado">
               <MappingFragment StoreEntitySet="BI_Facturas_Encabezado">
+                <ScalarProperty Name="Hora_Fac" ColumnName="Hora_Fac" />
+                <ScalarProperty Name="Cliente" ColumnName="Cliente" />
+                <ScalarProperty Name="TipoDoc_Interno" ColumnName="TipoDoc_Interno" />
+                <ScalarProperty Name="Id_TipoDoc_Interno" ColumnName="Id_TipoDoc_Interno" />
                 <ScalarProperty Name="Sucursal" ColumnName="Sucursal" />
-                <ScalarProperty Name="dochour" ColumnName="dochour" />
-                <ScalarProperty Name="tipoDocumento" ColumnName="tipoDocumento" />
-                <ScalarProperty Name="ID_sucursal" ColumnName="ID_sucursal" />
+                <ScalarProperty Name="Id_Sucursal" ColumnName="Id_Sucursal" />
+                <ScalarProperty Name="Cancelado" ColumnName="Cancelado" />
+                <ScalarProperty Name="Id_Vendedor" ColumnName="Id_Vendedor" />
+                <ScalarProperty Name="Tipo_Doc" ColumnName="Tipo_Doc" />
+                <ScalarProperty Name="Total_Doc" ColumnName="Total_Doc" />
+                <ScalarProperty Name="Percepcion" ColumnName="Percepcion" />
+                <ScalarProperty Name="IVA" ColumnName="IVA" />
+                <ScalarProperty Name="Descuento" ColumnName="Descuento" />
+                <ScalarProperty Name="Total_Sin_Imp" ColumnName="Total_Sin_Imp" />
+                <ScalarProperty Name="Id_Cliente" ColumnName="Id_Cliente" />
+                <ScalarProperty Name="Serie" ColumnName="Serie" />
+                <ScalarProperty Name="Id_Serie" ColumnName="Id_Serie" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="NoDoc" ColumnName="NoDoc" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
                 <ScalarProperty Name="DocEntry" ColumnName="DocEntry" />
-                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
-                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
-                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
-                <ScalarProperty Name="CardName" ColumnName="CardName" />
-                <ScalarProperty Name="DocTotal" ColumnName="DocTotal" />
-                <ScalarProperty Name="SlpCode" ColumnName="SlpCode" />
-                <ScalarProperty Name="DocStatus" ColumnName="DocStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BI_Series">
+            <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Series">
+              <MappingFragment StoreEntitySet="BI_Series">
+                <ScalarProperty Name="Tipo_Doc" ColumnName="Tipo_Doc" />
+                <ScalarProperty Name="Serie" ColumnName="Serie" />
+                <ScalarProperty Name="Cod_Serie" ColumnName="Cod_Serie" />
+                <ScalarProperty Name="Id_Serie" ColumnName="Id_Serie" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

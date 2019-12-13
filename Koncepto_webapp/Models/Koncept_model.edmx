@@ -22,8 +22,27 @@
           <Property Name="Assigned_SalesPoint" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="ID_SalesRep" Type="int" />
         </EntityType>
+        <EntityType Name="Tb_newCustomers">
+          <Key>
+            <PropertyRef Name="ID_customer" />
+          </Key>
+          <Property Name="ID_customer" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Correo" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="Telefono" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Direccion" Type="varchar(max)" Nullable="false" />
+          <Property Name="Departamento" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="Tipo_contribuyente" Type="int" Nullable="false" />
+          <Property Name="DUI" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="NRC" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="NIT" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Contribuyente" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="ID_SAP" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Creation_date" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="Koncept_dbModelStoreContainer">
           <EntitySet Name="Sys_Users" EntityType="Self.Sys_Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_newCustomers" EntityType="Self.Tb_newCustomers" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -48,7 +67,26 @@
         </EntityType>
         <EntityContainer Name="Koncept_dbEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Sys_Users" EntityType="Self.Sys_Users" />
+          <EntitySet Name="Tb_newCustomers" EntityType="Koncept_dbModel.Tb_newCustomers" />
         </EntityContainer>
+        <EntityType Name="Tb_newCustomers">
+          <Key>
+            <PropertyRef Name="ID_customer" />
+          </Key>
+          <Property Name="ID_customer" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Correo" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Telefono" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Direccion" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Departamento" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Tipo_contribuyente" Type="Int32" Nullable="false" />
+          <Property Name="DUI" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="NRC" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="NIT" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Contribuyente" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ID_SAP" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Creation_date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -70,6 +108,25 @@
                 <ScalarProperty Name="Creation_date" ColumnName="Creation_date" />
                 <ScalarProperty Name="ID_SalesPoint" ColumnName="ID_SalesPoint" />
                 <ScalarProperty Name="Assigned_SalesPoint" ColumnName="Assigned_SalesPoint" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_newCustomers">
+            <EntityTypeMapping TypeName="Koncept_dbModel.Tb_newCustomers">
+              <MappingFragment StoreEntitySet="Tb_newCustomers">
+                <ScalarProperty Name="Creation_date" ColumnName="Creation_date" />
+                <ScalarProperty Name="ID_SAP" ColumnName="ID_SAP" />
+                <ScalarProperty Name="Contribuyente" ColumnName="Contribuyente" />
+                <ScalarProperty Name="NIT" ColumnName="NIT" />
+                <ScalarProperty Name="NRC" ColumnName="NRC" />
+                <ScalarProperty Name="DUI" ColumnName="DUI" />
+                <ScalarProperty Name="Tipo_contribuyente" ColumnName="Tipo_contribuyente" />
+                <ScalarProperty Name="Departamento" ColumnName="Departamento" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ID_customer" ColumnName="ID_customer" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

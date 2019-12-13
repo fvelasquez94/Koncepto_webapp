@@ -159,10 +159,25 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\BI_Cuentas_por_cobrar.cs">
+      <DependentUpon>Koncepto_SAP.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BI_Dim_Customers.cs">
+      <DependentUpon>Koncepto_SAP.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BI_Dim_Empleados.cs">
+      <DependentUpon>Koncepto_SAP.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BI_Dim_Productos.cs">
+      <DependentUpon>Koncepto_SAP.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\BI_Facturas_Detalle.cs">
       <DependentUpon>Koncepto_SAP.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BI_Facturas_Encabezado.cs">
+      <DependentUpon>Koncepto_SAP.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BI_Series.cs">
       <DependentUpon>Koncepto_SAP.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Koncepto_SAP.Context.cs">
@@ -196,6 +211,9 @@
       <DependentUpon>Koncept_model.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\Sys_Users.cs">
+      <DependentUpon>Koncept_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_newCustomers.cs">
       <DependentUpon>Koncept_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -13011,6 +13029,7 @@
     <Content Include="Views\Shared\Footer.cshtml" />
     <Content Include="Views\Home\Signin.cshtml" />
     <Content Include="Views\Invoices\Invoice_process.cshtml" />
+    <Content Include="Views\Shared\Script_invoiceprocess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

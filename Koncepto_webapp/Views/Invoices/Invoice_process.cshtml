@@ -1,6 +1,6 @@
 ﻿@{
-    ViewBag.Title = "Dashboard";
-   
+    ViewBag.Title = "Invoice_process";
+  
 }
 
 <!-- Site Content Wrapper -->
@@ -50,7 +50,7 @@
                                         <!-- Content Area -->
                                         <div>
 
-                                            <select class="form-control js-example-responsive" multiple="multiple" style="width: 100%">
+                                            <select class="form-control js-example-responsive" id="cliente" style="width: 100%">
                                                 <option value="C0001">DUI: 00348348 - NCR: 022323923 - NOMBRE: Cliente Texaco</option>
                                             </select><br /><br />
                                             <button class="btn btn-secondary">Siguiente</button>
@@ -59,8 +59,9 @@
                                         <br />
                                         <br />
                                         <br />
-                                        <div class="mb-3">
-                                            <a href="#" class="d-flex align-items-center">
+                                        <div class="mb-3" id="clientenoexiste">
+                                            <a href="#" class="d-flex align-items-center" data-toggle="modal"
+                                               data-target="#form-modal" >
                                                 <i class="icon icon-info mr-2"></i>
                                                 <span class="text-dark f-12">Click aqui si el cliente no existe</span>
                                             </a>
@@ -72,23 +73,89 @@
                                     <div class="card-body">
 
                                         <!-- Card Title-->
-                                        <span class="d-block f-16 text-light-gray mb-2">Step-2</span>
-                                        <h2 class="card-title font-weight-normal">Create your account “FREE”</h2>
+                                        <span class="d-block f-16 text-light-gray mb-2">Seleccion de productos</span>
+                                        <h2 class="card-title font-weight-normal">Filtre los productos por categoria o realice la busqueda por SKU.</h2>
                                         <!-- Card Title-->
                                         <!-- Content Area -->
-                                        <p class="card-text">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem
-                                            blanditiis consectetur ducimus error est et fugiat impedit in
-                                            ipsam, odio omnis, praesentium quas rem repellendus.
-                                        </p>
                                         <!-- /content area -->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <input type="text" id="codigosku" placeholder="SKU" class="form-control" onkeypress="borrar1()"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="descripcionprod" placeholder="Nombre de producto" class="form-control" onkeypress="borrar2()"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="codigobarras" placeholder="Codigo de barras" class="form-control" onkeypress="borrar3()"/>
+                                                <label class="d-flex align-items-center">
 
-                                        <div class="mb-3">
-                                            <a href="#" class="d-flex align-items-center">
-                                                <i class="icon icon-play-circle-o mr-2"></i>
-                                                <span class="text-dark f-12">How it works</span>
-                                            </a>
+                                                    <i class="icon icon-play-circle-o mr-2"></i>
+                                                    <span class="text-dark f-12">Coloque el cursor sobre la caja de texto y escanee el codigo de barras</span>
+                                                </label>
+                                            </div>
                                         </div>
+                                        <button class="btn btn-secondary" onclick="buscarProducto()">Buscar producto</button><br /><br />
+                                        <h2 class="card-title font-weight-normal">O utilice el asistente de productos abajo.</h2>
+                                        <!-- Content Area -->
+                                        <div class="custom-post-title">
+                                            <div class=" mt-2">
+
+                                                @foreach (var itemc in ViewBag.lstCategories)
+            {
+                                    <button id="btn_@itemc" type="button" style="margin-top: 10px;" class="btn btn-outline-primary form-pill btnsl" onclick="filter('@itemc')">@itemc</button>
+}
+                                                <button type="button" class="btn btn-light form-pill" style="margin-top: 10px;" onclick="filter_clear()">Clear filters</button>
+
+                                            </div><hr />
+                                            <div id="mainsub">
+
+                                                @foreach (var itemc in ViewBag.lstCategories)
+            {
+                                    <div class="mt-2" id="@itemc">
+                                        @foreach (var itemsc in ViewBag.lstsubCategories)
+    {
+        if (itemsc.category != null && itemsc != null)
+        {
+            if (itemsc.category == itemc)
+            {
+                                    <button id="subbtn_@itemsc.id" type="button" style="margin-top: 10px;" class="btn btn-outline-warning form-pill subbtnsl" onclick="subfilter('@Convert.ToString(itemsc.name).Replace("'", "")')">@itemsc.name</button>
+}
+}
+
+}
+                                        @*<button id="subfilter" type="button" class="btn btn-light form-pill" style="margin-top: 10px;" onclick="subfilter_clear()">Clear Sub filters</button>*@
+                                    </div>}
+
+                                            </div><hr />
+                                            <div id="mainbrands">
+
+                                                @foreach (var itemc in ViewBag.lstsubCategories)
+            {
+                                    <div class="mt-2" id="@itemc.name">
+                                        @foreach (var itemsc in ViewBag.lstBrands)
+    {
+        if (itemsc.category != null && itemc.name != null)
+        {
+            if (itemsc.category == itemc.name)
+            {
+                                    <button id="brandbtn_@itemsc.id" type="button" style="margin-top: 10px;" class="btn btn-light form-pill brandbtnsl" onclick="brandfilter('@Convert.ToString(itemsc.name).Replace("'", "")')">@itemsc.name</button>
+}
+}
+
+}
+
+                                    </div>}
+
+                                            </div>
+                                        </div>
+                                        <br /><br />
+                                        <!-- Grid Item -->
+                               <div class="row" id="listaproductos">
+
+
+                               </div>
+
+
 
                                     </div>
                                     <!-- /card body -->
@@ -133,10 +200,151 @@
 
 
     </div>
-        <!-- /site content -->
-        <!-- Footer -->
-        @Html.Partial("~/Views/Shared/Footer.cshtml")
-        <!-- /footer -->
+    <!-- /site content -->
+    <!-- Footer -->
+    @Html.Partial("~/Views/Shared/Footer.cshtml")
+    <!-- /footer -->
+
+</div>
+<!-- /site content wrapper -->
+<!-- Modal -->
+<div class="modal fade" id="form-modal" tabindex="-1" role="dialog"
+     aria-labelledby="model-8"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <!-- Modal Content -->
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title" id="model-8">Nuevo cliente</h3>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- /modal header -->
+            <!-- Modal Body -->
+            <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name"
+                               class="col-form-label">Nombre de cliente:</label>
+                        <input class="form-control" id="name" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text"
+                               class="col-form-label">Grupo:</label>
+                        <select id="grupoCliente" class="form-control">
+                            @foreach (var item in ViewBag.grupoCliente)
+                            {
+                                if (item.id_grupo == 100)
+                                {
+                                       <option value="@item.id_grupo" selected>@item.grupo</option>
+                                }
+                                else {
+                                       <option value="@item.id_grupo">@item.grupo</option>
+                                }
+
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="email"
+                               class="col-form-label">Correo:</label>
+                        <input class="form-control" id="email" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="telephone"
+                               class="col-form-label">Telefono:</label>
+                        <input class="form-control" id="telephone" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion"
+                               class="col-form-label">Direccion:</label>
+                        <input class="form-control" id="direccion" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="departamento"
+                               class="col-form-label">Departamento:</label>
+                        <select class="form-control" id="departamento" >
+                            <optgroup label="Zona Occidental">
+                                <option>Ahuachapan</option>
+                                <option>Santa Ana</option>
+                                <option>Sonsonate</option>
+                                
+                            </optgroup>
+
+                            <optgroup label="Zona Central">
+                                <option>Cabañas</option>
+                                <option>Chalatenango</option>
+                                <option>Cuscatlán</option>
+                                <option>La Libertad</option>
+                                <option>La Paz</option>
+                                <option>San Salvador</option>
+                            </optgroup>
+                            <optgroup label="Zona Oriental">
+                                <option>La Union</option>
+                                <option>Morazan</option>
+                                <option>San Miguel</option>
+                                <option>San Vicente</option>
+                                <option>Usulutan</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoContribuyente"
+                               class="col-form-label">Tipo de Contribuyente:</label>
+                        <select class="form-control" id="tipoContribuyente" onchange="seleccionarContribuyente(this.value)">
+                            <option value="1" selected>Natural</option>
+                            <option value="2">Juridica</option>
+                        </select>
+                    </div>
+                    <div id="personaNatural">
+                        <div class="form-group">
+                            <label for="dui"
+                                   class="col-form-label">DUI:</label>
+                            <input class="form-control" id="dui" type="text">
+                        </div>
+                    </div>
+                    <div id="personaJuridica" style="display:none">
+                        <div class="form-group">
+                            <label for="nrc"
+                                   class="col-form-label">NRC:</label>
+                            <input class="form-control" id="nrc" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label for="contribuyente"
+                                   class="col-form-label">Contribuyente:</label>
+                            <select class="form-control" id="contribuyente">
+
+                                <option value="02">Pequeno o Mediano</option>
+                                <option value="01">Grande</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="nit"
+                                   class="col-form-label">NIT:</label>
+                            <input class="form-control" id="nit" type="text">
+                        </div>
+                    </div>
+            </div>
+            <!-- /modal body -->
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm"
+                        data-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="enviarDatos()">
+                    Guardar
+                </button>
+            </div>
+            <!-- /modal footer -->
+
+        </div>
+        <!-- /modal content -->
 
     </div>
-<!-- /site content wrapper -->
+</div>
+<!-- /modal -->

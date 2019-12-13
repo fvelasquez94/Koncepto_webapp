@@ -14,12 +14,16 @@ namespace Koncepto_webapp.Models
     
     public partial class BI_Facturas_Detalle
     {
-        public int DocEntry { get; set; }
-        public string ItemCode { get; set; }
-        public string Dscription { get; set; }
-        public Nullable<decimal> Quantity { get; set; }
-        public Nullable<decimal> Price { get; set; }
-        public Nullable<decimal> DiscPrcnt { get; set; }
-        public Nullable<decimal> PriceBefDi { get; set; }
+        public Nullable<int> DocEntry { get; set; }
+        public string Id_Producto { get; set; }
+        public Nullable<decimal> Unidades { get; set; }
+        public decimal UdM_Compra { get; set; }
+        public Nullable<decimal> Unidades_Venta { get; set; }
+        public Nullable<decimal> Total_Venta { get; set; }
+        public Nullable<decimal> Total_Ganancia { get; set; }
+        public Nullable<decimal> Total_Costo { get; set; }
+        public Nullable<decimal> Precio_Venta { get; set; }
+        public Nullable<decimal> Descuento_Porcentaje { get; set; }
+        public Nullable<decimal> Precio_Sin_Desc { get; set; }
     }
 }

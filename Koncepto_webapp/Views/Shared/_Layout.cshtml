@@ -39,8 +39,18 @@
 {
     <script type="text/javascript">
         window.onload = function () {
+            var toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
 
-            toastr.danger("@(TempData["error"])", "Warning");
+            toast({
+                type: 'danger',
+                title: '@(TempData["error"])'
+            });
+
         };
     </script>
 }
@@ -51,7 +61,18 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            toastr.warning("@(TempData["advertencia"])", "Warning");
+            var toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            toast({
+                type: 'info',
+                title: '@(TempData["advertencia"])'
+            });
+
 
         });
     </script>
@@ -63,13 +84,26 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            toastr.success("@(TempData["exito"])", "Success");
+            var toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
 
+
+
+        toast({
+            type: 'success',
+            title: '@(TempData["exito"])'
+        });
         });
     </script>
 }
 
-@if (ViewBag.Title == "Dashboard") {
+
+@if (ViewBag.Title == "Dashboard")
+{
     <script>
         $(document).ready(function () {
             $("#table_facturas").DataTable();
@@ -82,3 +116,9 @@
     });
 
 </script>
+
+
+@if (ViewBag.Title == "Invoice_process")
+{
+    @Html.Partial("~/Views/Shared/Script_invoiceprocess.cshtml")
+}

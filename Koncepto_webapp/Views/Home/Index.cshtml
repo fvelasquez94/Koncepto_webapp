@@ -36,24 +36,24 @@
                         </div>
                         <div class="flex-1">
                             <div class="d-flex align-items-center mb-2">
-                                <span class="h2 mb-0 font-weight-500 mr-2">$@Model.Sum(c => c.DocTotal).Value.ToString("N2")</span>
-                                @if (((((Model.Sum(c => c.DocTotal).Value / lstInvoices_Ant.Sum(c => c.DocTotal).Value) * 100) - 100)) < 0)
+                                <span class="h2 mb-0 font-weight-500 mr-2">$@Model.Sum(c => c.Total_Doc).Value.ToString("N2")</span>
+                                @if (((((Model.Sum(c => c.Total_Doc).Value / lstInvoices_Ant.Sum(c => c.Total_Doc).Value) * 100) - 100)) < 0)
         {
                         <span class="d-inline-flex text-danger">
 
-                            <i class="icon icon-loss icon-fw"></i>  @((((Model.Sum(c => c.DocTotal).Value / lstInvoices_Ant.Sum(c => c.DocTotal).Value) * 100) - 100).ToString("N0"))%
+                            <i class="icon icon-loss icon-fw"></i>  @((((Model.Sum(c => c.Total_Doc).Value / lstInvoices_Ant.Sum(c => c.Total_Doc).Value) * 100) - 100).ToString("N0"))%
                         </span>
 }
 else
 {
                         <span class="d-inline-flex text-success">
 
-                            <i class="icon icon-profit icon-fw"></i>  @((((Model.Sum(c => c.DocTotal).Value / lstInvoices_Ant.Sum(c => c.DocTotal).Value) * 100) - 100).ToString("N0"))%
+                            <i class="icon icon-profit icon-fw"></i>  @((((Model.Sum(c => c.Total_Doc).Value / lstInvoices_Ant.Sum(c => c.Total_Doc).Value) * 100) - 100).ToString("N0"))%
                         </span>
 }
                             </div>
                             <div class="h5 mb-2">Total de Venta</div>
-                            <p class="card-text text-light-gray f-12">Anterior: $@lstInvoices_Ant.Sum(c => c.DocTotal).Value.ToString("N2")</p>
+                            <p class="card-text text-light-gray f-12">Anterior: $@lstInvoices_Ant.Sum(c => c.Total_Doc).Value.ToString("N2")</p>
                         </div>
             </div>
             <!-- /card body -->
@@ -128,24 +128,24 @@ else
                     </div>
                     <div class="flex-1">
                         <div class="d-flex align-items-center mb-2">
-                            <span class="h2 mb-0 font-weight-500 mr-2">@Model.Select(c => c.CardCode).Distinct().Count()</span>
+                            <span class="h2 mb-0 font-weight-500 mr-2">@Model.Select(c => c.Id_Cliente).Distinct().Count()</span>
 
-                            @if ((((Convert.ToDecimal(Model.Select(c => c.CardCode).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.CardCode).Distinct().Count())) * 100) - 100) < 0)
+                            @if ((((Convert.ToDecimal(Model.Select(c => c.Id_Cliente).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.Id_Cliente).Distinct().Count())) * 100) - 100) < 0)
         {
                     <span class="d-inline-flex text-danger">
-                        <i class="icon icon-loss icon-fw"></i> @((((Convert.ToDecimal(Model.Select(c => c.CardCode).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.CardCode).Distinct().Count())) * 100) - 100).ToString("N0"))%
+                        <i class="icon icon-loss icon-fw"></i> @((((Convert.ToDecimal(Model.Select(c => c.Id_Cliente).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.Id_Cliente).Distinct().Count())) * 100) - 100).ToString("N0"))%
                     </span>
 }
 else
 {
                     <span class="d-inline-flex text-success">
-                        <i class="icon icon-profit icon-fw"></i> @((((Convert.ToDecimal(Model.Select(c => c.CardCode).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.CardCode).Distinct().Count())) * 100) - 100).ToString("N0"))%
+                        <i class="icon icon-profit icon-fw"></i> @((((Convert.ToDecimal(Model.Select(c => c.Id_Cliente).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.Id_Cliente).Distinct().Count())) * 100) - 100).ToString("N0"))%
                     </span>
 }
 
                         </div>
                         <div class="h5 mb-2">Clientes</div>
-                        <p class="card-text text-light-gray f-12">Anterior: @lstInvoices_Ant.Select(c => c.CardCode).Distinct().Count() </p>
+                        <p class="card-text text-light-gray f-12">Anterior: @lstInvoices_Ant.Select(c => c.Id_Cliente).Distinct().Count() </p>
                        
                     </div>
                 </div>
@@ -235,20 +235,20 @@ else
                                         @foreach (var factura in Model)
                                     {
                                         <tr>
-                                            <td data-label="# FACTURA">@factura.DocNum</td>
+                                            <td data-label="# FACTURA">@factura.NoDoc</td>
                                             <td data-label="FECHA">
-                                                @factura.DocDate.Value.ToString("dd/MM/yyyy")
-                                            @if (Convert.ToString(factura.dochour).Length > 3)
-                                        {<label>@Convert.ToString(factura.dochour).Substring(0, 2):@Convert.ToString(factura.dochour).Substring(2, 2)</label>
+                                                @factura.Fecha.Value.ToString("dd/MM/yyyy")
+                                            @if (Convert.ToString(factura.Hora_Fac).Length > 3)
+                                        {<label>@Convert.ToString(factura.Hora_Fac).Substring(0, 2):@Convert.ToString(factura.Hora_Fac).Substring(2, 2)</label>
                                 }
                                 else
                                 {
-                                    <label>@Convert.ToString(factura.dochour).Substring(0, 1):@Convert.ToString(factura.dochour).Substring(1, 2)</label>
+                                    <label>@Convert.ToString(factura.Hora_Fac).Substring(0, 1):@Convert.ToString(factura.Hora_Fac).Substring(1, 2)</label>
                             }
                                         </td>
-                                        <td data-label="CLIENTE">@factura.CardCode - @factura.CardName</td>
+                                        <td data-label="CLIENTE">@factura.Id_Cliente - @factura.Cliente</td>
                                         <td data-label="SUCURSAL">@factura.Sucursal</td>
-                                    <td data-label="TOTAL">$@factura.DocTotal.Value.ToString("N2")</td>
+                                    <td data-label="TOTAL">$@factura.Total_Doc.Value.ToString("N2")</td>
                                 </tr>
                         }
 

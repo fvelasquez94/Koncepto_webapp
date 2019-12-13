@@ -26,5 +26,6 @@ namespace Koncepto_webapp.Models
         }
     
         public virtual DbSet<Sys_Users> Sys_Users { get; set; }
+        public virtual DbSet<Tb_newCustomers> Tb_newCustomers { get; set; }
     }
 }

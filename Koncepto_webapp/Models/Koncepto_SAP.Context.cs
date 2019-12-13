@@ -25,7 +25,12 @@ namespace Koncepto_webapp.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<BI_Cuentas_por_cobrar> BI_Cuentas_por_cobrar { get; set; }
+        public virtual DbSet<BI_Dim_Customers> BI_Dim_Customers { get; set; }
+        public virtual DbSet<BI_Dim_Empleados> BI_Dim_Empleados { get; set; }
+        public virtual DbSet<BI_Dim_Productos> BI_Dim_Productos { get; set; }
         public virtual DbSet<BI_Facturas_Detalle> BI_Facturas_Detalle { get; set; }
         public virtual DbSet<BI_Facturas_Encabezado> BI_Facturas_Encabezado { get; set; }
+        public virtual DbSet<BI_Series> BI_Series { get; set; }
     }
 }

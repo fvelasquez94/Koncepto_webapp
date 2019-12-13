@@ -50,11 +50,11 @@ namespace Koncepto_webapp.Controllers
                 ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
 
                 //
-                List<BI_Facturas_Encabezado> lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado where ((a.DocDate >= filtrostartdate && a.DocDate <= filtroenddate) 
-                                                            && puntosVenta.Contains(a.ID_sucursal)) select a).ToList();
+                List<BI_Facturas_Encabezado> lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate) 
+                                                            && puntosVenta.Contains(a.Id_Sucursal)) select a).ToList();
 
                 List<BI_Facturas_Encabezado> earlier_lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
-                                                                    where ((a.DocDate >= anteriorSunday && a.DocDate <= anteriorSaturday) && puntosVenta.Contains(a.ID_sucursal))
+                                                                    where ((a.Fecha >= anteriorSunday && a.Fecha <= anteriorSaturday) && puntosVenta.Contains(a.Id_Sucursal))
                                                                     select a).ToList();
                 ViewBag.earlier_lstInvoices = earlier_lstInvoices;
                 return View(lstInvoices);
