@@ -14,7 +14,8 @@ namespace Koncepto_webapp.Models
     
     public partial class BI_Facturas_Encabezado
     {
-        public Nullable<int> DocEntry { get; set; }
+        public int DocEntry { get; set; }
+        public string ID { get; set; }
         public Nullable<System.DateTime> Fecha { get; set; }
         public Nullable<int> NoDoc { get; set; }
         public string Tipo { get; set; }

@@ -326,20 +326,20 @@
 
                             $.each($.parseJSON(result.lstProducts), function (i, producto) {
                                 var estructura = "";
-
                                 estructura += '<div class="col-xl-2 col-md-3 col-sm-6">'
                                 estructura += '<div class="dt-card text-center">'
                                 estructura += '<div class="dt-card__header px-5 mb-4">'
-                                estructura += '<div class="dt-card__heading text-center">'
-                                estructura += '<div class="dt-separator-h-v1 mb-2"></div>'
-                                estructura += '<h3 class="mb-1">' + producto.Nombre_Producto + '</h3>'
-                                estructura += '<span class="d-inline-block text-primary">$' + producto.Costo + '</span>'
+                                estructura += '<div class="text-center" style="height:90px;">'
+                                //estructura += '<div class="dt-separator-h-v1 mb-2"></div>'
+                                estructura += '<h5 class="mb-1">' + producto.Nombre_Producto + '</h5>'
+                                estructura += '<h1 class="d-inline-block text-primary">$' + producto.Precio_Venta + '</h1>'
                                 estructura += '</div>'
                                 estructura += '</div>'
                                 estructura += '<div class="dt-card__body px-5">'
-                                estructura += '<img class="img-fluid mb-7" src="~/Content/assets/images/widget/camera.jpg" alt="' + producto.Id_Producto + '">'
+
+                                estructura += '<img class="img-fluid mb-7" src="/Content/assets/images/no-image-icon.png" alt="' + producto.Id_Producto + '">'
                                 estructura += '<div>'
-                                estructura += '<a href="javascript:void(0)" class="btn bg-brown text-uppercase text-white btn-sm">Add to Cart</a>'
+                                estructura += '<a href="#" data-toggle="modal" data-target="#form-modalProducto" class="btn bg-brown text-uppercase text-white btn-sm">Agregar a carrito</a>'
                                 estructura += '</div>'
                                 estructura += '</div>'
                                 estructura += '</div>'
@@ -424,9 +424,11 @@
         $('.btnsl').removeClass('brandsbtnsl');
         $('.subbtnsl').removeClass('btnsel');
         $('.brandbtnsl').removeClass('btnsubsel');
+        $("#listaproductos").html("");
     }
     function subfilter_clear() {
         $('.subbtnsl').removeClass('btnsel');
+        $("#listaproductos").html("");
     }
 
     function subfilter(clicked_id) {
@@ -440,14 +442,14 @@
         $('.brandbtnsl').removeClass('btnsubsel');
         brandfilter_clear();
         subcategoria = clicked_id;
+
+        
     }
 
-    function brandfilter(clicked_id) {
-        $('.brandbtnsl').removeClass('btnsubsel');
-
-        //ejecutamos ajax
-        var brand = clicked_id;
-
+    function mostrar_productos() {
+        var id_grupo = $("#sel_grupo").val();
+        var id_linea = $("#sel_linea").val();
+        var id_marca = $("#sel_marca").val();
         //ejecutamos AJAX
         $.ajax
             ({
@@ -456,9 +458,9 @@
                 datatype: 'application/json',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    categoria: categoria,
-                    subcategoria: subcategoria,
-                    marca: brand
+                    categoria: id_grupo,
+                    subcategoria: id_linea,
+                    marca: id_marca
                 }),
                 success: function (result) {
                     //result.flag - result.lstNuevoCliente
@@ -471,16 +473,17 @@
                             estructura += '<div class="col-xl-2 col-md-3 col-sm-6">'
                             estructura += '<div class="dt-card text-center">'
                             estructura += '<div class="dt-card__header px-5 mb-4">'
-                            estructura += '<div class="dt-card__heading text-center">'
-                            estructura += '<div class="dt-separator-h-v1 mb-2"></div>'
-                            estructura += '<h3 class="mb-1">' + producto.Nombre_Producto + '</h3>'
-                            estructura += '<span class="d-inline-block text-primary">$' + producto.Costo + '</span>'
+                            estructura += '<div class="text-center" style="height:90px;">'
+                            //estructura += '<div class="dt-separator-h-v1 mb-2"></div>'
+                            estructura += '<h5 class="mb-1">' + producto.Nombre_Producto + '</h5>'
+                            estructura += '<h1 class="d-inline-block text-primary">$' + producto.Precio_Venta + '</h1>'
                             estructura += '</div>'
                             estructura += '</div>'
                             estructura += '<div class="dt-card__body px-5">'
-                            estructura += '<img class="img-fluid mb-7" src="~/Content/assets/images/widget/camera.jpg" alt="' + producto.Id_Producto + '">'
+                            
+                            estructura += '<img class="img-fluid mb-7" src="/Content/assets/images/no-image-icon.png" alt="' + producto.Id_Producto + '">'
                             estructura += '<div>'
-                            estructura += '<a href="javascript:void(0)" class="btn bg-brown text-uppercase text-white btn-sm">Add to Cart</a>'
+                            estructura += '<a href="#" data-toggle="modal" data-target="#form-modalProducto" class="btn bg-brown text-uppercase text-white btn-sm">Agregar a carrito</a>'
                             estructura += '</div>'
                             estructura += '</div>'
                             estructura += '</div>'
@@ -501,8 +504,10 @@
 
                         toasterror({
                             type: 'info',
-                            title: 'Ocurrio un error. ' + result.flag
+                            title: result.flag
                         });
+
+                        $("#listaproductos").html("");
                     }
 
 
@@ -526,12 +531,113 @@
 
     function brandfilter_clear() {
         $('.brandbtnsl').removeClass('btnsubsel');
+       
     }
+    var owl = $('.dt-card-carousel .owl-carousel');
+
+
+    function moveNext_slide() {
+        owl.trigger('next.owl.carousel');
+    }
+
+    function movePrev_slide() {
+        owl.trigger('prev.owl.carousel');
+    }
+
 
 
     $(document).ready(function () {
         $("#mainsub > *").css('display', 'none')
         $("#mainbrands > *").css('display', 'none')
+
+
+        $("#cantidad").bootstrapNumber();
     });
 
+    $("#codigobarras").bind('paste', function (e) {
+        var ctl = $(this);
+        setTimeout(function () {
+            buscarProducto();
+        }, 100);
+    });
+
+
+    function filter_linea() {
+        var id_grupo = $("#sel_grupo").val();
+        $("#listaproductos").html("");
+
+        $.ajax
+            ({
+                url: '/Invoices/Get_linea',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    id_grupo: id_grupo
+                }),
+                success: function (result) {
+
+                    $("#sel_linea").html("");
+                    $("#sel_marca").html("");
+                    $("#sel_linea").append($('<option></option>').val(0).html("Seleccione una Linea"))
+                    $.each($.parseJSON(result), function (i, linea) {
+
+                        $("#sel_linea").append($('<option data-grupo=' + linea.id_grupo + '></option>').val(linea.id_linea).html(linea.linea));
+                       
+                    }
+
+                    )
+
+                },
+                error: function () {
+                  
+                },
+            });
+
+
+
+    }
+
+    function filter_marca() {
+        var id_linea = $("#sel_linea").val();
+        var id_grupo = $("#sel_linea").find(':selected').attr('data-grupo')
+        $("#listaproductos").html("");
+        $.ajax
+            ({
+                url: '/Invoices/Get_marca',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    id_linea: id_linea,
+                    id_grupo: id_grupo
+                }),
+                success: function (result) {
+
+                    $("#sel_marca").html("");
+                    $("#sel_marca").append($('<option></option>').val(0).html("Seleccione una marca"))
+                    $.each($.parseJSON(result), function (i, marca) {
+
+                        $("#sel_marca").append($('<option data-linea=' + marca.id_linea + ' data-grupo=' + marca.id_grupo + '></option>').val(marca.id_marca).html(marca.marca));
+
+                    }
+
+                    )
+
+                },
+                error: function () {
+
+                },
+            });
+
+
+
+    }
+</script>
+
+<script type="text/javascript">
+    $(".disable-owl-swipe").on("touchstart mousedown", function (e) {
+        // Prevent carousel swipe
+        e.stopPropagation();
+    })
 </script>

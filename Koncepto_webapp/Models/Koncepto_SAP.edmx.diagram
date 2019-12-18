@@ -9,9 +9,9 @@
         <EntityTypeShape EntityType="DB_KONCEPTOModel.BI_Dim_Customers" Width="1.5" PointX="2.75" PointY="0.75" />
         <EntityTypeShape EntityType="DB_KONCEPTOModel.BI_Dim_Empleados" Width="1.5" PointX="4.75" PointY="0.75" />
         <EntityTypeShape EntityType="DB_KONCEPTOModel.BI_Dim_Productos" Width="1.5" PointX="4.75" PointY="3.75" />
-        <EntityTypeShape EntityType="DB_KONCEPTOModel.BI_Facturas_Detalle" Width="1.5" PointX="6.75" PointY="0.75" />
-        <EntityTypeShape EntityType="DB_KONCEPTOModel.BI_Facturas_Encabezado" Width="1.5" PointX="0.75" PointY="6.75" />
         <EntityTypeShape EntityType="DB_KONCEPTOModel.BI_Series" Width="1.5" PointX="6.75" PointY="4.75" />
+        <EntityTypeShape EntityType="DB_KONCEPTOModel.BI_Facturas_Detalle" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="DB_KONCEPTOModel.BI_Facturas_Encabezado" Width="1.5" PointX="7.75" PointY="7.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

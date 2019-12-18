@@ -14,7 +14,8 @@ namespace Koncepto_webapp.Models
     
     public partial class BI_Facturas_Detalle
     {
-        public Nullable<int> DocEntry { get; set; }
+        public int DocEntry { get; set; }
+        public string Id { get; set; }
         public string Id_Producto { get; set; }
         public Nullable<decimal> Unidades { get; set; }
         public decimal UdM_Compra { get; set; }

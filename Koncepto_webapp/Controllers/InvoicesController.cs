@@ -24,12 +24,31 @@ namespace Koncepto_webapp.Controllers
             public int? id_grupo { get; set; }
             public string grupo { get; set; }
         }
-        public class MyObj_SubCat
+        public class grupo_productos
+        {
+            public int? id_grupo { get; set; }
+            public string grupo { get; set; }
+        }
+        public class Linea
 
         {
-            public string id { get; set; }
-            public string name { get; set; }
-            public string category { get; set; }
+            public string id_linea { get; set; }
+            public string linea { get; set; }
+            public int? id_grupo { get; set; }
+            public string grupo { get; set; }
+
+
+        }
+
+        public class Marca
+
+        {
+            public string id_marca { get; set; }
+            public string marca { get; set; }
+            public string id_linea { get; set; }
+            public string linea { get; set; }
+            public int? id_grupo { get; set; }
+            public string grupo { get; set; }
 
         }
         public ActionResult Invoice_process()
@@ -49,17 +68,18 @@ namespace Koncepto_webapp.Controllers
                 ViewBag.grupoCliente = grupoCliente;
 
 
-                //var products = (from a in SAPkoncepto.BI_Dim_Productos where(a.Nombre_Producto != null && a.Linea != null && a.Marca != null) select a).ToList();
+               // var products = (from a in SAPkoncepto.BI_Dim_Productos where(a.Nombre_Producto != null && a.Linea != null && a.Marca != null) select a).ToList();
 
-                var lstCategories = (from a in SAPkoncepto.BI_Dim_Productos where (a.Nombre_Producto != null && a.Linea != null && a.Marca != null) select a.Grupo_Productos).Distinct().OrderBy(c => c).ToList();
+
+                var lstCategories = (from a in SAPkoncepto.BI_Dim_Productos where (a.Nombre_Producto != null && a.Linea != null && a.Marca != null && a.Id_Grupo_Productos != 100) select new grupo_productos { id_grupo = a.Id_Grupo_Productos, grupo = a.Grupo_Productos }).Distinct().OrderBy(c => c.grupo).ToList();
                 ViewBag.lstCategories = lstCategories;
 
-                var lstSubCategories = (from a in  SAPkoncepto.BI_Dim_Productos where (a.Nombre_Producto != null && a.Linea != null && a.Marca != null) select new MyObj_SubCat { id = a.Id_Linea, name = a.Linea, category = a.Grupo_Productos }).Distinct().OrderBy(c => c.name).ToList();
-                ViewBag.lstSubCategories = lstSubCategories;
+                //var lstSubCategories = (from a in SAPkoncepto.BI_Dim_Productos where (a.Nombre_Producto != null && a.Linea != null && a.Marca != null) select new Linea { id_linea = a.Id_Linea, linea = a.Linea, grupo = a.Grupo_Productos, id_grupo=a.Id_Grupo_Productos}).OrderBy(c => c.linea).ToList();
+                //ViewBag.lstSubCategories = lstSubCategories;
 
 
-                var lstBrands = (from a in SAPkoncepto.BI_Dim_Productos where (a.Nombre_Producto != null && a.Linea != null && a.Marca != null) select new MyObj_SubCat { id = a.Id_Marca, name = a.Marca, category =a.Linea }).Distinct().OrderBy(c => c.name).ToList();
-                ViewBag.lstBrands = lstBrands;
+                //var lstBrands = (from a in SAPkoncepto.BI_Dim_Productos where (a.Nombre_Producto != null && a.Linea != null && a.Marca != null) select new Marca { id_marca = a.Id_Marca, marca = a.Marca, linea = a.Linea,id_linea=a.Id_Linea, grupo=a.Grupo_Productos, id_grupo=a.Id_Grupo_Productos }).OrderBy(c => c.marca).ToList();
+                //ViewBag.lstBrands = lstBrands;
 
 
 
@@ -216,16 +236,16 @@ namespace Koncepto_webapp.Controllers
 
 
         }
-        public ActionResult product_searchasistente(string categoria, string subcategoria, string marca)
+        public ActionResult product_searchasistente(int categoria, string subcategoria, string marca)
         {
 
             try
             {
-                var product = SAPkoncepto.BI_Dim_Productos.Where(a => a.Grupo_Productos.Contains(categoria) && a.Linea.Contains(subcategoria) && a.Marca.Contains(marca)).ToList();
+                var product = SAPkoncepto.BI_Dim_Productos.Where(a => a.Id_Grupo_Productos ==categoria && a.Id_Linea.Contains(subcategoria) && a.Marca ==marca && a.Activo=="Y").ToList();
 
                 if (product.Count() <= 0)
                 {
-                    var result = new { flag = "Producto no encontrado." };
+                    var result = new { flag = "Producto(s) no encontrado(s)." };
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
                 else
@@ -247,6 +267,50 @@ namespace Koncepto_webapp.Controllers
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
 
+
+        }
+
+        public ActionResult Get_linea(int? id_grupo)
+        {
+            try
+            {
+                    var lst_linea = SAPkoncepto.BI_Dim_Productos
+                            .Where(i => i.Id_Grupo_Productos == id_grupo && i.Id_Linea !=null)
+                            .Select(i => new Linea { id_linea = i.Id_Linea, linea = i.Linea, grupo=i.Grupo_Productos, id_grupo=i.Id_Grupo_Productos})
+                            .Distinct()
+                            .OrderBy(i => i.linea)
+                            .ToList();
+                    JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                    string result = javaScriptSerializer.Serialize(lst_linea);
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                
+            }
+            catch
+            {
+                return Json("error", JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public ActionResult Get_marca(string id_linea, int? id_grupo)
+        {
+            try
+            {
+                var lst_linea = SAPkoncepto.BI_Dim_Productos
+                        .Where(i => i.Id_Linea == id_linea && i.Id_Grupo_Productos==id_grupo && i.Id_Marca !=null)
+                        .Select(i => new Marca {id_marca=i.Marca, marca=i.Marca, id_linea = i.Id_Linea, linea = i.Linea, grupo = i.Grupo_Productos, id_grupo = i.Id_Grupo_Productos })
+                        .Distinct()
+                        .OrderBy(i => i.marca)
+                        .ToList();
+                JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                string result = javaScriptSerializer.Serialize(lst_linea);
+                return Json(result, JsonRequestBehavior.AllowGet);
+
+            }
+            catch
+            {
+                return Json("error", JsonRequestBehavior.AllowGet);
+            }
 
         }
     }

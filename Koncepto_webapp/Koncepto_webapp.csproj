@@ -271,6 +271,7 @@
     <Content Include="Content\assets\images\icon\icon-youtube.png" />
     <Content Include="Content\assets\images\koncepto\logokoncepto.png" />
     <Content Include="Content\assets\images\koncepto\logowithoutbackground.png" />
+    <Content Include="Content\assets\images\no-image-icon.png" />
     <Content Include="Content\assets\images\patterns\pattern1.png" />
     <Content Include="Content\assets\images\patterns\pattern2.png" />
     <Content Include="Content\assets\images\patterns\pattern3.png" />
@@ -287,6 +288,7 @@
     <Content Include="Content\assets\images\widget\study-1.png" />
     <Content Include="Content\assets\images\widget\study-2.png" />
     <Content Include="Content\assets\images\widget\study-3.png" />
+    <Content Include="Content\assets\js\bootstrap-number-input.js" />
     <Content Include="Content\assets\js\customizer.js" />
     <Content Include="Content\assets\js\custom\advance-plugins.js" />
     <Content Include="Content\assets\js\custom\apps\app.js" />

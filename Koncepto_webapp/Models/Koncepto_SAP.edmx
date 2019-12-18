@@ -88,6 +88,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Dim_Productos' does not have a 
           <Property Name="Imagen" Type="nvarchar" MaxLength="200" />
           <Property Name="Ruta_Imagen" Type="varchar" MaxLength="39" Nullable="false" />
           <Property Name="Costo" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Precio_Venta" Type="numeric" Precision="19" Scale="6" />
           <Property Name="Id_Linea" Type="nvarchar" MaxLength="50" />
           <Property Name="Linea" Type="nvarchar" MaxLength="100" />
           <Property Name="Codigo_Anterior" Type="nvarchar" MaxLength="20" />
@@ -100,14 +101,16 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Dim_Productos' does not have a 
 warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Facturas_Detalle' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BI_Facturas_Detalle">
           <Key>
+            <PropertyRef Name="DocEntry" />
             <PropertyRef Name="UdM_Compra" />
           </Key>
-          <Property Name="DocEntry" Type="int" />
+          <Property Name="DocEntry" Type="int" Nullable="false" />
+          <Property Name="Id" Type="nvarchar" MaxLength="106" />
           <Property Name="Id_Producto" Type="nvarchar" MaxLength="50" />
           <Property Name="Unidades" Type="numeric" Precision="19" Scale="6" />
           <Property Name="UdM_Compra" Type="numeric" Precision="19" Scale="6" Nullable="false" />
           <Property Name="Unidades_Venta" Type="numeric" Precision="19" Scale="6" />
-          <Property Name="Total_Venta" Type="numeric" Precision="38" Scale="10" />
+          <Property Name="Total_Venta" Type="numeric" Precision="38" Scale="6" />
           <Property Name="Total_Ganancia" Type="numeric" Precision="19" Scale="6" />
           <Property Name="Total_Costo" Type="numeric" Precision="19" Scale="6" />
           <Property Name="Precio_Venta" Type="numeric" Precision="19" Scale="6" />
@@ -118,9 +121,11 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Facturas_Detalle' does not have
 warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Facturas_Encabezado' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BI_Facturas_Encabezado">
           <Key>
+            <PropertyRef Name="DocEntry" />
             <PropertyRef Name="Tipo" />
           </Key>
-          <Property Name="DocEntry" Type="int" />
+          <Property Name="DocEntry" Type="int" Nullable="false" />
+          <Property Name="ID" Type="nvarchar" MaxLength="106" />
           <Property Name="Fecha" Type="datetime" />
           <Property Name="NoDoc" Type="int" />
           <Property Name="Tipo" Type="varchar" MaxLength="3" Nullable="false" />
@@ -219,6 +224,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
     [BI_Dim_Productos].[Imagen] AS [Imagen], 
     [BI_Dim_Productos].[Ruta_Imagen] AS [Ruta_Imagen], 
     [BI_Dim_Productos].[Costo] AS [Costo], 
+    [BI_Dim_Productos].[Precio_Venta] AS [Precio_Venta], 
     [BI_Dim_Productos].[Id_Linea] AS [Id_Linea], 
     [BI_Dim_Productos].[Linea] AS [Linea], 
     [BI_Dim_Productos].[Codigo_Anterior] AS [Codigo_Anterior], 
@@ -231,6 +237,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <EntitySet Name="BI_Facturas_Detalle" EntityType="Self.BI_Facturas_Detalle" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [BI_Facturas_Detalle].[DocEntry] AS [DocEntry], 
+    [BI_Facturas_Detalle].[Id] AS [Id], 
     [BI_Facturas_Detalle].[Id_Producto] AS [Id_Producto], 
     [BI_Facturas_Detalle].[Unidades] AS [Unidades], 
     [BI_Facturas_Detalle].[UdM_Compra] AS [UdM_Compra], 
@@ -246,6 +253,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <EntitySet Name="BI_Facturas_Encabezado" EntityType="Self.BI_Facturas_Encabezado" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [BI_Facturas_Encabezado].[DocEntry] AS [DocEntry], 
+    [BI_Facturas_Encabezado].[ID] AS [ID], 
     [BI_Facturas_Encabezado].[Fecha] AS [Fecha], 
     [BI_Facturas_Encabezado].[NoDoc] AS [NoDoc], 
     [BI_Facturas_Encabezado].[Tipo] AS [Tipo], 
@@ -286,9 +294,9 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <EntitySet Name="BI_Dim_Customers" EntityType="DB_KONCEPTOModel.BI_Dim_Customers" />
           <EntitySet Name="BI_Dim_Empleados" EntityType="DB_KONCEPTOModel.BI_Dim_Empleados" />
           <EntitySet Name="BI_Dim_Productos" EntityType="DB_KONCEPTOModel.BI_Dim_Productos" />
+          <EntitySet Name="BI_Series" EntityType="DB_KONCEPTOModel.BI_Series" />
           <EntitySet Name="BI_Facturas_Detalle" EntityType="DB_KONCEPTOModel.BI_Facturas_Detalle" />
           <EntitySet Name="BI_Facturas_Encabezado" EntityType="DB_KONCEPTOModel.BI_Facturas_Encabezado" />
-          <EntitySet Name="BI_Series" EntityType="DB_KONCEPTOModel.BI_Series" />
         </EntityContainer>
         <EntityType Name="BI_Cuentas_por_cobrar">
           <Key>
@@ -372,17 +380,31 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <Property Name="Id_Marca" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Marca" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Activo" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Precio_Venta" Type="Decimal" Precision="19" Scale="6" />
+        </EntityType>
+        <EntityType Name="BI_Series">
+          <Key>
+            <PropertyRef Name="Id_Serie" />
+            <PropertyRef Name="Cod_Serie" />
+            <PropertyRef Name="Tipo_Doc" />
+          </Key>
+          <Property Name="Id_Serie" Type="Int32" Nullable="false" />
+          <Property Name="Cod_Serie" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Serie" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Tipo_Doc" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="BI_Facturas_Detalle">
           <Key>
+            <PropertyRef Name="DocEntry" />
             <PropertyRef Name="UdM_Compra" />
           </Key>
-          <Property Name="DocEntry" Type="Int32" />
+          <Property Name="DocEntry" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="String" MaxLength="106" FixedLength="false" Unicode="true" />
           <Property Name="Id_Producto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Unidades" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="UdM_Compra" Type="Decimal" Nullable="false" Precision="19" Scale="6" />
           <Property Name="Unidades_Venta" Type="Decimal" Precision="19" Scale="6" />
-          <Property Name="Total_Venta" Type="Decimal" Precision="38" Scale="10" />
+          <Property Name="Total_Venta" Type="Decimal" Precision="38" Scale="6" />
           <Property Name="Total_Ganancia" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="Total_Costo" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="Precio_Venta" Type="Decimal" Precision="19" Scale="6" />
@@ -391,9 +413,11 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
         </EntityType>
         <EntityType Name="BI_Facturas_Encabezado">
           <Key>
+            <PropertyRef Name="DocEntry" />
             <PropertyRef Name="Tipo" />
           </Key>
-          <Property Name="DocEntry" Type="Int32" />
+          <Property Name="DocEntry" Type="Int32" Nullable="false" />
+          <Property Name="ID" Type="String" MaxLength="106" FixedLength="false" Unicode="true" />
           <Property Name="Fecha" Type="DateTime" Precision="3" />
           <Property Name="NoDoc" Type="Int32" />
           <Property Name="Tipo" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
@@ -414,17 +438,6 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <Property Name="TipoDoc_Interno" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
           <Property Name="Cliente" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Hora_Fac" Type="Int16" />
-        </EntityType>
-        <EntityType Name="BI_Series">
-          <Key>
-            <PropertyRef Name="Id_Serie" />
-            <PropertyRef Name="Cod_Serie" />
-            <PropertyRef Name="Tipo_Doc" />
-          </Key>
-          <Property Name="Id_Serie" Type="Int32" Nullable="false" />
-          <Property Name="Cod_Serie" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="Serie" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Tipo_Doc" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -491,6 +504,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <EntitySetMapping Name="BI_Dim_Productos">
             <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Dim_Productos">
               <MappingFragment StoreEntitySet="BI_Dim_Productos">
+                <ScalarProperty Name="Precio_Venta" ColumnName="Precio_Venta" />
                 <ScalarProperty Name="Activo" ColumnName="Activo" />
                 <ScalarProperty Name="Marca" ColumnName="Marca" />
                 <ScalarProperty Name="Id_Marca" ColumnName="Id_Marca" />
@@ -512,6 +526,16 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="BI_Series">
+            <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Series">
+              <MappingFragment StoreEntitySet="BI_Series">
+                <ScalarProperty Name="Tipo_Doc" ColumnName="Tipo_Doc" />
+                <ScalarProperty Name="Serie" ColumnName="Serie" />
+                <ScalarProperty Name="Cod_Serie" ColumnName="Cod_Serie" />
+                <ScalarProperty Name="Id_Serie" ColumnName="Id_Serie" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="BI_Facturas_Detalle">
             <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Facturas_Detalle">
               <MappingFragment StoreEntitySet="BI_Facturas_Detalle">
@@ -525,6 +549,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
                 <ScalarProperty Name="UdM_Compra" ColumnName="UdM_Compra" />
                 <ScalarProperty Name="Unidades" ColumnName="Unidades" />
                 <ScalarProperty Name="Id_Producto" ColumnName="Id_Producto" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="DocEntry" ColumnName="DocEntry" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -552,17 +577,8 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
                 <ScalarProperty Name="Tipo" ColumnName="Tipo" />
                 <ScalarProperty Name="NoDoc" ColumnName="NoDoc" />
                 <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DocEntry" ColumnName="DocEntry" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BI_Series">
-            <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Series">
-              <MappingFragment StoreEntitySet="BI_Series">
-                <ScalarProperty Name="Tipo_Doc" ColumnName="Tipo_Doc" />
-                <ScalarProperty Name="Serie" ColumnName="Serie" />
-                <ScalarProperty Name="Cod_Serie" ColumnName="Cod_Serie" />
-                <ScalarProperty Name="Id_Serie" ColumnName="Id_Serie" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

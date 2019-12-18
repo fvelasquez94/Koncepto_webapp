@@ -32,5 +32,6 @@ namespace Koncepto_webapp.Models
         public string Id_Marca { get; set; }
         public string Marca { get; set; }
         public string Activo { get; set; }
+        public Nullable<decimal> Precio_Venta { get; set; }
     }
 }
