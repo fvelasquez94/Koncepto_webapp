@@ -339,14 +339,14 @@
 
                                 estructura += '<img class="img-fluid mb-7" src="/Content/assets/images/no-image-icon.png" alt="' + producto.Id_Producto + '">'
                                 estructura += '<div>'
-                                estructura += '<a href="#" data-toggle="modal" data-target="#form-modalProducto" class="btn bg-brown text-uppercase text-white btn-sm">Agregar a carrito</a>'
+                                estructura += '<a href="#" data-idproducto="' + producto.Id_Producto + '" data-precioproducto="' + producto.Precio_Venta + '" data-nombreproducto="' + producto.Nombre_Producto + '" data-toggle="modal" data-target="#form-modalProducto" class="btn bg-brown text-uppercase text-white btn-sm">Agregar a carrito</a>'
                                 estructura += '</div>'
                                 estructura += '</div>'
                                 estructura += '</div>'
                                 estructura += '</div>'
 
                                 $("#listaproductos").append(estructura);
-
+                                
                             }
                             )
 
@@ -483,7 +483,7 @@
                             
                             estructura += '<img class="img-fluid mb-7" src="/Content/assets/images/no-image-icon.png" alt="' + producto.Id_Producto + '">'
                             estructura += '<div>'
-                            estructura += '<a href="#" data-toggle="modal" data-target="#form-modalProducto" class="btn bg-brown text-uppercase text-white btn-sm">Agregar a carrito</a>'
+                            estructura += '<a href="#" data-idproducto="' + producto.Id_Producto +'" data-precioproducto="' + producto.Precio_Venta +'" data-nombreproducto="' + producto.Nombre_Producto +'" data-toggle="modal" data-target="#form-modalProducto" class="btn bg-brown text-uppercase text-white btn-sm">Agregar a carrito</a>'
                             estructura += '</div>'
                             estructura += '</div>'
                             estructura += '</div>'
@@ -537,7 +537,9 @@
 
 
     function moveNext_slide() {
+    
         owl.trigger('next.owl.carousel');
+    
     }
 
     function movePrev_slide() {
@@ -552,6 +554,7 @@
 
 
         $("#cantidad").bootstrapNumber();
+    
     });
 
     $("#codigobarras").bind('paste', function (e) {
@@ -640,4 +643,186 @@
         // Prevent carousel swipe
         e.stopPropagation();
     })
+
+
+    //MODAL SCRIPT
+
+    $('#form-modalProducto').on('show.bs.modal', function (event) {
+
+        var button = $(event.relatedTarget);// Button that triggered the modal
+
+        var idproducto = button.data("idproducto");// Extract info from data-* attributes
+        var producto = button.data("nombreproducto");// Extract info from data-* attributes
+        var precio = button.data("precioproducto");
+
+        var modal = $(this);
+
+        $("#modal_titulo").text(producto);
+        $("#precio_modal").text(precio);
+        $("#precio_modalsub").text(precio);
+        $("#total_modal").text(precio);
+        $("#total_modalsub").text(precio);
+        $("#idproducto").val(idproducto);
+        $("#preciofijo").val(precio);
+      
+    });
+
+
+    $("#cantidad").on("change", function () {
+        var cantidad = parseInt($("#cantidad").val());
+        var precio = parseFloat($("#preciofijo").val());
+        var preciofijo = parseFloat($("#preciofijo").val());
+        var descuento = parseFloat($("#descuento").val());
+        var subtotal = parseFloat(cantidad * precio);
+        $("#precio_modalsub").text(precio);
+        $("#total_modalsub").text(subtotal.toFixed(2));
+        $("#cantidad_modalsub").text(cantidad);
+
+
+        if (isNaN(descuento) || descuento == "" || descuento == "0.0") {
+
+            $("#total_modalsub").text(subtotal.toFixed(2));
+
+            $("#cantidad_modal").text(cantidad);
+            $("#descuento_total").text("0.00");
+            $("#total_modal").text(subtotal.toFixed(2));
+        } else {
+            precio = parseFloat(precio - (precio * (descuento / 100)));
+            var descuentoprecio = parseFloat((preciofijo * (descuento / 100)));
+            $("#descuento_total").text(descuentoprecio.toFixed(2));
+            var total = parseFloat(cantidad * precio);
+            $("#precio_modal").text(precio.toFixed(2));
+            $("#total_modal").text(total.toFixed(2));
+        }
+
+
+    })
+    $("#descuento").on("change", function () {
+        var cantidad = parseInt($("#cantidad").val());
+        var precio = parseFloat($("#preciofijo").val());
+        var preciofijo = parseFloat($("#preciofijo").val());
+        var descuento = parseFloat($("#descuento").val());
+        var subtotal = parseFloat(cantidad * precio);
+        $("#precio_modalsub").text(precio);
+        $("#total_modalsub").text(subtotal.toFixed(2));
+        $("#cantidad_modalsub").text(cantidad);
+
+
+        if (isNaN(descuento) || descuento == "" || descuento == "0.0") {
+
+            $("#total_modalsub").text(subtotal.toFixed(2));
+
+            $("#cantidad_modal").text(cantidad);
+            $("#descuento_total").text("0.00");
+            $("#total_modal").text(subtotal.toFixed(2));
+        } else {
+            precio = parseFloat(precio - (precio * (descuento / 100)));
+            var descuentoprecio = parseFloat((preciofijo * (descuento / 100)));
+            $("#descuento_total").text(descuentoprecio.toFixed(2));
+            var total = parseFloat(cantidad * precio);
+            $("#precio_modal").text(precio.toFixed(2));
+            $("#total_modal").text(total.toFixed(2));
+        }
+
+    })
+
+
+    function limpiarAgregar() {
+        $("#cantidad_modal").text("0");
+        $("#cantidad").val(1);
+
+        $("#total_modal").text("0.00");
+    }
+
+    function agregarCarrito() {
+        var idproducto = $("#idproducto").val();
+        var nombreproducto = $("#modal_titulo").text();
+        var cantidad = $("#cantidad_modal").text();
+        var precio = $("#precio_modal").text();
+        var total = $("#total_modal").text();
+
+        //Agregar a carrito de compras
+        var item_widget = "";
+        item_widget += '<div class="dt-widget__item" id="widget_' + idproducto + '">';
+        item_widget += '<div class="dt-widget__img"><img class="img-fluid" style="height:60px; width:60px;" src="https://via.placeholder.com/115x58"alt="Logo"></div>';
+        item_widget += '<div class="dt-widget__info text-truncate">';
+        item_widget += '<div class="dt-widget__title text-truncate"><a href="javascript:void(0);">' + nombreproducto +'</a></div>';
+        item_widget += '<p class="dt-widget__subtitle text-truncate">$' + precio + ' x ' + cantidad + '</p>';
+        item_widget += '<p class="dt-widget__subtitle text-truncate">Total: $<p class="totalwidget">' + total + '</p></p>';
+        item_widget += '</div>';
+        item_widget += '<div class="dt-widget__extra">';
+        item_widget += '<div class="hide-content">';
+        item_widget += '<div class="action-btn-group">';
+        item_widget += '<button id="wbtn_' + idproducto + '" onclick="eliminarwidget(this.id)" class="btn btn-default text-danger dt-fab-btn"><i class="icon icon-circle-remove-o icon-1x"></i></button>';
+        item_widget += ' </div>';
+        item_widget += '</div>';
+        item_widget += '</div>';
+        item_widget += '</div>';
+
+        $("#widgetprincipal").append(item_widget);
+        $('#form-modalProducto').modal('hide');
+        
+        //Agregar a listado final
+        var rowdt = "";
+
+
+
+
+        //final
+        limpiarAgregar();
+        $("#iconshop").addClass("animation-customizer")
+
+        sumarTotal();
+
+    }
+
+    function eliminarwidget(id) {
+        var idbtn = id;      
+        var idwidget = "#widget_" + idbtn.substring(5);
+        $(idwidget).remove();
+
+        contar_widgetshop();
+        sumarTotal();
+    }
+
+    function contar_widgetshop() {
+        var existe = $(".dt-widget__item").length;
+
+        if (existe > 0) {
+
+        } else {
+            $("#iconshop").removeClass("animation-customizer")
+        }
+
+    }
+    function moveNext_slidecheckout() {
+        var existe = $(".dt-widget__item").length;
+
+        if (existe > 0) {
+            owl.trigger('next.owl.carousel');
+        } else {
+            var toasterror = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            toasterror({
+                type: 'info',
+                title: 'Agregue al menos un producto.'
+            });
+        }
+
+           
+    }
+    function sumarTotal() {
+        var total = 0.0;
+        $.each($('.totalwidget'), function () {
+            total += parseFloat($(this).text());
+        });
+
+
+        $("#totalorden_shopcart").text(total.toFixed(2));
+    }
 </script>
