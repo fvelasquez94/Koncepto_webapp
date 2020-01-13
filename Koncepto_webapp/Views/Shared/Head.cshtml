@@ -6,6 +6,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 <meta name="description" content="Drift - A fully responsive, HTML5 based admin template">
 <meta name="keywords" content="Responsive, HTML5, admin theme, business, professional, jQuery, web design, CSS3, sass">
 <!-- /meta tags -->
@@ -112,6 +113,91 @@
                 }
 
                 table#table_facturas td:last-child {
+                    border-bottom: 0;
+                }
+    }
+    /**/
+    /*END DATATABLES*/    
+    /*DATATABLES*/
+    table#prodfacturar {
+        border-collapse: collapse;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+        table#prodfacturar tr {
+            padding: .35em;
+        }
+
+        table#prodfacturar th, table td {
+            padding: .625em;
+            text-align: left;
+        }
+
+        table#prodfacturar th {
+            font-size: .9em;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        table#prodfacturar td {
+            font-size: .3em;
+        }
+    /**/
+    @@media screen and (max-width: 2000px) {
+
+        table#prodfacturar td {
+            font-size: .9em;
+        }
+    }
+
+    @@media screen and (max-width: 850px) {
+        table#prodfacturar th {
+            font-size: .8em;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        table#prodfacturar td {
+            font-size: .7em;
+        }
+    }
+
+
+
+    /**/
+    @@media screen and (max-width: 530px) {
+
+        table#prodfacturar {
+            border: 0;
+        }
+
+            table#prodfacturar thead {
+                display: none;
+            }
+
+            table#prodfacturar tr {
+                border-bottom: 3px solid #ddd;
+                display: block;
+                margin-bottom: 2.625em;
+            }
+
+            table#prodfacturar td {
+                border-bottom: 1px solid #ddd;
+                display: block;
+                font-size: .8em;
+                text-align: right;
+            }
+
+                table#prodfacturar td:before {
+                    content: attr(data-label);
+                    float: left;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                }
+
+                table#prodfacturar td:last-child {
                     border-bottom: 0;
                 }
     }

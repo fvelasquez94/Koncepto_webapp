@@ -1,96 +1,299 @@
+    /**
+     * Author and copyright: Stefan Haack (https://shaack.com)
+     * Repository: https://github.com/shaack/bootstrap-input-spinner
+     * License: MIT, see file 'LICENSE'
+     */
 
-/* ========================================================================
- * bootstrap-spin - v1.0
- * https://github.com/wpic/bootstrap-spin
- * ========================================================================
- * Copyright 2014 WPIC, Hamed Abdollahpour
- *
- * ========================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ========================================================================
- */
-var creado = 0;
-(function ( $ ) {
+    ; (function ($) {
+        "use strict"
 
-	$.fn.bootstrapNumber = function( options ) {
-     
-		var settings = $.extend({
-			upClass: 'primary',
-			downClass: 'primary',
-			upText: '+',
-			downText: '-',
-			center: true
-			}, options );
-
-		return this.each(function(e) {
-			var self = $(this);
-			var clone = self.clone(true, true);
-
-			var min = self.attr('min');
-			var max = self.attr('max');
-			var step = parseInt(self.attr('step')) || 1;
-
-			function setText(n) {
-				if (isNaN(n) || (min && n < min) || (max && n > max)) {
-					return false;
-				}
-
-				clone.focus().val(n);
-				clone.trigger('change');
-				return true;
-			}
-            if ($('#btndown')) {
-                $("#btndown").remove();
-            }
-            if ($('#btnup')) {
-                $("#btnup").remove();
-            }
-                var group = $("<div class='input-group'></div>");
-                var down = $("<button type='button' id='btndown'>" + settings.downText + "</button>").attr('class', 'btn btn-' + settings.downClass).click(function () {
-                    setText(parseInt(clone.val() || clone.attr('value')) - step);
-                });
-                var up = $("<button type='button' id='btnup'>" + settings.upText + "</button>").attr('class', 'btn btn-' + settings.upClass).click(function () {
-                    setText(parseInt(clone.val() || clone.attr('value')) + step);
-                });
-                $("<span class='input-group-btn'></span>").append(down).appendTo(group);
-                clone.appendTo(group);
-                if (clone && settings.center) {
-                    clone.css('text-align', 'center');
+        var triggerKeyPressed = false
+        var originalVal = $.fn.val
+        $.fn.val = function (value) {
+            if (arguments.length >= 1) {
+                if (this[0] && this[0]["bootstrap-input-spinner"] && this[0].setValue) {
+                    var element = this[0]
+                    setTimeout(function () {
+                        element.setValue(value)
+                    })
                 }
-                $("<span class='input-group-btn'></span>").append(up).appendTo(group);
+            }
+            return originalVal.apply(this, arguments)
+        }
 
-                // remove spins from original
-                clone.prop('type', 'text').keydown(function (e) {
-                    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
-                        (e.keyCode == 65 && e.ctrlKey === true) ||
-                        (e.keyCode >= 35 && e.keyCode <= 39)) {
-                        return;
+        $.fn.InputSpinner = $.fn.inputSpinner = function (options) {
+
+            var config = {
+                decrementButton: "<strong>-</strong>", // button text
+                incrementButton: "<strong>+</strong>", // ..
+                groupClass: "", // css class of the resulting input-group
+                buttonsClass: "btn-outline-secondary",
+                buttonsWidth: "2.5rem",
+                textAlign: "center",
+                autoDelay: 500, // ms holding before auto value change
+                autoInterval: 100, // speed of auto value change
+                boostThreshold: 10, // boost after these steps
+                boostMultiplier: "auto" // you can also set a constant number as multiplier
+            }
+            for (var option in options) {
+                config[option] = options[option]
+            }
+
+            var html = '<div class="input-group ' + config.groupClass + '">' +
+                '<div class="input-group-prepend">' +
+                '<button style="min-width: ' + config.buttonsWidth + '" class="btn btn-decrement ' + config.buttonsClass + '" type="button">' + config.decrementButton + '</button>' +
+                '</div>' +
+                '<input type="text" inputmode="decimal" style="text-align: ' + config.textAlign + '" class="form-control"/>' +
+                '<div class="input-group-append">' +
+                '<button style="min-width: ' + config.buttonsWidth + '" class="btn btn-increment ' + config.buttonsClass + '" type="button">' + config.incrementButton + '</button>' +
+                '</div>' +
+                '</div>'
+
+            var locale = navigator.language || "en-US"
+
+            this.each(function () {
+
+                var $original = $(this)
+                $original[0]["bootstrap-input-spinner"] = true
+                $original.hide()
+
+                var autoDelayHandler = null
+                var autoIntervalHandler = null
+                var autoMultiplier = config.boostMultiplier === "auto"
+                var boostMultiplier = autoMultiplier ? 1 : config.boostMultiplier
+
+                var $inputGroup = $(html)
+                var $buttonDecrement = $inputGroup.find(".btn-decrement")
+                var $buttonIncrement = $inputGroup.find(".btn-increment")
+                var $input = $inputGroup.find("input")
+
+                var min = null
+                var max = null
+                var step = null
+                var stepMax = null
+                var decimals = null
+                var digitGrouping = null
+                var numberFormat = null
+
+                updateAttributes()
+
+                var value = parseFloat($original[0].value)
+                var boostStepsCount = 0
+
+                var prefix = $original.attr("data-prefix") || ""
+                var suffix = $original.attr("data-suffix") || ""
+
+                if (prefix) {
+                    var prefixElement = $('<span class="input-group-text">' + prefix + '</span>')
+                    $inputGroup.find(".input-group-prepend").append(prefixElement)
+                }
+                if (suffix) {
+                    var suffixElement = $('<span class="input-group-text">' + suffix + '</span>')
+                    $inputGroup.find(".input-group-append").prepend(suffixElement)
+                }
+
+                $original[0].setValue = function (newValue) {
+                    setValue(newValue)
+                }
+
+                var observer = new MutationObserver(function () {
+                    updateAttributes()
+                    setValue(value, true)
+                })
+                observer.observe($original[0], { attributes: true })
+
+                $original.after($inputGroup)
+
+                setValue(value)
+
+                $input.on("paste input change focusout", function (event) {
+                    var newValue = $input[0].value
+                    var focusOut = event.type === "focusout"
+                    newValue = parseLocaleNumber(newValue)
+                    setValue(newValue, focusOut)
+                    dispatchEvent($original, event.type)
+                })
+
+                onPointerDown($buttonDecrement[0], function () {
+                    stepHandling(-step)
+                })
+                onPointerDown($buttonIncrement[0], function () {
+                    stepHandling(step)
+                })
+                onPointerUp(document.body, function () {
+                    resetTimer()
+                })
+
+                function setValue(newValue, updateInput) {
+                    if (updateInput === undefined) {
+                        updateInput = true
                     }
-                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                        e.preventDefault();
+                    if (isNaN(newValue) || newValue === "") {
+                        $original[0].value = ""
+                        if (updateInput) {
+                            $input[0].value = ""
+                        }
+                        value = NaN
+                    } else {
+                        newValue = parseFloat(newValue)
+                        newValue = Math.min(Math.max(newValue, min), max)
+                        newValue = Math.round(newValue * Math.pow(10, decimals)) / Math.pow(10, decimals)
+                        $original[0].value = newValue
+                        if (updateInput) {
+                            $input[0].value = numberFormat.format(newValue)
+                        }
+                        value = newValue
                     }
+                }
 
-                    var c = String.fromCharCode(e.which);
-                    var n = parseInt(clone.val() + c);
-
-                    if ((min && n < min) || (max && n > max)) {
-                        e.preventDefault();
+                function dispatchEvent($element, type) {
+                    if (type) {
+                        setTimeout(function () {
+                            var event
+                            if (typeof (Event) === 'function') {
+                                event = new Event(type, { bubbles: true })
+                            } else { // IE
+                                event = document.createEvent('Event')
+                                event.initEvent(type, true, true)
+                            }
+                            $element[0].dispatchEvent(event)
+                        })
                     }
-                });
+                }
 
-                self.replaceWith(group);
-           
+                function stepHandling(step) {
+                    if (!$input[0].disabled && !$input[0].readOnly) {
+                        calcStep(step)
+                        resetTimer()
+                        autoDelayHandler = setTimeout(function () {
+                            autoIntervalHandler = setInterval(function () {
+                                if (boostStepsCount > config.boostThreshold) {
+                                    if (autoMultiplier) {
+                                        calcStep(step * parseInt(boostMultiplier, 10))
+                                        if (boostMultiplier < 100000000) {
+                                            boostMultiplier = boostMultiplier * 1.1
+                                        }
+                                        if (stepMax) {
+                                            boostMultiplier = Math.min(stepMax, boostMultiplier)
+                                        }
+                                    } else {
+                                        calcStep(step * boostMultiplier)
+                                    }
+                                } else {
+                                    calcStep(step)
+                                }
+                                boostStepsCount++
+                            }, config.autoInterval)
+                        }, config.autoDelay)
+                    }
+                }
 
-		});
-	};
-} ( jQuery ));
+                function calcStep(step) {
+                    if (isNaN(value)) {
+                        value = 0
+                    }
+                    setValue(Math.round(value / step) * step + step)
+                    dispatchEvent($original, "input")
+                    dispatchEvent($original, "change")
+                }
+
+                function resetTimer() {
+                    boostStepsCount = 0
+                    boostMultiplier = boostMultiplier = autoMultiplier ? 1 : config.boostMultiplier
+                    clearTimeout(autoDelayHandler)
+                    clearTimeout(autoIntervalHandler)
+                }
+
+                function updateAttributes() {
+                    // copy properties from original to the new input
+                    $input.prop("required", $original.prop("required"))
+                    $input.prop("placeholder", $original.prop("placeholder"))
+                    $input.attr("inputmode", $original.attr("inputmode") || "decimal")
+                    var disabled = $original.prop("disabled")
+                    var readonly = $original.prop("readonly")
+                    $input.prop("disabled", disabled)
+                    $input.prop("readonly", readonly)
+                    $buttonIncrement.prop("disabled", disabled || readonly)
+                    $buttonDecrement.prop("disabled", disabled || readonly)
+                    if (disabled || readonly) {
+                        resetTimer()
+                    }
+                    var originalClass = $original.prop("class")
+                    var groupClass = ""
+                    // sizing
+                    if (/form-control-sm/g.test(originalClass)) {
+                        groupClass = "input-group-sm"
+                    } else if (/form-control-lg/g.test(originalClass)) {
+                        groupClass = "input-group-lg"
+                    }
+                    var inputClass = originalClass.replace(/form-control(-(sm|lg))?/g, "")
+                    $inputGroup.prop("class", "input-group " + groupClass + " " + config.groupClass)
+                    $input.prop("class", "form-control " + inputClass)
+
+                    // update the main attributes
+                    min = parseFloat($original.prop("min")) || 0
+                    max = isNaN($original.prop("max")) || $original.prop("max") === "" ? Infinity : parseFloat($original.prop("max"))
+                    step = parseFloat($original.prop("step")) || 1
+                    stepMax = parseInt($original.attr("data-step-max")) || 0
+                    var newDecimals = parseInt($original.attr("data-decimals")) || 0
+                    var newDigitGrouping = !($original.attr("data-digit-grouping") === "false")
+                    if (decimals !== newDecimals || digitGrouping !== newDigitGrouping) {
+                        decimals = newDecimals
+                        digitGrouping = newDigitGrouping
+                        numberFormat = new Intl.NumberFormat(locale, {
+                            minimumFractionDigits: decimals,
+                            maximumFractionDigits: decimals,
+                            useGrouping: digitGrouping
+                        })
+                    }
+                }
+
+                function parseLocaleNumber(stringNumber) {
+                    var numberFormat = new Intl.NumberFormat(locale)
+                    var thousandSeparator = numberFormat.format(1111).replace(/1/g, '')
+                    var decimalSeparator = numberFormat.format(1.1).replace(/1/g, '')
+                    return parseFloat(stringNumber
+                        .replace(new RegExp('\\' + thousandSeparator, 'g'), '')
+                        .replace(new RegExp('\\' + decimalSeparator), '.')
+                    )
+                }
+            })
+
+            return this
+        }
+
+        function onPointerUp(element, callback) {
+            element.addEventListener("mouseup", function (e) {
+                callback(e)
+            })
+            element.addEventListener("touchend", function (e) {
+                callback(e)
+            })
+            element.addEventListener("keyup", function (e) {
+                if ((e.keyCode === 32 || e.keyCode === 13)) {
+                    triggerKeyPressed = false
+                    callback(e)
+                }
+            })
+        }
+
+        function onPointerDown(element, callback) {
+            element.addEventListener("mousedown", function (e) {
+                e.preventDefault()
+                callback(e)
+            })
+            element.addEventListener("touchstart", function (e) {
+                if (e.cancelable) {
+                    e.preventDefault()
+                }
+                callback(e)
+            })
+            element.addEventListener("keydown", function (e) {
+                if ((e.keyCode === 32 || e.keyCode === 13) && !triggerKeyPressed) {
+                    triggerKeyPressed = true
+                    callback(e)
+                }
+            })
+        }
+
+    }(jQuery))

@@ -308,6 +308,8 @@
     <Content Include="Content\assets\js\custom\datetime-pickers.js" />
     <Content Include="Content\assets\js\custom\dropzone.js" />
     <Content Include="Content\assets\js\custom\editor-summernote.js" />
+    <Content Include="Content\assets\js\custom\inputmask.js" />
+    <Content Include="Content\assets\js\custom\jquery.inputmask.js" />
     <Content Include="Content\assets\js\custom\maps\am-maps.js" />
     <Content Include="Content\assets\js\custom\maps\data-maps.js" />
     <Content Include="Content\assets\js\custom\maps\gmaps.js" />
