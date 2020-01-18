@@ -64,24 +64,17 @@ namespace Koncepto_webapp.Controllers
                 //PUNTOS DE VENTA
                 List<string> puntosVenta = new List<string>(activeuser.ID_SalesPoint.Split(new string[] { "," }, StringSplitOptions.None));
 
-                var grupoCliente = SAPkoncepto.BI_Dim_Customers.Select(c => new grupo_clientes { id_grupo = c.Id_Grupo_Clientes, grupo = c.Grupo_Clientes }).Distinct().ToList();
+
+                var lstCustomers = SAPkoncepto.BI_Dim_Customers.ToList();
+                ViewBag.lstCustomers = lstCustomers;
+
+
+                var grupoCliente = lstCustomers.Select(c => new grupo_clientes { id_grupo = c.Id_Grupo_Clientes, grupo = c.Grupo_Clientes }).Distinct().ToList();
                 ViewBag.grupoCliente = grupoCliente;
-
-
-               // var products = (from a in SAPkoncepto.BI_Dim_Productos where(a.Nombre_Producto != null && a.Linea != null && a.Marca != null) select a).ToList();
 
 
                 var lstCategories = (from a in SAPkoncepto.BI_Dim_Productos where (a.Nombre_Producto != null && a.Linea != null && a.Marca != null && a.Id_Grupo_Productos != 100) select new grupo_productos { id_grupo = a.Id_Grupo_Productos, grupo = a.Grupo_Productos }).Distinct().OrderBy(c => c.grupo).ToList();
                 ViewBag.lstCategories = lstCategories;
-
-                //var lstSubCategories = (from a in SAPkoncepto.BI_Dim_Productos where (a.Nombre_Producto != null && a.Linea != null && a.Marca != null) select new Linea { id_linea = a.Id_Linea, linea = a.Linea, grupo = a.Grupo_Productos, id_grupo=a.Id_Grupo_Productos}).OrderBy(c => c.linea).ToList();
-                //ViewBag.lstSubCategories = lstSubCategories;
-
-
-                //var lstBrands = (from a in SAPkoncepto.BI_Dim_Productos where (a.Nombre_Producto != null && a.Linea != null && a.Marca != null) select new Marca { id_marca = a.Id_Marca, marca = a.Marca, linea = a.Linea,id_linea=a.Id_Linea, grupo=a.Grupo_Productos, id_grupo=a.Id_Grupo_Productos }).OrderBy(c => c.marca).ToList();
-                //ViewBag.lstBrands = lstBrands;
-
-
 
                 return View();
 
@@ -137,6 +130,33 @@ namespace Koncepto_webapp.Controllers
             
 
         }
+
+        public ActionResult Search_customer(string idcustomer)
+        {
+            
+
+            try
+            {
+                BI_Dim_Customers newCustomer = SAPkoncepto.BI_Dim_Customers.Where(a=>a.Id_Cliente==idcustomer).FirstOrDefault();
+
+                List<BI_Dim_Customers> lstCustomers = new List<BI_Dim_Customers>();
+                lstCustomers.Add(newCustomer);
+
+                JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                string lstnuevocliente = javaScriptSerializer.Serialize(lstCustomers);
+
+                var result = new { flag = "Success", lstNuevoCliente = lstnuevocliente };
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                var result = new { flag = ex };
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+
+
+        }
+
 
         public ActionResult product_searchsku(string sku)
         {

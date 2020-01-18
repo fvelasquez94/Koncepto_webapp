@@ -568,9 +568,23 @@
 
 
     function moveNext_slide() {
-       
-        owl.trigger('next.owl.carousel');
-        window.location.href = "#";
+        if ($("#cliente").val() != "0") {
+            owl.trigger('next.owl.carousel');
+            window.location.href = "#";
+        } else {
+            var toasterror = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            toasterror({
+                type: 'info',
+                title: 'Seleccione un cliente valido.'
+            });
+        }
+
     }
 
     function movePrev_slide() {
@@ -771,22 +785,36 @@
         $("#cambio").val("0.00");
         $("#anticipo").val("");
         $("#pendiente").val("0.00");
-        if ($(this).val() == "EFECTIVO") {
+        if ($(this).val() == "01") {
             $("#div_tarjeta").hide();
             $("#div_cheque").hide();
             $("#div_efectivo").show();
 
-        } else if ($(this).val() == "TARJETA DE CREDITO") {
+        } else if ($(this).val() == "04") {
             $("#div_efectivo").hide();
             $("#div_cheque").hide();
             $("#div_tarjeta").show();
-          
+
         }
-        else { //CHEQUE
+        else if ($(this).val() == "03") { //CHEQUE
             $("#div_efectivo").hide();
             $("#div_tarjeta").hide();
             $("#div_cheque").show();
-            
+
+        } else  {
+            $("#div_efectivo").hide();
+            $("#div_tarjeta").hide();
+            $("#div_cheque").hide();
+
+            if (parseFloat($("#CreditoActual").val()) < parseFloat($("#totalPagar").val())) {
+                $("#tipopago").val("01");
+                $("#div_tarjeta").hide();
+                $("#div_cheque").hide();
+                $("#div_efectivo").show();
+                $("#tipopago option[value='" + "02" + "']").attr('disabled', true);
+                $("#tipopago option[value='" + "02" + "']").css('color', '#dddddd');
+            }
+
         }
     })
 
@@ -1147,6 +1175,104 @@
     }
     //
 
+    $("#cliente").on("change", function () {
+        //Consultamos datos de cliente e historial de credito
+        var idcliente = $(this).val();
+        if (idcliente != "0") {
+            //Buscamos cliente
+            $.ajax
+                ({
+                    url: '/Invoices/Search_customer',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        idcustomer: idcliente
+                    }),
+                    success: function (result) {
+                        //result.flag - result.lstNuevoCliente
+                        if (result.flag == "Success") {
+
+                            $.each($.parseJSON(result.lstNuevoCliente), function (i, nuevocliente) {
+                              
+
+                                $("#codcliente_factura").val(nuevocliente.Id_Cliente);
+                                $("#nombreCliente").val(nuevocliente.Nombre_Cliente);
+                                $("#duic").val(nuevocliente.DUI);
+                                $("#nrcc").val(nuevocliente.NRC);
+                                $("#nitc").val(nuevocliente.NIT);
+                                if (nuevocliente.Id_Tipo_Contribuyente == "01") {
+                                    $("#tipocontribuyente").val("GRANDE");
+                                } else if (nuevocliente.Id_Tipo_Contribuyente == "02") {
+                                    $("#tipocontribuyente").val("PEQUENO/MEDIANO");
+                                } else {
+                                    $("#tipocontribuyente").val("");
+                                }
+
+                                if (nuevocliente.Id_Tipo_Contribuyente == "03") {
+                                    $("#tipocliente").val("PERSONA NATURAL");
+                                } else {
+                                    $("#tipocliente").val("PERSONA JURIDICA");
+                                }
+
+                                $("#CreditoActual").val(nuevocliente.Limite_Credito);
+                           
+                                if (nuevocliente.Limite_Credito < nuevocliente.Saldo || nuevocliente.Limite_Credito == 0) {
+                                    $("#alertaCreditos").show();
+                                    $("#tipopago option[value='" + "02" + "']").attr('disabled', true); 
+                                    $("#tipopago option[value='" + "02" + "']").css('color', '#dddddd');
+                                } else {
+                                    $("#alertaCreditos").hide();
+                                    $("#tipopago option[value='" + "02" + "']").attr('disabled', false); 
+                                    $("#tipopago option[value='" + "02" + "']").css('color', '#000');
+                                }
+                            }
+                            )
+                            var toastsuccess = swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+
+                        } else { //Error try catch
+                            var toasterror = swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                            toasterror({
+                                type: 'info',
+                                title: 'Ocurrio un error. ' + result.flag
+                            });
+                        }
+
+
+                    },
+                    error: function () {
+                        var toasterror = swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+
+                        toasterror({
+                            type: 'info',
+                            title: 'Algo salio mal, favor intentar nuevamente.'
+                        });
+                    },
+                });
+
+
+        }
+    });
+
+
+
     function eliminarwidget(id) {
         $('aside').removeClass("open");
         var swalWithBootstrapButtons = swal.mixin({
@@ -1318,6 +1444,22 @@
             $("#totalPagar").val(format2(totalfinal, ''));
       
         }
+
+
+        if (parseFloat($("#CreditoActual").val()) < parseFloat($("#totalPagar").val())) {
+            $("#tipopago").val("01");
+            $("#div_tarjeta").hide();
+            $("#div_cheque").hide();
+            $("#div_efectivo").show();
+            $("#tipopago option[value='" + "02" + "']").attr('disabled', true);
+            $("#tipopago option[value='" + "02" + "']").css('color', '#dddddd');
+            $("#alertaCreditos").show();
+        } else {
+            $("#tipopago option[value='" + "02" + "']").attr('disabled', false);
+            $("#tipopago option[value='" + "02" + "']").css('color', '#000');
+            $("#alertaCreditos").hide();
+        }
+
 
 
        

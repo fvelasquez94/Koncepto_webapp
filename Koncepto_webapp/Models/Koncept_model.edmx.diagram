@@ -7,6 +7,8 @@
       <Diagram DiagramId="af48d73a02104591aecfb64148649682" Name="Diagram1">
         <EntityTypeShape EntityType="Koncept_dbModel.Sys_Users" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="Koncept_dbModel.Tb_newCustomers" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="Koncept_dbModel.Tb_Invoices" Width="1.5" PointX="5.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Koncept_dbModel.Tb_Invoices_Details" Width="1.5" PointX="0.75" PointY="5.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

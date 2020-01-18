@@ -22,6 +22,56 @@
           <Property Name="Assigned_SalesPoint" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="ID_SalesRep" Type="int" />
         </EntityType>
+        <EntityType Name="Tb_Invoices">
+          <Key>
+            <PropertyRef Name="ID_factura" />
+          </Key>
+          <Property Name="ID_factura" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Cod_cliente" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Cliente" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Fecha" Type="datetime" Nullable="false" />
+          <Property Name="Cod_tipoDocumento" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="TipoDocumento" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Cod_tipoPago" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="TipoPago" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="SubTotal" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Descuentos" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="IVA" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="AnticipoIVA" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Anticipo" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="TotalFactura" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="TotalCancelado" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="SaldoPendiente" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="BancoCheque" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="NumeroCheque" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="TitularTarjeta" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="DocumentoTarjeta" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="NumeroTarjeta" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="VoucherTarjeta" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Docentry" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="MensajeError" Type="varchar(max)" Nullable="false" />
+          <Property Name="Error" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_Invoices_Details">
+          <Key>
+            <PropertyRef Name="ID_detalle" />
+          </Key>
+          <Property Name="ID_detalle" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_factura" Type="int" Nullable="false" />
+          <Property Name="CodigoProducto" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="NombreProducto" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Cantidad" Type="int" Nullable="false" />
+          <Property Name="Precio" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Descuento" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="PorcentajeDescuento" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="PrecioDescuento" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="TotalFila" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Devolucion" Type="bit" Nullable="false" />
+          <Property Name="DocEntryDevolucion" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="EstadoFila" Type="int" Nullable="false" />
+          <Property Name="MensajeError" Type="varchar(max)" Nullable="false" />
+          <Property Name="Error" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Tb_newCustomers">
           <Key>
             <PropertyRef Name="ID_customer" />
@@ -42,6 +92,8 @@
         </EntityType>
         <EntityContainer Name="Koncept_dbModelStoreContainer">
           <EntitySet Name="Sys_Users" EntityType="Self.Sys_Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_Invoices" EntityType="Self.Tb_Invoices" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_Invoices_Details" EntityType="Self.Tb_Invoices_Details" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_newCustomers" EntityType="Self.Tb_newCustomers" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -68,6 +120,8 @@
         <EntityContainer Name="Koncept_dbEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Sys_Users" EntityType="Self.Sys_Users" />
           <EntitySet Name="Tb_newCustomers" EntityType="Koncept_dbModel.Tb_newCustomers" />
+          <EntitySet Name="Tb_Invoices" EntityType="Koncept_dbModel.Tb_Invoices" />
+          <EntitySet Name="Tb_Invoices_Details" EntityType="Koncept_dbModel.Tb_Invoices_Details" />
         </EntityContainer>
         <EntityType Name="Tb_newCustomers">
           <Key>
@@ -86,6 +140,56 @@
           <Property Name="Contribuyente" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="ID_SAP" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="Creation_date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Tb_Invoices">
+          <Key>
+            <PropertyRef Name="ID_factura" />
+          </Key>
+          <Property Name="ID_factura" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Cod_cliente" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Cliente" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Cod_tipoDocumento" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="TipoDocumento" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Cod_tipoPago" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="TipoPago" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="SubTotal" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Descuentos" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="IVA" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="AnticipoIVA" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Anticipo" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalFactura" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalCancelado" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SaldoPendiente" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="BancoCheque" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="NumeroCheque" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="TitularTarjeta" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="DocumentoTarjeta" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="NumeroTarjeta" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="VoucherTarjeta" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Docentry" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="MensajeError" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Error" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_Invoices_Details">
+          <Key>
+            <PropertyRef Name="ID_detalle" />
+          </Key>
+          <Property Name="ID_detalle" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_factura" Type="Int32" Nullable="false" />
+          <Property Name="CodigoProducto" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="NombreProducto" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Cantidad" Type="Int32" Nullable="false" />
+          <Property Name="Precio" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Descuento" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PorcentajeDescuento" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PrecioDescuento" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalFila" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Devolucion" Type="Boolean" Nullable="false" />
+          <Property Name="DocEntryDevolucion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EstadoFila" Type="Int32" Nullable="false" />
+          <Property Name="MensajeError" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Error" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -127,6 +231,58 @@
                 <ScalarProperty Name="Correo" ColumnName="Correo" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="ID_customer" ColumnName="ID_customer" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_Invoices">
+            <EntityTypeMapping TypeName="Koncept_dbModel.Tb_Invoices">
+              <MappingFragment StoreEntitySet="Tb_Invoices">
+                <ScalarProperty Name="Error" ColumnName="Error" />
+                <ScalarProperty Name="MensajeError" ColumnName="MensajeError" />
+                <ScalarProperty Name="Docentry" ColumnName="Docentry" />
+                <ScalarProperty Name="VoucherTarjeta" ColumnName="VoucherTarjeta" />
+                <ScalarProperty Name="NumeroTarjeta" ColumnName="NumeroTarjeta" />
+                <ScalarProperty Name="DocumentoTarjeta" ColumnName="DocumentoTarjeta" />
+                <ScalarProperty Name="TitularTarjeta" ColumnName="TitularTarjeta" />
+                <ScalarProperty Name="NumeroCheque" ColumnName="NumeroCheque" />
+                <ScalarProperty Name="BancoCheque" ColumnName="BancoCheque" />
+                <ScalarProperty Name="SaldoPendiente" ColumnName="SaldoPendiente" />
+                <ScalarProperty Name="TotalCancelado" ColumnName="TotalCancelado" />
+                <ScalarProperty Name="TotalFactura" ColumnName="TotalFactura" />
+                <ScalarProperty Name="Anticipo" ColumnName="Anticipo" />
+                <ScalarProperty Name="AnticipoIVA" ColumnName="AnticipoIVA" />
+                <ScalarProperty Name="IVA" ColumnName="IVA" />
+                <ScalarProperty Name="Descuentos" ColumnName="Descuentos" />
+                <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
+                <ScalarProperty Name="TipoPago" ColumnName="TipoPago" />
+                <ScalarProperty Name="Cod_tipoPago" ColumnName="Cod_tipoPago" />
+                <ScalarProperty Name="TipoDocumento" ColumnName="TipoDocumento" />
+                <ScalarProperty Name="Cod_tipoDocumento" ColumnName="Cod_tipoDocumento" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Cliente" ColumnName="Cliente" />
+                <ScalarProperty Name="Cod_cliente" ColumnName="Cod_cliente" />
+                <ScalarProperty Name="ID_factura" ColumnName="ID_factura" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_Invoices_Details">
+            <EntityTypeMapping TypeName="Koncept_dbModel.Tb_Invoices_Details">
+              <MappingFragment StoreEntitySet="Tb_Invoices_Details">
+                <ScalarProperty Name="Error" ColumnName="Error" />
+                <ScalarProperty Name="MensajeError" ColumnName="MensajeError" />
+                <ScalarProperty Name="EstadoFila" ColumnName="EstadoFila" />
+                <ScalarProperty Name="DocEntryDevolucion" ColumnName="DocEntryDevolucion" />
+                <ScalarProperty Name="Devolucion" ColumnName="Devolucion" />
+                <ScalarProperty Name="TotalFila" ColumnName="TotalFila" />
+                <ScalarProperty Name="PrecioDescuento" ColumnName="PrecioDescuento" />
+                <ScalarProperty Name="PorcentajeDescuento" ColumnName="PorcentajeDescuento" />
+                <ScalarProperty Name="Descuento" ColumnName="Descuento" />
+                <ScalarProperty Name="Precio" ColumnName="Precio" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="NombreProducto" ColumnName="NombreProducto" />
+                <ScalarProperty Name="CodigoProducto" ColumnName="CodigoProducto" />
+                <ScalarProperty Name="ID_factura" ColumnName="ID_factura" />
+                <ScalarProperty Name="ID_detalle" ColumnName="ID_detalle" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

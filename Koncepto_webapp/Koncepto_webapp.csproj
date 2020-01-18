@@ -213,6 +213,12 @@
     <Compile Include="Models\Sys_Users.cs">
       <DependentUpon>Koncept_model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Tb_Invoices.cs">
+      <DependentUpon>Koncept_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_Invoices_Details.cs">
+      <DependentUpon>Koncept_model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Tb_newCustomers.cs">
       <DependentUpon>Koncept_model.tt</DependentUpon>
     </Compile>

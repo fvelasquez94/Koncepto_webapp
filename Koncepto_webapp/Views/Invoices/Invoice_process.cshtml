@@ -19,8 +19,8 @@
             <h1 class="dt-page__title">Facturacion</h1>
         </div>
 
-        <div class="alert alert-warning" role="alert">
-            Ejemplo de alerta al saber que cliente No tiene credito disponible o tiene creditos vencidos.
+        <div class="alert alert-warning" id="alertaCreditos" style="display:none;" role="alert">
+            Cliente no cuenta con credito disponible.
             <a href="javascript:void(0)" class="alert-link">
                 Ver historial
             </a>
@@ -51,7 +51,12 @@
                                         <div>
 
                                             <select class="form-control js-example-responsive" id="cliente" style="width: 100%">
-                                                <option value="C0001">DUI: 00348348 - NCR: 022323923 - NOMBRE: Cliente Texaco</option>
+                                            <option value="0">Seleccione Cliente</option>
+                                                @foreach (var customer in ViewBag.lstCustomers)
+    {
+                                            <option value="@customer.Id_Cliente">DUI: @customer.DUI - NRC: @customer.NRC - NOMBRE: @customer.Nombre_Cliente</option>
+}
+
                                             </select><br /><br />
                                             <div class="float-right">
                                                 <button onclick="moveNext_slide()" class="btn btn-secondary">Siguiente</button>
@@ -406,16 +411,17 @@
                                                 <label>Tipo de Pago</label>
 
                                                 <select class="form-control" id="tipopago">
-                                                    <option>CHEQUE</option>
-                                                    <option selected>EFECTIVO</option>
-                                                    <option>TARJETA DE CREDITO</option>
+                                                    <option value="03">CHEQUE</option>
+                                                    <option value="02">CREDITO</option>
+                                                    <option selected value="01">EFECTIVO</option>
+                                                    <option value="04">TARJETA DE CREDITO</option>
 
                                                 </select>
                                             </div>
 
 
                                         </div>
-
+                                        <input type="text" id="CreditoActual" hidden/>
                                         <div class="row">
 
                                             <div class="col-md-4">
@@ -480,6 +486,16 @@
                                                         <input type="text" class="form-control" style="text-align:right; font-size:20px;" value="0.00" id="cambio" readonly>
                                                     </div>
                                                 </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-md-10 col-form-label text-sm-right">
+
+                                                    </label>
+                                                    <div class="col-md-1">
+                                                        <button class="btn btn-secondary" onclick="Facturar()">Facturar</button>
+                                                    </div>
+
+
+                                                </div>
                                             </div>
                                             <div class="form-group col-md-8" id="div_tarjeta" style="display:none;">
                                                 <div class="form-group form-row">
@@ -526,6 +542,16 @@
                                                         <input type="text" class="form-control" style="text-align:right; font-size:20px;" id="voucher_tarjeta">
                                                     </div>
                                                 </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-md-10 col-form-label text-sm-right">
+
+                                                    </label>
+                                                    <div class="col-md-1">
+                                                        <button class="btn btn-secondary" onclick="Facturar()">Facturar</button>
+                                                    </div>
+
+
+                                                </div>
                                             </div>
                                             <div class="form-group col-md-8" id="div_cheque" style="display:none">
                                                 <div class="form-group form-row">
@@ -548,6 +574,7 @@
                                                             <option>SCOTIABANK</option>
                                                         </select>
                                                     </div>
+
                                                 </div>
                                                 <div class="form-group form-row">
                                                     <label class="col-xl-6 col-form-label text-sm-right">
@@ -559,10 +586,22 @@
                                                         </div>
                                                         <input type="number" class="form-control" style="text-align:right; font-size:20px;" id="numero_cheque">
                                                     </div>
+
                                                 </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-md-10 col-form-label text-sm-right">
+
+                                                    </label>
+                                                    <div class="col-md-1">
+                                                        <button class="btn btn-secondary" onclick="Facturar()">Facturar</button>
+                                                    </div>
 
 
+                                                </div>
                                             </div>
+
+ 
+
                                         </div>
 
 
