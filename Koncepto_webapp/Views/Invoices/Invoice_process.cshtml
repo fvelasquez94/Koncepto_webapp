@@ -245,6 +245,19 @@
                                                                     </select>
                                                                 </div>
 
+
+
+                                                                <div class="form-group col-md-6">
+                                                                    <label>Vendedor</label>
+
+                                                                    <select class="form-control" id="selvendedor">
+                                                                        @foreach (var vendedor in ViewBag.lstEmpleados)
+            {
+                                                            <option value="@vendedor.Id_Vendedor">@vendedor.Vendedor</option>
+}
+                                                                    </select>
+                                                                </div>
+
                                                             </div>
 
                                                         </form>

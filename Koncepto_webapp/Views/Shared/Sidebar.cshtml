@@ -53,8 +53,7 @@
         <!-- Sidebar Navigation -->
         <ul class="dt-side-nav">
             <li class="dt-side-nav__item">
-                <a href="@Url.Action("Index","Home")" class="dt-side-nav__link"
-                   >
+                <a href="@Url.Action("Index","Home")" class="dt-side-nav__link">
                     <i class="icon icon-dashboard3 icon-fw icon-lg"></i> <span class="dt-side-nav__text">Dashboard</span>
                 </a>
             </li>
@@ -66,7 +65,7 @@
 
 
             <li class="dt-side-nav__item">
-                <a href="javascript:void(0)" class="dt-side-nav__link dt-side-nav__arrow" >
+                <a href="javascript:void(0)" class="dt-side-nav__link dt-side-nav__arrow">
                     <i class="icon icon-invoice-new icon-fw icon-lg"></i> <span class="dt-side-nav__text">Facturacion</span>
                 </a>
 
@@ -75,22 +74,20 @@
 
 
                     <li class="dt-side-nav__item">
-                        <a href="#" class="dt-side-nav__link"
-                           >
+                        <a href="#" class="dt-side-nav__link">
                             <i class="icon icon-forms-basic icon-fw icon-lg"></i> <span class="dt-side-nav__text">Devoluciones</span>
                         </a>
                     </li>
 
                     <li class="dt-side-nav__item">
-                        <a href="#" class="dt-side-nav__link" >
+                        <a href="@Url.Action("Invoices_history","Invoices")" class="dt-side-nav__link">
                             <i class="icon icon-datatable icon-fw icon-lg"></i>
                             <span class="dt-side-nav__text">Historial</span>
                         </a>
                     </li>
 
                     <li class="dt-side-nav__item">
-                        <a href="@Url.Action("Invoice_process","Invoices")" class="dt-side-nav__link"
-                           >
+                        <a href="@Url.Action("Invoice_process","Invoices")" class="dt-side-nav__link">
                             <i class="icon icon-addnew icon-fw icon-lg"></i> <span class="dt-side-nav__text">Nueva Factura</span>
                         </a>
                     </li>
@@ -108,7 +105,7 @@
             <!-- /menu header -->
             <!-- Menu Item -->
             <li class="dt-side-nav__item">
-                <a href="javascript:void(0)" class="dt-side-nav__link dt-side-nav__arrow" >
+                <a href="javascript:void(0)" class="dt-side-nav__link dt-side-nav__arrow">
                     <i class="icon icon-settings icon-fw icon-lg"></i> <span class="dt-side-nav__text">Mantenimiento</span>
                 </a>
 
@@ -117,15 +114,13 @@
 
 
                     <li class="dt-side-nav__item">
-                        <a href="#" class="dt-side-nav__link"
-                           >
+                        <a href="#" class="dt-side-nav__link">
                             <i class="icon icon-star-fill icon-fw icon-lg"></i> <span class="dt-side-nav__text">Clientes</span>
                         </a>
                     </li>
 
                     <li class="dt-side-nav__item">
-                        <a href="#" class="dt-side-nav__link"
-                           >
+                        <a href="#" class="dt-side-nav__link">
                             <i class="icon icon-orders-new icon-fw icon-lg"></i> <span class="dt-side-nav__text">Productos</span>
                         </a>
                     </li>
@@ -139,7 +134,19 @@
                 <!-- /sub-menu -->
 
             </li>
+            <li class="dt-side-nav__item dt-side-nav__header">
+                <span class="dt-side-nav__text"></span>
+            </li>
+            <!-- Menu Item -->
+            <li class="dt-side-nav__item">
+                <a href="@Url.Action("Log_out","Home")" class="dt-side-nav__link">
+                    <i class="icon icon-circle-minus-o icon-fw icon-lg"></i> <span class="dt-side-nav__text">Cerrar Sesion</span>
+                </a>
 
+                <!-- Sub-menu -->
+                <!-- /sub-menu -->
+
+            </li>
             <!-- /menu header -->
 
 

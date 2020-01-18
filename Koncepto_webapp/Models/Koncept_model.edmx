@@ -51,6 +51,11 @@
           <Property Name="Docentry" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="MensajeError" Type="varchar(max)" Nullable="false" />
           <Property Name="Error" Type="int" Nullable="false" />
+          <Property Name="ID_sucursal" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Sucursal" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="ID_Vendedor" Type="int" Nullable="false" />
+          <Property Name="Vendedor" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Estado" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Tb_Invoices_Details">
           <Key>
@@ -170,6 +175,11 @@
           <Property Name="Docentry" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="MensajeError" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Error" Type="Int32" Nullable="false" />
+          <Property Name="ID_sucursal" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Sucursal" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ID_Vendedor" Type="Int32" Nullable="false" />
+          <Property Name="Vendedor" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Estado" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Tb_Invoices_Details">
           <Key>
@@ -237,6 +247,11 @@
           <EntitySetMapping Name="Tb_Invoices">
             <EntityTypeMapping TypeName="Koncept_dbModel.Tb_Invoices">
               <MappingFragment StoreEntitySet="Tb_Invoices">
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Vendedor" ColumnName="Vendedor" />
+                <ScalarProperty Name="ID_Vendedor" ColumnName="ID_Vendedor" />
+                <ScalarProperty Name="Sucursal" ColumnName="Sucursal" />
+                <ScalarProperty Name="ID_sucursal" ColumnName="ID_sucursal" />
                 <ScalarProperty Name="Error" ColumnName="Error" />
                 <ScalarProperty Name="MensajeError" ColumnName="MensajeError" />
                 <ScalarProperty Name="Docentry" ColumnName="Docentry" />

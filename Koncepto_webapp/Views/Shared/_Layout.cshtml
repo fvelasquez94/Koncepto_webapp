@@ -110,6 +110,16 @@
         });
     </script>
 }
+
+@if (ViewBag.Title == "Historial")
+{
+    <script>
+        $(document).ready(function () {
+            $("#table_facturas").DataTable();
+        });
+    </script>
+}
+
 <script>
     $(".js-example-responsive").select2({
         width: 'resolve' // need to override the changed default

@@ -1,7 +1,7 @@
 ﻿
 @{
     Layout = null;
-  
+
 }
 
 <script>
@@ -102,7 +102,12 @@
                                 } else if (nuevocliente.Tipo_contribuyente == 2) {
                                     $("#tipocliente").val("PERSONA JURIDICA");
                                 } 
-                               
+                                $("#CreditoActual").val("0");
+
+                        
+                                    $("#alertaCreditos").show();
+                                    $("#tipopago option[value='" + "02" + "']").attr('disabled', true);
+                                    $("#tipopago option[value='" + "02" + "']").css('color', '#dddddd');
                                 
                             }
                             )
@@ -618,7 +623,11 @@
         });
 
         $("#numero_tarjeta").inputmask("9999-9999-9999-9999");
-       
+
+
+
+
+
     });
 
     $("#codigobarras").bind('paste', function (e) {
@@ -834,21 +843,30 @@
 
 
         var recibido = parseFloat($("#recibido1").val());
+  
+        if (recibido == "" || recibido == null || isNaN(recibido)) {
+            recibido = 0;
+            $("#recibido1").val("0")
+        }
+       
         var totalpagar = parseFloat($("#totalPagar").val().replace(",", ""));
-        console.log(recibido);
-        console.log(totalpagar);
+
         if ($('#tipodocumento').val() == "ANTICIPO") {
 
             if ($("#anticipo").val() != "") {
                 totalpagar = parseFloat($("#anticipo").val());
-                console.log("anticipo");
+               
             } 
            
         }
 
-        var totalpagarfinal = ((totalpagar - recibido) * -1)
-
-        $("#cambio").val(format2(totalpagarfinal, ''));
+        var totalpagarfinal = ((totalpagar - (recibido)) * -1)
+        try {
+            $("#cambio").val(format2(totalpagarfinal, ''));
+        } catch{
+            $("#cambio").val("0");
+        }
+        
 
     })
 
@@ -1465,4 +1483,239 @@
        
 
     }
+
+
+    //GUARDAR FACTURA
+    function Facturar() {
+        //Datos factura
+
+        var flag = 1;
+
+        var BancoCheque = $("#banco_cheque").val();
+        var NumeroCheque = $("#numero_cheque").val();
+
+        var TitularTarjeta = $("#nombre_tarjeta").val();
+        var DocumentoTarjeta = $("#doc_tarjeta").val();
+        var NumeroTarjeta = $("#numero_tarjeta").val();
+        var VoucherTarjeta = $("#voucher_tarjeta").val();
+
+        var tipopago = $("#tipopago").val();
+        if (tipopago == "01") {//Efectivo
+            var recibido = $("#recibido1").val();
+            if (recibido == null || recibido == "") {
+                flag = 0;
+            }
+        }
+        if (tipopago == "03") {//Cheque
+            if (BancoCheque == "" || BancoCheque==null) {
+                flag = 0;
+            }
+            if (NumeroCheque == "" || NumeroCheque == null) {
+                flag = 0;
+            }
+        }
+        if (tipopago == "04") {//Tarjeta
+            if (TitularTarjeta == "" || TitularTarjeta == null) {
+                flag = 0;
+            }
+            if (DocumentoTarjeta == "" || DocumentoTarjeta == null) {
+                flag = 0;
+            }
+            if (NumeroTarjeta == "" || NumeroTarjeta == null) {
+                flag = 0;
+            }
+            if (VoucherTarjeta == "" || VoucherTarjeta == null) {
+                flag = 0;
+            }
+        }
+
+   
+        if ($("#selvendedor").val() == "-1") {//Vendedor NO valido
+
+                flag = 0;
+            
+        }
+
+
+
+        //ANTICIPO
+        var tipopago = $("#tipodocumento").val();
+        if (tipopago == "ANTICIPO") {//verificamos que coloque anticipo
+            var recibido = $("#anticipo").val();
+            if (recibido == null || recibido == "") {
+                flag = 0;
+            }
+        }
+
+
+        if (flag == 1) {
+
+            var saldopend = $("#pendiente").val();
+            if (saldopend == null) { saldopend = 0; }
+            var anticipo = $("#anticipo").val();
+            if (anticipo == null) { anticipo = 0; }
+
+            var totalcancelado = 0;
+            if (anticipo > 0) {
+                totalcancelado = anticipo;
+
+            } else {
+                totalcancelado = $("#totalfac").val();
+            }
+
+            var headerdata = [];
+            var fecha = new Date();
+
+
+
+            if (BancoCheque == null) { BancoCheque = ""; }
+            if (NumeroCheque == null) { NumeroCheque = ""; }
+            if (TitularTarjeta == null) { TitularTarjeta = ""; }
+            if (DocumentoTarjeta == null) { DocumentoTarjeta = ""; }
+            if (NumeroTarjeta == null) { NumeroTarjeta = ""; }
+            if (VoucherTarjeta == null) { VoucherTarjeta = ""; }
+
+
+
+            var Docentry = "";
+            var MensajeError = '';
+
+
+            headerdata.push({
+                //factura
+                Cod_cliente: $("#codcliente_factura").val(),
+                Cliente: $("#nombreCliente").val(),
+                Fecha: fecha.toLocaleString(),
+                Cod_tipoDocumento: $("#tipodocumento").val(),
+                TipoDocumento: $("#tipodocumento option:selected").text(),
+                Cod_tipoPago: $("#tipopago").val(),
+                TipoPago: $("#tipopago option:selected").text(),
+                //
+                SubTotal: $("#subtotalfac").val(),
+                Descuentos: $("#descuentosfac").val(),
+                IVA: $("#ivafac").val(),
+                AnticipoIVA: $("#anticipoivafac").val(),
+                Anticipo: anticipo,
+                TotalFactura: $("#totalfac").val(),
+                TotalCancelado: totalcancelado,
+                SaldoPendiente: parseFloat(saldopend * -1),
+                //
+                BancoCheque: BancoCheque,
+                NumeroCheque: NumeroCheque,
+                //
+                TitularTarjeta: TitularTarjeta,
+                DocumentoTarjeta: DocumentoTarjeta,
+                NumeroTarjeta: NumeroTarjeta,
+                VoucherTarjeta: VoucherTarjeta,
+                //db
+                Docentry: Docentry,
+                MensajeError: MensajeError,
+                Error: 0,
+                ID_Vendedor: $("#selvendedor").val(),
+                Vendedor: $("#selvendedor option:selected").text()
+
+            });
+            var objects = [];
+
+
+
+            $.each($('button.btnEditprod'), function () {
+                var button = $(this);// Button that triggered the modal
+
+                var porcentajedescuento = parseFloat((button.data("descuentoproducto") / button.data("precioproducto")) * 100);
+                objects.push({
+                    ID_factura: 0,
+                    //producto
+                    CodigoProducto: button.data("idproducto"),
+                    NombreProducto: button.data("nombreproducto"),
+                    Cantidad: button.data("cantidad"),
+                    Precio: button.data("precioproducto"),
+                    Descuento: button.data("descuentoproducto"),
+                    PorcentajeDescuento: porcentajedescuento,
+                    PrecioDescuento: button.data("preciodescuento"),
+                    TotalFila: button.data("totalproducto"),
+                    //db
+                    Devolucion: false,
+                    DocEntryDevolucion: Docentry,
+                    EstadoFila: 0,
+                    MensajeError: MensajeError,
+                    Error: 0
+                });
+
+            });
+
+            $.ajax
+                ({
+                    url: '/Invoices/Save_InvoiceData',
+                    type: 'POST',
+
+                    data: { 'detailsInvoice': objects, 'headerInvoice': headerdata },
+                    success: function (result) {
+                        if (result == "SUCCESS") {
+                            var toastsuccess = swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                            toastsuccess({
+                                type: 'success',
+                                title: 'Factura creada exitosamente.'
+                            });
+
+                            window.location.reload(true);
+
+                        } else {
+                            var toastsuccess = swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                            toastsuccess({
+                                type: 'info',
+                                title: result
+                            });
+
+                        }
+                    },
+
+                    error: function () {
+
+                        var toastsuccess = swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+
+                        toastsuccess({
+                            type: 'info',
+                            title: 'Ocurrio un error.'
+                        });
+                    },
+
+                });
+        } else {
+
+            //Alerta de validacion
+            var toastsuccess = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            toastsuccess({
+                type: 'info',
+                title: 'Complete todos los campos.'
+            });
+        }
+
+
+        }
+
+    
 </script>

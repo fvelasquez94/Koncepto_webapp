@@ -123,6 +123,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Facturas_Encabezado' does not h
           <Key>
             <PropertyRef Name="DocEntry" />
             <PropertyRef Name="Tipo" />
+            <PropertyRef Name="Total_Pagado" />
           </Key>
           <Property Name="DocEntry" Type="int" Nullable="false" />
           <Property Name="ID" Type="nvarchar" MaxLength="106" />
@@ -137,6 +138,8 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Facturas_Encabezado' does not h
           <Property Name="IVA" Type="numeric" Precision="19" Scale="6" />
           <Property Name="Percepcion" Type="numeric" Precision="19" Scale="6" />
           <Property Name="Total_Doc" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Total_Pagado" Type="numeric" Precision="5" Scale="2" Nullable="false" />
+          <Property Name="Pendiente_Pago" Type="numeric" Precision="20" Scale="6" />
           <Property Name="Tipo_Doc" Type="char" MaxLength="1" />
           <Property Name="Id_Vendedor" Type="int" />
           <Property Name="Cancelado" Type="char" MaxLength="1" />
@@ -147,6 +150,15 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Facturas_Encabezado' does not h
           <Property Name="Cliente" Type="nvarchar" MaxLength="100" />
           <Property Name="Hora_Fac" Type="smallint" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'DB_KONCEPTO.dbo.BI_Metas' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="BI_Metas">
+          <Property Name="ID" Type="bigint" />
+          <Property Name="Fecha" Type="datetime" />
+          <Property Name="Id_Vendedor" Type="nvarchar" MaxLength="10" />
+          <Property Name="Id_Sucursal" Type="nvarchar" MaxLength="10" />
+          <Property Name="Venta_Meta" Type="numeric" Precision="19" Scale="6" />
+        </EntityType>-->
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BI_Series">
@@ -265,6 +277,8 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
     [BI_Facturas_Encabezado].[IVA] AS [IVA], 
     [BI_Facturas_Encabezado].[Percepcion] AS [Percepcion], 
     [BI_Facturas_Encabezado].[Total_Doc] AS [Total_Doc], 
+    [BI_Facturas_Encabezado].[Total_Pagado] AS [Total_Pagado], 
+    [BI_Facturas_Encabezado].[Pendiente_Pago] AS [Pendiente_Pago], 
     [BI_Facturas_Encabezado].[Tipo_Doc] AS [Tipo_Doc], 
     [BI_Facturas_Encabezado].[Id_Vendedor] AS [Id_Vendedor], 
     [BI_Facturas_Encabezado].[Cancelado] AS [Cancelado], 
@@ -415,6 +429,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <Key>
             <PropertyRef Name="DocEntry" />
             <PropertyRef Name="Tipo" />
+            <PropertyRef Name="Total_Pagado" />
           </Key>
           <Property Name="DocEntry" Type="Int32" Nullable="false" />
           <Property Name="ID" Type="String" MaxLength="106" FixedLength="false" Unicode="true" />
@@ -429,6 +444,8 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <Property Name="IVA" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="Percepcion" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="Total_Doc" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Total_Pagado" Type="Decimal" Nullable="false" Precision="5" Scale="2" />
+          <Property Name="Pendiente_Pago" Type="Decimal" Precision="20" Scale="6" />
           <Property Name="Tipo_Doc" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="Id_Vendedor" Type="Int32" />
           <Property Name="Cancelado" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
@@ -566,6 +583,8 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
                 <ScalarProperty Name="Cancelado" ColumnName="Cancelado" />
                 <ScalarProperty Name="Id_Vendedor" ColumnName="Id_Vendedor" />
                 <ScalarProperty Name="Tipo_Doc" ColumnName="Tipo_Doc" />
+                <ScalarProperty Name="Pendiente_Pago" ColumnName="Pendiente_Pago" />
+                <ScalarProperty Name="Total_Pagado" ColumnName="Total_Pagado" />
                 <ScalarProperty Name="Total_Doc" ColumnName="Total_Doc" />
                 <ScalarProperty Name="Percepcion" ColumnName="Percepcion" />
                 <ScalarProperty Name="IVA" ColumnName="IVA" />

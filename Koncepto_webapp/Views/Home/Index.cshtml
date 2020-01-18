@@ -227,28 +227,31 @@ else
                                             <th class="text-uppercase" scope="col"># Factura</th>
                                             <th class="text-uppercase" scope="col">Fecha</th>
                                             <th class="text-uppercase" scope="col">Cliente</th>
-                                            <th class="text-uppercase" scope="col">Sucursal</th>
+                                            <th class="text-uppercase" scope="col">Vendedor</th>
                                             <th class="text-uppercase" scope="col">Total</th>
+                                            <th class="text-uppercase" scope="col"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var factura in Model)
+                                        @foreach (var factura in ViewBag.lstinvoicesAzure)
                                     {
                                         <tr>
-                                            <td data-label="# FACTURA">@factura.NoDoc</td>
+                                            <td data-label="# FACTURA">@factura.Docentry</td>
                                             <td data-label="FECHA">
-                                                @factura.Fecha.Value.ToString("dd/MM/yyyy")
-                                            @if (Convert.ToString(factura.Hora_Fac).Length > 3)
-                                        {<label>@Convert.ToString(factura.Hora_Fac).Substring(0, 2):@Convert.ToString(factura.Hora_Fac).Substring(2, 2)</label>
-                                }
-                                else
-                                {
-                                    <label>@Convert.ToString(factura.Hora_Fac).Substring(0, 1):@Convert.ToString(factura.Hora_Fac).Substring(1, 2)</label>
-                            }
+                                                @Convert.ToDateTime(factura.Fecha).ToShortDateString()
+                            
+                                    <label>@Convert.ToDateTime(factura.Fecha).ToShortTimeString()</label>
+                            
                                         </td>
-                                        <td data-label="CLIENTE">@factura.Id_Cliente - @factura.Cliente</td>
-                                        <td data-label="SUCURSAL">@factura.Sucursal</td>
-                                    <td data-label="TOTAL">$@factura.Total_Doc.Value.ToString("N2")</td>
+                                        <td data-label="CLIENTE">@factura.Cod_cliente - @factura.Cliente</td>
+                                        <td data-label="VENDEDOR">@factura.Vendedor</td>
+                                    <td data-label="TOTAL">$@factura.TotalFactura.ToString("N2")</td>
+                                    <td data-label="">
+                                        @if (factura.Estado == 0) {
+                                            <button class="btn btn-primary mr-2 mb-2">Facturar</button>
+                                        }
+                                            
+                                    </td>
                                 </tr>
                         }
 

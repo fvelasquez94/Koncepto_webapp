@@ -27,6 +27,8 @@ namespace Koncepto_webapp.Models
         public Nullable<decimal> IVA { get; set; }
         public Nullable<decimal> Percepcion { get; set; }
         public Nullable<decimal> Total_Doc { get; set; }
+        public decimal Total_Pagado { get; set; }
+        public Nullable<decimal> Pendiente_Pago { get; set; }
         public string Tipo_Doc { get; set; }
         public Nullable<int> Id_Vendedor { get; set; }
         public string Cancelado { get; set; }

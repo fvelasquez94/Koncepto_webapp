@@ -57,6 +57,13 @@ namespace Koncepto_webapp.Controllers
                                                                     where ((a.Fecha >= anteriorSunday && a.Fecha <= anteriorSaturday) && puntosVenta.Contains(a.Id_Sucursal))
                                                                     select a).ToList();
                 ViewBag.earlier_lstInvoices = earlier_lstInvoices;
+
+                List<Tb_Invoices> lstInvoicesAzure = (from a in dbkoncepto.Tb_Invoices
+                                                      where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate) && puntosVenta.Contains(a.ID_sucursal))
+                                                      select a).ToList();
+                ViewBag.lstinvoicesAzure = lstInvoicesAzure;
+
+
                 return View(lstInvoices);
 
             }
@@ -79,6 +86,10 @@ namespace Koncepto_webapp.Controllers
                 else if (logpage == 1)
                 {
                     TempData["advertencia"] = "Correo o contrasena incorrectos.";
+                }
+                else if (logpage == 3)
+                {
+                    TempData["advertencia"] = "Sesion finalizada.";
                 }
 
             }
@@ -107,6 +118,33 @@ namespace Koncepto_webapp.Controllers
 
 
             return View();
+        }
+        public ActionResult Log_out()
+        {
+            Session.RemoveAll();
+
+            if (Request.Cookies["correo"] != null)
+            {
+                var c = new HttpCookie("correo");
+                c.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(c);
+            }
+            if (Request.Cookies["pass"] != null)
+            {
+                var c = new HttpCookie("pass");
+                c.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(c);
+            }
+            if (Request.Cookies["rememberme"] != null)
+            {
+                var c = new HttpCookie("rememberme");
+                c.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(c);
+            }
+
+
+
+            return RedirectToAction("Signin", "Home", new { access = false, logpage = 3 });
         }
 
         public ActionResult Sign_in(string email, string password, bool sesionactiva) 

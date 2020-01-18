@@ -13040,6 +13040,7 @@
     <Content Include="Views\Home\Signin.cshtml" />
     <Content Include="Views\Invoices\Invoice_process.cshtml" />
     <Content Include="Views\Shared\Script_invoiceprocess.cshtml" />
+    <Content Include="Views\Invoices\Invoices_history.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

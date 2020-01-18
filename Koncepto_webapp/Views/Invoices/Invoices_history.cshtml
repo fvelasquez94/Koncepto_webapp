@@ -1,0 +1,118 @@
+﻿@model List<Koncepto_webapp.Models.BI_Facturas_Encabezado>
+@{
+    ViewBag.Title = "Historial";
+    List<Koncepto_webapp.Models.BI_Facturas_Encabezado> lstInvoices_Ant = ViewBag.earlier_lstInvoices;
+}
+
+<!-- Site Content Wrapper -->
+<div class="dt-content-wrapper">
+
+    <!-- Site Content -->
+    <div class="dt-content">
+
+        <!-- Brand tool -->
+        <div class="dt-brand__tool mb-8 d-lg-none" data-toggle="main-sidebar">
+            <div class="hamburger-inner"></div>
+        </div>
+        <!-- /brand tool -->
+        <!-- Page Header -->
+        <div class="dt-page__header">
+            <h1 class="dt-page__title">Historial de Facturacion</h1>
+        </div>
+        <!-- /page header -->
+
+            <!-- Grid -->
+            <div class="row">
+
+                <!-- Grid Item -->
+                <div class="col-xl-12">
+
+                    <!-- Entry Header -->
+                    <div class="dt-entry__header">
+
+                        <!-- Entry Heading -->
+                        @*<div class="dt-entry__heading">
+                            <h3 class="dt-entry__title">Historial de facturacion</h3>
+                        </div>*@
+                        <!-- /entry heading -->
+
+                    </div>
+                    <!-- /entry header -->
+                    <!-- Card -->
+                    <div class="dt-card overflow-hidden" style="box-shadow:none !important;">
+
+                        <!-- Card Body -->
+                        <div class="dt-card__body p-0">
+
+                            <!-- Tables -->
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="table_facturas">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-uppercase" scope="col"># Factura</th>
+                                            <th class="text-uppercase" scope="col">Fecha</th>
+                                            <th class="text-uppercase" scope="col">Cliente</th>
+
+                                            <th class="text-uppercase" scope="col">Total</th>
+                                            <th class="text-uppercase" scope="col">Pagado</th>
+                                            <th class="text-uppercase" scope="col">Pendiente</th>
+                                            <th class="text-uppercase" scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var factura in Model)
+                                    {
+                                        <tr>
+                                            <td data-label="# FACTURA">@factura.NoDoc</td>
+                                            <td data-label="FECHA">
+                                                @factura.Fecha.Value.ToString("dd/MM/yyyy")
+                                                @if (Convert.ToString(factura.Hora_Fac).Length > 3)
+        {<label>@Convert.ToString(factura.Hora_Fac).Substring(0, 2):@Convert.ToString(factura.Hora_Fac).Substring(2, 2)</label>
+}
+else
+{
+                                        <label>@Convert.ToString(factura.Hora_Fac).Substring(0, 1):@Convert.ToString(factura.Hora_Fac).Substring(1, 2)</label>
+}
+                                            </td>
+                                            <td data-label="CLIENTE">@factura.Id_Cliente - @factura.Cliente</td>
+
+                                            <td data-label="TOTAL">$@factura.Total_Doc.Value.ToString("N2")</td>
+                                            <td data-label="PAGADO">$@factura.Total_Pagado.ToString("N2")</td>
+                                            <td data-label="PENDIENTE">@factura.Pendiente_Pago.Value.ToString("N2")</td>
+                                            <td data-label="">
+                                            <button class="btn btn-primary mr-2 mb-2">Devolver</button>
+                                                @if (factura.Pendiente_Pago > 0) {
+                                                    <button class="btn btn-secondary mr-2 mb-2">Anticipo</button>
+                                                }
+                                            
+                                            </td>
+                                        </tr>
+                        }
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /tables -->
+
+                        </div>
+                        <!-- /card body -->
+
+                    </div>
+                    <!-- /card -->
+
+
+                </div>
+                <!-- /grid item -->
+
+            </div>
+            <!-- /grid -->
+
+        </div>
+        <!-- /site content -->
+        <!-- Footer -->
+        @Html.Partial("~/Views/Shared/Footer.cshtml")
+        <!-- /footer -->
+
+    </div>
+<!-- /site content wrapper -->

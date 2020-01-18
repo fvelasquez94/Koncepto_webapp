@@ -39,5 +39,10 @@ namespace Koncepto_webapp.Models
         public string Docentry { get; set; }
         public string MensajeError { get; set; }
         public int Error { get; set; }
+        public string ID_sucursal { get; set; }
+        public string Sucursal { get; set; }
+        public int ID_Vendedor { get; set; }
+        public string Vendedor { get; set; }
+        public int Estado { get; set; }
     }
 }
