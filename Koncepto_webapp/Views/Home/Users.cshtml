@@ -1,0 +1,407 @@
+﻿@model List<Koncepto_webapp.Models.Sys_Users>
+@{
+    ViewBag.Title = "Users";
+
+}
+
+<!-- Site Content Wrapper -->
+<div class="dt-content-wrapper">
+
+    <!-- Site Content -->
+    <div class="dt-content">
+
+        <!-- Brand tool -->
+        <div class="dt-brand__tool mb-8 d-lg-none" data-toggle="main-sidebar">
+            <div class="hamburger-inner"></div>
+        </div>
+        <!-- /brand tool -->
+        <!-- Page Header -->
+        <div class="dt-page__header">
+            <h1 class="dt-page__title">Usuarios</h1>
+
+
+
+        </div>
+        <!-- /page header -->
+        <!-- Grid -->
+        <!-- Grid -->
+        <div class="row">
+
+            <!-- Grid Item -->
+            <div class="col-xl-12">
+
+                <!-- Entry Header -->
+                <div class="dt-entry__header">
+
+                    <!-- Entry Heading -->
+                    <div class="dt-entry__heading">
+                        <h3 class="dt-entry__title">Listado de Usuarios</h3>
+
+
+                    </div>
+                    <!-- /entry heading -->
+                    <div class="dt-card__tools">
+                        <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#form-modal">Agregar nuevo</button>
+                    </div>
+                </div>
+                <!-- /entry header -->
+                <!-- Card -->
+                <div class="dt-card overflow-hidden" style="box-shadow:none !important;">
+
+                    <!-- Card Body -->
+                    <div class="dt-card__body p-0">
+
+                        <!-- Tables -->
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="table_facturas">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase" scope="col">ID</th>
+                                        <th class="text-uppercase" scope="col">ID SAP</th>
+                                        <th class="text-uppercase" scope="col">Nombre</th>
+                                        <th class="text-uppercase" scope="col">Correo</th>
+                                        <th class="text-uppercase" scope="col">Departamento</th>
+                                        <th class="text-uppercase" scope="col">Roles</th>
+                                        <th class="text-uppercase" scope="col">Sucursal</th>
+                                        <th class="text-uppercase" scope="col">Activo</th>
+                                        <th class="text-uppercase" scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model)
+                                    {
+                                        <tr>
+                                            <td data-label="ID">@user.ID_User</td>
+                                            <td data-label="ID SAP">@user.ID_SalesRep</td>
+                                            <td data-label="NOMBRE">@user.Name </td>
+                                            <td data-label="CORREO">@user.Email</td>
+                                            <td data-label="DEPARTAMENTO">@user.Departments</td>
+                                            <td data-label="ROLES">@user.Roles</td>
+                                            <td data-label="SUCURSAL">@user.Assigned_SalesPoint</td>
+                                            <td data-label="ACTIVO">
+
+                                          
+                                                    @if (user.Active == true)
+    {
+                                                <input type="checkbox" class="selectchk" style="font-size:14px;" id="chk_@user.ID_User" data-iduser="@user.ID_User" checked>
+     
+
+}
+else
+{
+                                                <input type="checkbox" class="selectchk" style="font-size:14px;"  id="chk_@user.ID_User" data-iduser="@user.ID_User">
+                             
+}
+                                              
+
+                                            </td>
+                                            <td><a href="#" class="btn btn-primary" onclick="editUser(@user.ID_User)" title="Edit">Editar</a></td>
+                                        </tr>
+                                    }
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /tables -->
+
+                    </div>
+                    <!-- /card body -->
+
+                </div>
+                <!-- /card -->
+
+
+            </div>
+            <!-- /grid item -->
+
+        </div>
+        <!-- /grid -->
+
+    </div>
+    <!-- /site content -->
+    <!-- Footer -->
+    @Html.Partial("~/Views/Shared/Footer.cshtml")
+    <!-- /footer -->
+
+</div>
+<!-- /site content wrapper -->
+<!-- Modal -->
+<div class="modal fade" id="form-modal" tabindex="-1" role="dialog"
+     aria-labelledby="model-8"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <!-- Modal Content -->
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel5">Nuevo usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createUserForm" method="post">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="nameUserC" name="nameUserC" required>
+
+                        <label class="col-form-label">CODIGO SAP:</label>
+                        <input type="text" class="form-control" id="codigoUserC" name="codigoUserC" required>
+
+
+                        <label class="col-form-label">Correo:</label>
+                        <input type="email" class="form-control" id="emailUserC" name="emailUserC" required>
+
+                        <label class="col-form-label">Contrasena:</label>
+                        <input type="password" class="form-control" id="passwordUserC" name="passwordUserC" required>
+
+                        <label class="col-form-label">Telefono:</label>
+                        <input type="text" class="form-control" id="telephoneUserC" name="telephoneUserC" required>
+
+                        <label class="col-form-label">Sucursal:</label>
+                        <select class="form-control" id="SucursalUserC" name="SucursalUserC">
+                            @foreach (var item in ViewBag.puntosventa)
+    {
+                        <option value="@item.Code">@item.Name</option>
+}
+                        </select>
+
+
+                        <label class="col-form-label">Departamentos:</label>
+                        <select type="text" class="form-control" id="departmentsUserC" name="departmentsUserC" style="width:100%;">
+                            <option>Administracion</option>
+                            <option>Ventas</option>
+                        </select>
+
+                        <label class="col-form-label">Roles:</label>
+                        <select type="text" class="form-control" id="rolesUserC" name="rolesUserC" style="width:100%;">
+                            <optgroup label="Administracion">
+                                <option>Administrador</option>
+                            </optgroup>
+                            <optgroup label="Ventas">
+                                <option>Caja</option>
+                                <option>Vendedor</option>
+                            </optgroup>
+                        </select>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+
+        </div>
+        <!-- /modal content -->
+
+    </div>
+</div>
+<!-- /modal -->
+<!-- Modal -->
+<div class="modal fade" id="form-modalEditar" tabindex="-1" role="dialog"
+     aria-labelledby="model-8"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <!-- Modal Content -->
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel5">Editar usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="editUserForm" method="post">
+                <div class="modal-body">
+                    <input type="text" id="IDUserEdit" hidden/>
+                    <div class="form-group">
+                        <label class="col-form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="nameUserEdit" name="nameUserEdit" required>
+
+                        <label class="col-form-label">CODIGO SAP:</label>
+                        <input type="text" class="form-control" id="codigoUserEdit" name="codigoUserEdit" required>
+
+
+                        <label class="col-form-label">Correo:</label>
+                        <input type="email" class="form-control" id="emailUserEdit" name="emailUserEdit" required>
+
+                        <label class="col-form-label">Contrasena:</label>
+                        <input type="password" class="form-control" id="passwordUserEdit" name="passwordUserEdit" required>
+                        <input type="checkbox" onclick="myFunction()">Show Password <br />
+                        <label class="col-form-label">Telefono:</label>
+                        <input type="text" class="form-control" id="telephoneUserEdit" name="telephoneUserEdit" required>
+
+                        <label class="col-form-label">Sucursal:</label>
+
+                        <select class="form-control" id="SucursalUserEdit" name="SucursalUserEdit">
+                            @foreach (var item in ViewBag.puntosventa) {
+                                <option value="@item.Code">@item.Name</option>
+                            }
+                        </select>
+                       
+                        <label class="col-form-label">Departamentos:</label>
+                        <select type="text" class="form-control" id="departmentsUserEdit" name="departmentsUserEdit" style="width:100%;">
+                            <option>Administracion</option>
+                            <option>Ventas</option>
+                        </select>
+
+                        <label class="col-form-label">Roles:</label>
+                        <select type="text" class="form-control" id="rolesUserEdit" name="rolesUserEdit" style="width:100%;">
+                            <optgroup label="Administracion">
+                                <option>Administrador</option>
+                            </optgroup>
+                            <optgroup label="Ventas">
+                                <option>Caja</option>
+                                <option>Vendedor</option>
+                            </optgroup>
+                        </select>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+
+        </div>
+        <!-- /modal content -->
+
+    </div>
+</div>
+<!-- /modal -->
+
+
+<script>
+    window.onload = function () {
+        $('#form-modal').submit(function (event) {
+            event.preventDefault();
+
+        
+
+            var selMulti = $.map($("#departmentsUserC option:selected"), function (el, i) {
+                return $(el).text();
+            });
+            var deps = selMulti.join(",");
+
+
+            var selMulti2 = $.map($("#rolesUserC option:selected"), function (el, i) {
+                return $(el).text();
+            });
+            var roles = selMulti2.join(",");
+
+            $.ajax({
+                url: '/Home/CreateUser',
+                method: 'POST',
+                contentType: 'application/json',
+                datatype: 'application/json',
+                data: JSON.stringify({
+                    name: $('#nameUserC').val(),
+                    idsap: $('#codigoUserC').val(),
+                    email: $('#emailUserC').val(),
+                    password: $('#passwordUserC').val(),
+                    idsucursal: $("#SucursalUserC").val(),
+                    sucursal: $("#SucursalUserC option:selected").text(),
+                    telephone: $('#telephoneUserC').val(),
+                    departments: deps, roles: roles,
+                }),
+
+                success: function (data) {
+                    if (data.Result == "Success") {
+                        $('#form-modal').modal('hide');
+                        var toastsuccess = swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+
+                        toastsuccess({
+                            type: 'success',
+                            title: 'Usuario creado exitosamente.'
+                        });
+                        window.location.reload(true);
+                    } else {
+           
+                        alert(data.Result);
+                    }
+                }
+            });
+        })
+
+        $("#departmentsUserC").select2({
+            multiple: true
+        });
+        $("#rolesUserC").select2({
+            multiple: true
+        });
+
+        $("#rolesUserEdit").select2({
+            multiple: true
+        });
+
+        $("#rolesUserC").val(-1).trigger("change");
+        $("#departmentsUserC").val(-1).trigger("change");
+        $("#rolesReps").val(-2).trigger("change");
+
+        $('#editUserForm').submit(function (event) {
+            event.preventDefault();
+            $('#editUserForm').modal('hide');
+
+            var selMulti = $.map($("#departmentsUserEdit option:selected"), function (el, i) {
+                return $(el).text();
+            });
+            var deps2 = selMulti.join(",");
+
+
+            var selMulti2 = $.map($("#rolesUserEdit option:selected"), function (el, i) {
+                return $(el).text();
+            });
+            var roles2 = selMulti2.join(",");
+
+
+            $.ajax({
+                url: '/Home/EditUser',
+                method: 'POST',
+                contentType: 'application/json',
+                datatype: 'application/json',
+                data: JSON.stringify({
+                    id: $('#IDUserEdit').val(), name: $('#nameUserEdit').val(), idsap:$("#codigoUserEdit").val(),
+                    email: $('#emailUserEdit').val(), password: $('#passwordUserEdit').val(),
+                    telephone: $('#telephoneUserEdit').val(), idsucursal: $("#SucursalUserEdit").val(),
+                    sucursal: $("#SucursalUserEdit option:selected").text(),
+                    departments: deps2, roles: roles2,
+                }),
+
+                success: function (data) {
+                    if (data.Result == "Success") {
+                        var toastsuccess = swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+
+                        toastsuccess({
+                            type: 'success',
+                            title: 'Usuario editado exitosamente.'
+                        });
+
+                        window.location.reload(true);
+                    } else {
+                     
+
+                    }
+                }
+            });
+        })
+
+    }
+</script>

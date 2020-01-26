@@ -105,9 +105,30 @@
 @if (ViewBag.Title == "Dashboard")
 {
     <script>
+
         $(document).ready(function () {
             $("#table_facturas").DataTable();
+
+
+
+
         });
+
+
+        function filtrarTabla() {
+
+            var val = $("#table-filter").val();
+
+            if (this.value = "") {
+
+                $("#table_facturas").DataTable().column(5).search('').draw();
+            } else {
+
+                $("#table_facturas").DataTable().column(5).search(val).draw();
+
+            }
+        }
+
     </script>
 }
 
@@ -131,4 +152,157 @@
 @if (ViewBag.Title == "Invoice_process")
 {
     @Html.Partial("~/Views/Shared/Script_invoiceprocess.cshtml")
+}
+
+
+@if (ViewBag.Title == "Invoice_processEdit")
+{
+    @Html.Partial("~/Views/Shared/Script_invoiceprocessEdit.cshtml")
+}
+
+
+@if (ViewBag.Title == "Users")
+{
+    <script>
+
+
+        $('input.selectchk[type="checkbox"]').on('change', function () {
+
+            var iduser = $(this).data('iduser');
+            var val = $(this).prop('checked');
+
+
+            $.ajax
+                ({
+                    url: '/Home/activeUser',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        iduser: iduser,
+                        selected: val
+                    }),
+                    success: function (result) {
+
+                        var toastsuccess = swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+
+                        toastsuccess({
+                            type: 'success',
+                            title: 'Usuario actualizado exitosamente.'
+                        });
+                    },
+                    error: function () {
+
+
+                    },
+                });
+        });
+
+        //function delUser(id_user) {
+
+        //    swal.fire({
+        //        title: 'Are you sure to delete this user?',
+
+        //        type: 'warning',
+        //        showCancelButton: true,
+        //        confirmButtonColor: '#3dba6f',
+        //        cancelButtonColor: '#aaa',
+        //        confirmButtonText: 'Yes'
+        //    }).then((result) => {
+        //        if (result.value) {
+
+        //            $.ajax({
+        //                url: '/Management/deleteUser',
+        //                type: 'POST',
+        //                data: { 'id_user': id_user },
+        //                cache: false,
+        //                global: false,
+        //                success: function (result) {
+
+        //                    if (result == "SUCCESS") {
+
+        //                        Swal.fire(
+        //                            'User deleted!',
+        //                            'The User has been deleted.',
+        //                            'success'
+        //                        )
+        //                        window.location.reload(true);
+        //                    } else {
+        //                        alert("Something went wrong..");
+        //                    }
+
+
+        //                },
+        //                error: function (request) {
+        //                    alert("Something went wrong..");
+
+        //                }
+        //            });
+
+        //        }
+        //    })
+        //}
+
+        function editUser(id_user) {
+            $.ajax({
+                url: '/Home/getUser',
+                type: 'GET',
+                data: { 'id_user': id_user },
+                cache: false,
+                global: false,
+                success: function (result) {
+                    //console.log(result.result);
+                    $.each($.parseJSON(result.result), function (i, userdata) {
+                        $("#nameUserEdit").val(userdata.Name);
+                        $("#IDUserEdit").val(userdata.ID_User);
+                        $("#emailUserEdit").val(userdata.Email);
+                        $("#passwordUserEdit").val(userdata.Password);
+                        $("#telephoneUserEdit").val(userdata.Telephone);
+                        $("#codigoUserEdit").val(userdata.ID_SalesRep);
+                        $("#SucursalUserC").val(userdata.ID_SalesPoint);
+
+
+
+                        $("#departmentsUserEdit").select2({
+                            multiple: true
+                        });
+                        $("#rolesUserEdit").select2({
+                            multiple: true
+                        });
+                        var array = userdata.Departments.split(',');
+                        $('#departmentsUserEdit').select2('val', [array]);
+
+                        var array2 = userdata.Roles.split(',');
+                        $('#rolesUserEdit').select2('val', [array2]);
+                    });
+
+
+                    $("#form-modalEditar").modal('show');
+                },
+                error: function (request) {
+                    alert("Something went wrong..");
+
+                }
+            });
+        }
+
+
+
+    </script>
+
+    <script>
+        function myFunction() {
+            var x = document.getElementById("passwordUserEdit");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+    </script>
 }

@@ -5,6 +5,13 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="DB_KONCEPTOModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="@SUCURSALES">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Cuentas_por_cobrar' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BI_Cuentas_por_cobrar">
@@ -151,15 +158,6 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Facturas_Encabezado' does not h
           <Property Name="Hora_Fac" Type="smallint" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6013: The table/view 'DB_KONCEPTO.dbo.BI_Metas' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="BI_Metas">
-          <Property Name="ID" Type="bigint" />
-          <Property Name="Fecha" Type="datetime" />
-          <Property Name="Id_Vendedor" Type="nvarchar" MaxLength="10" />
-          <Property Name="Id_Sucursal" Type="nvarchar" MaxLength="10" />
-          <Property Name="Venta_Meta" Type="numeric" Precision="19" Scale="6" />
-        </EntityType>-->
-        <!--Errors Found During Generation:
 warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BI_Series">
           <Key>
@@ -173,6 +171,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <Property Name="Tipo_Doc" Type="varchar" MaxLength="3" Nullable="false" />
         </EntityType>
         <EntityContainer Name="DB_KONCEPTOModelStoreContainer">
+          <EntitySet Name="@SUCURSALES" EntityType="Self.@SUCURSALES" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BI_Cuentas_por_cobrar" EntityType="Self.BI_Cuentas_por_cobrar" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [BI_Cuentas_por_cobrar].[DocNum] AS [DocNum], 
@@ -311,6 +310,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <EntitySet Name="BI_Series" EntityType="DB_KONCEPTOModel.BI_Series" />
           <EntitySet Name="BI_Facturas_Detalle" EntityType="DB_KONCEPTOModel.BI_Facturas_Detalle" />
           <EntitySet Name="BI_Facturas_Encabezado" EntityType="DB_KONCEPTOModel.BI_Facturas_Encabezado" />
+          <EntitySet Name="C_SUCURSALES" EntityType="DB_KONCEPTOModel.C_SUCURSALES" />
         </EntityContainer>
         <EntityType Name="BI_Cuentas_por_cobrar">
           <Key>
@@ -456,6 +456,13 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <Property Name="Cliente" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Hora_Fac" Type="Int16" />
         </EntityType>
+        <EntityType Name="C_SUCURSALES">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -598,6 +605,14 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
                 <ScalarProperty Name="Fecha" ColumnName="Fecha" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DocEntry" ColumnName="DocEntry" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C_SUCURSALES">
+            <EntityTypeMapping TypeName="DB_KONCEPTOModel.C_SUCURSALES">
+              <MappingFragment StoreEntitySet="@SUCURSALES">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

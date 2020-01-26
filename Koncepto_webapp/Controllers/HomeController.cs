@@ -2,9 +2,11 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace Koncepto_webapp.Controllers
 {
@@ -73,6 +75,135 @@ namespace Koncepto_webapp.Controllers
                 return RedirectToAction("Signin", "Home", new { access = false });
 
             }
+        }
+
+        public ActionResult Users()
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                //PERMISOS
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //PUNTOS DE VENTA
+                List<string> puntosVenta = new List<string>(activeuser.ID_SalesPoint.Split(new string[] { "," }, StringSplitOptions.None));
+
+                List<Sys_Users> lstusers = new List<Sys_Users>();
+                lstusers = (from a in dbkoncepto.Sys_Users select a).ToList();
+
+
+                var puntossventa = (from b in SAPkoncepto.C_SUCURSALES select b).ToList();
+                ViewBag.puntosventa = puntossventa;
+                return View(lstusers);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Signin", "Home", new { access = false });
+
+            }
+        }
+
+
+        public JsonResult EditUser(string id, string name, string email, string password, string telephone, string departments, string roles, string idsucursal, string sucursal, int idsap)
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            int idr = Convert.ToInt32(id);
+            Sys_Users User = (from a in dbkoncepto.Sys_Users where (a.ID_User == idr) select a).FirstOrDefault();
+            try
+            {
+                User.Name = name;
+                User.Email = email;
+                User.Password = password;
+                User.Telephone = telephone;
+                User.Departments = departments;
+                User.Roles = roles;
+                User.ID_SalesRep = idsap;
+                User.ID_SalesPoint = idsucursal;
+                User.Assigned_SalesPoint = sucursal;
+                if (User.Departments == null)
+                {
+                    User.Departments = "";
+                }
+                if (User.Roles == null)
+                {
+                    User.Roles = "";
+                }
+
+                if (User.ID_SalesRep == null)
+                {
+                    User.ID_SalesRep = 0;
+                }
+
+                if (User.Telephone == null)
+                {
+                    User.Telephone = "";
+                }
+
+                dbkoncepto.Entry(User).State = EntityState.Modified;
+                dbkoncepto.SaveChanges();
+
+               
+                return Json(new { Result = "Success" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Result = "Something wrong happened, try again. " + ex.Message });
+            }
+
+        }
+
+
+        public JsonResult CreateUser(string id, string name, string email, string password, string telephone, string departments, string roles, string idsucursal, string sucursal, int idsap)
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            Sys_Users User = new Sys_Users();
+            try
+            {
+                User.Name = name;
+                User.Email = email;
+                User.Password = password;
+                User.Telephone = telephone;
+                User.Departments = departments;
+                User.Roles = roles;
+                User.ID_SalesRep = idsap;
+                User.ID_SalesPoint = idsucursal;
+                User.Assigned_SalesPoint = sucursal;
+
+                if (User.Departments == null)
+                {
+                    User.Departments = "";
+                }
+                if (User.Roles == null)
+                {
+                    User.Roles = "";
+                }
+
+                if (User.ID_SalesRep == null)
+                {
+                    User.ID_SalesRep = 0;
+                }
+
+                if (User.Telephone == null)
+                {
+                    User.Telephone = "";
+                }
+
+                User.Active = true;
+                User.Creation_date = DateTime.Now;
+                dbkoncepto.Sys_Users.Add(User);
+                dbkoncepto.SaveChanges();
+
+                return Json(new { Result = "Success" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Result = "Something wrong happened, try again. " + ex.Message });
+            }
+
         }
 
         public ActionResult Signin(bool access = true, int? logpage = 0)
@@ -203,6 +334,57 @@ namespace Koncepto_webapp.Controllers
             return RedirectToAction("Signin", "Home", new { access = false, logpage = 1 });
         }
 
+        public ActionResult getUser(string id_user)
+        {
+
+            try
+            {
+
+                JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                var id = Convert.ToInt32(id_user);
+               
+                var user2 = (from a in dbkoncepto.Sys_Users
+                             where (a.ID_User == id)
+                             select a).ToArray();
+                var result2 = javaScriptSerializer.Serialize(user2);
+                var result = new { result =result2 };
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                string result = "ERROR: " + ex.Message;
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        public ActionResult activeUser(int iduser, bool selected)
+        {
+            try
+            {
+                var usuario = dbkoncepto.Sys_Users.Find(iduser);
+                if (usuario != null)
+                {
+                    usuario.Active = selected;
+                    dbkoncepto.Entry(usuario).State = EntityState.Modified;
+                    dbkoncepto.SaveChanges();
+                    return Json("success", JsonRequestBehavior.AllowGet);
+                }
+                else {
+                    return Json("warning", JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch
+            {
+                return Json("error", JsonRequestBehavior.AllowGet);
+            }
+
+            
+
+
+        }
 
     }
 }

@@ -32,5 +32,6 @@ namespace Koncepto_webapp.Models
         public virtual DbSet<BI_Series> BI_Series { get; set; }
         public virtual DbSet<BI_Facturas_Detalle> BI_Facturas_Detalle { get; set; }
         public virtual DbSet<BI_Facturas_Encabezado> BI_Facturas_Encabezado { get; set; }
+        public virtual DbSet<C_SUCURSALES> C_SUCURSALES { get; set; }
     }
 }

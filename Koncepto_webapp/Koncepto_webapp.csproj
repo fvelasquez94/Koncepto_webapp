@@ -180,6 +180,9 @@
     <Compile Include="Models\BI_Series.cs">
       <DependentUpon>Koncepto_SAP.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\C_SUCURSALES.cs">
+      <DependentUpon>Koncepto_SAP.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Koncepto_SAP.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -13041,6 +13044,10 @@
     <Content Include="Views\Invoices\Invoice_process.cshtml" />
     <Content Include="Views\Shared\Script_invoiceprocess.cshtml" />
     <Content Include="Views\Invoices\Invoices_history.cshtml" />
+    <Content Include="Views\Home\Users.cshtml" />
+    <Content Include="Views\Invoices\Invoice_process2.cshtml" />
+    <Content Include="Views\Invoices\Invoice_processEdit.cshtml" />
+    <Content Include="Views\Shared\Script_invoiceprocessEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

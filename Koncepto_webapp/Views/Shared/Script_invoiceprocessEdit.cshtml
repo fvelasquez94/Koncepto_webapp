@@ -625,8 +625,39 @@
         $("#numero_tarjeta").inputmask("9999-9999-9999-9999");
 
 
+        $(".disable-owl-swipe").on("touchstart mousedown", function (e) {
+            // Prevent carousel swipe
+            e.stopPropagation();
+        })
 
 
+
+        owl.trigger("to.owl.carousel", [2, 1, true]);
+
+
+        $('#cliente').trigger('change');
+
+        setTimeout(function () {
+
+        try {
+
+          var json = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model, Newtonsoft.Json.Formatting.Indented));
+            console.log(json);
+
+            $.each(json, function (i, producto) {
+                agregarCarritoDesdeDB(producto.CodigoProducto, producto.NombreProducto, producto.Cantidad, producto.PrecioDescuento, producto.TotalFila, producto.Precio, producto.Precio*producto.Cantidad , producto.CodigoProducto, producto.Descuento);
+            });
+
+     
+
+
+
+        } catch{
+
+            alert("Error al cargar los productos, actualice la pagina")
+        }
+
+        }, 2000);
 
     });
 
@@ -713,10 +744,7 @@
 </script>
 
 <script type="text/javascript">
-    $(".disable-owl-swipe").on("touchstart mousedown", function (e) {
-        // Prevent carousel swipe
-        e.stopPropagation();
-    })
+
 
 
     //MODAL SCRIPT
@@ -1122,6 +1150,88 @@
        
     }
 
+
+
+    //CARRITO DESDE DATABASE
+    function agregarCarritoDesdeDB(idproducto, nombreproducto, cantidad, precio, total, preciofijo, subtotal, sku, descuento) {
+
+
+
+        var desccanti = ((preciofijo - precio) * cantidad);
+        var preciodesc = parseFloat(preciofijo - descuento);
+        //Agregar a carrito de compras
+        var item_widget = "";
+        item_widget += '<div class="dt-widget__item" id="widget_' + idproducto + '">';
+        //item_widget += '<div class="dt-widget__img"><img class="img-fluid" style="height:60px; width:60px;" src="https://via.placeholder.com/115x58"alt="Logo"></div>';
+        item_widget += '<div class="dt-widget__info">';
+        item_widget += '<div class="dt-widget__title"><label>' + sku + " | " + nombreproducto + '</label></div>';
+        item_widget += '<p class="dt-widget__subtitle">Precio: $' + preciofijo + '</p>';
+        item_widget += '<p class="dt-widget__subtitle descuentowidget">Descuento: $' + descuento + '</p>';
+        item_widget += '<p class="dt-widget__subtitle totalwidget" style="display:none;">' + total + '</p>';
+        item_widget += '<p class="dt-widget__subtitle subtotalwidget" style="display:none;">' + subtotal + '</p>';
+        item_widget += '<p class="dt-widget__subtitle descwidget" style="display:none;">' + desccanti + '</p>';
+        item_widget += '<p class="dt-widget__subtitle subtotaltext">Total: $' + precio + ' x ' + cantidad + ' = $' + total + '</p>';
+        item_widget += '</div>';
+        item_widget += '<div class="dt-widget__extra">';
+        item_widget += '<div class="hide-content">';
+        item_widget += '<div class="action-btn-group">';
+        item_widget += '<button id="wbtn_' + idproducto + '" onclick="eliminarwidget(this.id)" class="btn btn-default text-danger dt-fab-btn"><i class="icon icon-circle-remove-o icon-1x"></i></button>';
+        item_widget += ' </div>';
+        item_widget += '</div>';
+        item_widget += '</div>';
+        item_widget += '</div>';
+
+        $("#widgetprincipal").append(item_widget);
+
+
+        //Agregar a listado final
+
+        var t = $('#prodfacturar').DataTable();
+        //var td = '';
+        //td += '<td>' + sku + '</td>';
+        //td += '<td>' + nombreproducto + '</td>';
+        //td += '<td>' + cantidad + '</td>';
+        //td += '<td>' + preciofijo + '</td>';
+        //td += '<td>' + descuento + '</td>';
+        //td += '<td>' + preciodesc + '</td>';
+        //td += '<td>' + total + '</td>';
+        //td += '<td><button id="btndelfacee_' + sku + '" class="btn btn-danger deletebtnprod" data-idpro="' + sku + '"><i class="icon icon-trash"></i></button></td>';
+        //td += '<td><button class="btn btn-info btnEditprod" data-toggle="modal" data-target="#form-modalProductoEditar" data-idproducto="' + sku + '" data-nombreproducto="' + nombreproducto + '" data-precioproducto="' + preciofijo + '" data-descuentoproducto="' + descuento + '" data-preciodescuento="' + preciodesc + '" data-cantidad="' + cantidad + '" data-totalproducto="' + total +'"><i class="icon icon-editors"></i></button></td>';
+
+
+
+
+        //$('#prodfacturar > tbody:last-child').append('<tr id=row_' + sku + '>' + td + '</tr>');
+        //$('#prodfacturar').DataTable().draw();
+        var row = t.row.add([sku,
+            nombreproducto, cantidad,
+            preciofijo.toLocaleString('en-US', { style: 'currency', currency: 'USD' }), descuento.toLocaleString('en-US', { style: 'currency', currency: 'USD' }), preciodesc.toLocaleString('en-US', { style: 'currency', currency: 'USD' }), total.toLocaleString('en-US', { style: 'currency', currency: 'USD' }), '<button style="width: 100%;"  id="btndelfacee_' + sku + '" class="btn btn-danger deletebtnprod" data-idpro="' + sku + '"><i class="icon icon-trash"></i></button>', '<button id="btnEditprodf_' + sku + '" class="btn btn-info btnEditprod" style="width: 100%;" data-toggle="modal" data-target="#form-modalProductoEditar" data-idproducto="' + sku + '" data-nombreproducto="' + nombreproducto + '" data-precioproducto="' + preciofijo + '" data-descuentoproducto="' + descuento + '" data-preciodescuento="' + preciodesc + '" data-cantidad="' + cantidad + '" data-totalproducto="' + total + '"><i class="icon icon-editors"></i></button>'
+        ]).node().id = 'row_' + sku;
+        t.row(row).column(0).nodes().to$().attr("data-label", "SKU");
+        t.row(row).column(1).nodes().to$().attr("data-label", "PRODUCTO");
+        t.row(row).column(2).nodes().to$().attr("data-label", "CANTIDAD");
+        t.row(row).column(3).nodes().to$().attr("data-label", "PRECIO");
+        t.row(row).column(4).nodes().to$().attr("data-label", "DESCUENTO");
+        t.row(row).column(5).nodes().to$().attr("data-label", "PRECIO/DESC");
+        t.row(row).column(6).nodes().to$().attr("data-label", "TOTAL");
+
+
+        t.draw(true);
+
+        //final
+        limpiarAgregar();
+        $("#iconshop").addClass("animation-customizer")
+
+        sumarTotal();
+
+
+
+
+
+    }
+    //
+
+
     //Editar carrito
     function editarCarrito() {
         var idproducto = $("#idproductoEditar").val();
@@ -1445,7 +1555,7 @@
         $("#descuentosfac").val(format2(desc, ''));
 
         var tipocont = $("#tipocontribuyente").val();
-
+        
         if (tipocont == "GRANDE") {
             var antici = parseFloat((subtotal - desc) * 0.01);
             $("#anticipoivafac").val(format2(antici, ''));
@@ -1454,13 +1564,13 @@
 
             $("#totalfac").val(format2(totalfinal, ''));
             $("#totalPagar").val(format2(totalfinal, ''));
-
+       
         } else {
             $("#anticipoivafac").val('0.00');
             var totalfinal = (total + iva);
             $("#totalfac").val(format2(totalfinal, ''));
             $("#totalPagar").val(format2(totalfinal, ''));
-      
+         
         }
 
 
@@ -1576,7 +1686,7 @@
             if (VoucherTarjeta == null) { VoucherTarjeta = ""; }
 
 
-
+            var ideliminar = @ViewBag.ideliminar;
             var Docentry = "";
             var MensajeError = '';
 
@@ -1646,10 +1756,10 @@
 
             $.ajax
                 ({
-                    url: '/Invoices/Save_InvoiceData',
+                    url: '/Invoices/Save_InvoiceDatafromPedido',
                     type: 'POST',
 
-                    data: { 'detailsInvoice': objects, 'headerInvoice': headerdata },
+                    data: { 'detailsInvoice': objects, 'headerInvoice': headerdata, 'ideliminar': ideliminar },
                     success: function (result) {
                         if (result == "SUCCESS") {
                             var toastsuccess = swal.mixin({
@@ -1664,7 +1774,7 @@
                                 title: 'Factura creada exitosamente.'
                             });
 
-                            window.location.reload(true);
+                            window.location.href = '@Url.Action("Invoice_process","Invoices")';
 
                         } else {
                             var toastsuccess = swal.mixin({

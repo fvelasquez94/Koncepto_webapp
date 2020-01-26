@@ -210,7 +210,13 @@ else
                             <h3 class="dt-entry__title">Historial de facturacion</h3>
                         </div>
                         <!-- /entry heading -->
-
+                        <div class="dt-card__tools">
+                           <select class="form-control" id="table-filter" onchange="filtrarTabla()">
+                               <option value="">Ver todos</option>
+                               <option value="1">Facturados</option>
+                               <option value="0">Pendientes de Pago</option>
+                           </select>
+                        </div>
                     </div>
                     <!-- /entry header -->
                     <!-- Card -->
@@ -229,6 +235,7 @@ else
                                             <th class="text-uppercase" scope="col">Cliente</th>
                                             <th class="text-uppercase" scope="col">Vendedor</th>
                                             <th class="text-uppercase" scope="col">Total</th>
+                                            <th hidden class="text-uppercase" scope="col">Total</th>
                                             <th class="text-uppercase" scope="col"></th>
                                         </tr>
                                     </thead>
@@ -246,9 +253,10 @@ else
                                         <td data-label="CLIENTE">@factura.Cod_cliente - @factura.Cliente</td>
                                         <td data-label="VENDEDOR">@factura.Vendedor</td>
                                     <td data-label="TOTAL">$@factura.TotalFactura.ToString("N2")</td>
+                                    <td hidden>@factura.Estado</td>
                                     <td data-label="">
                                         @if (factura.Estado == 0) {
-                                            <button class="btn btn-primary mr-2 mb-2">Facturar</button>
+                                            <a href="@Url.Action("Invoice_processEdit","Invoices", new { factura=factura.ID_factura})" class="btn btn-primary mr-2 mb-2">Facturar</a>
                                         }
                                             
                                     </td>

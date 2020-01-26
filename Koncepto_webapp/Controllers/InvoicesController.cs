@@ -51,7 +51,120 @@ namespace Koncepto_webapp.Controllers
             public string grupo { get; set; }
 
         }
+
         public ActionResult Invoice_process()
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                //PERMISOS
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //PUNTOS DE VENTA
+                List<string> puntosVenta = new List<string>(activeuser.ID_SalesPoint.Split(new string[] { "," }, StringSplitOptions.None));
+
+
+                var lstCustomers = SAPkoncepto.BI_Dim_Customers.ToList();
+                ViewBag.lstCustomers = lstCustomers;
+
+
+                var grupoCliente = SAPkoncepto.BI_Dim_Customers.Select(c => new grupo_clientes { id_grupo = c.Id_Grupo_Clientes, grupo = c.Grupo_Clientes }).Distinct().ToList();
+                ViewBag.grupoCliente = grupoCliente;
+
+
+                var lstCategories = (from a in SAPkoncepto.BI_Dim_Productos where (a.Nombre_Producto != null && a.Linea != null && a.Marca != null && a.Id_Grupo_Productos != 100) select new grupo_productos { id_grupo = a.Id_Grupo_Productos, grupo = a.Grupo_Productos }).Distinct().OrderBy(c => c.grupo).ToList();
+                ViewBag.lstCategories = lstCategories;
+
+                List<BI_Dim_Empleados> vendedores = new List<BI_Dim_Empleados>();
+                if (activeuser.Roles.Contains("Vendedor"))
+                {
+                    vendedores = (from a in SAPkoncepto.BI_Dim_Empleados where (a.Tipo_Empleado.Contains("Vendedor") && a.Activo == "Y" && a.Id_Vendedor == activeuser.ID_SalesRep) select a).ToList();
+                }
+                else
+                {
+                    vendedores = (from a in SAPkoncepto.BI_Dim_Empleados where (a.Tipo_Empleado.Contains("Vendedor") && a.Activo == "Y") select a).ToList();
+                }
+
+
+                ViewBag.lstEmpleados = vendedores;
+
+
+
+                return View();
+
+            }
+            else
+            {
+
+                return RedirectToAction("Signin", "Home", new { access = false });
+
+            }
+        }
+
+        public ActionResult Invoice_processEdit(int factura)
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                //PERMISOS
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //PUNTOS DE VENTA
+                List<string> puntosVenta = new List<string>(activeuser.ID_SalesPoint.Split(new string[] { "," }, StringSplitOptions.None));
+
+
+
+                //Necesario
+
+                //factura
+                //header
+                var header = (from a in dbkoncepto.Tb_Invoices where (a.ID_factura == factura) select a).FirstOrDefault();
+                //detalles
+                var detalles = (from a in dbkoncepto.Tb_Invoices_Details where (a.ID_factura == factura) select a).ToList();
+                //Enviamos cliente seleccionado
+
+                ViewBag.headerfactura = header;
+
+                //
+
+                var lstCustomers = SAPkoncepto.BI_Dim_Customers.ToList();
+                ViewBag.lstCustomers = lstCustomers;
+
+
+                var grupoCliente = SAPkoncepto.BI_Dim_Customers.Select(c => new grupo_clientes { id_grupo = c.Id_Grupo_Clientes, grupo = c.Grupo_Clientes }).Distinct().ToList();
+                ViewBag.grupoCliente = grupoCliente;
+
+
+                var lstCategories = (from a in SAPkoncepto.BI_Dim_Productos where (a.Nombre_Producto != null && a.Linea != null && a.Marca != null && a.Id_Grupo_Productos != 100) select new grupo_productos { id_grupo = a.Id_Grupo_Productos, grupo = a.Grupo_Productos }).Distinct().OrderBy(c => c.grupo).ToList();
+                ViewBag.lstCategories = lstCategories;
+
+                List<BI_Dim_Empleados> vendedores = new List<BI_Dim_Empleados>();
+
+                    vendedores = (from a in SAPkoncepto.BI_Dim_Empleados where (a.Id_Vendedor==header.ID_Vendedor) select a).ToList();
+                
+
+
+                ViewBag.lstEmpleados = vendedores;
+
+
+                ViewBag.ideliminar = header.ID_factura;
+
+                return View(detalles);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Signin", "Home", new { access = false });
+
+            }
+        }
+
+        public ActionResult Invoice_process2()
         {
             if (generalClass.checkSession())
             {
@@ -415,6 +528,173 @@ namespace Koncepto_webapp.Controllers
 
         }
 
+
+        [HttpPost]
+        public ActionResult Save_InvoiceDatafromPedido(int ideliminar,List<Tb_Invoices_Details> detailsInvoice, List<Tb_Invoices> headerInvoice)
+        {
+            string ttresult = "";
+            try
+            {
+
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+
+
+
+                if (detailsInvoice.Count > 0 && headerInvoice.Count > 0)
+                {
+
+                    //ELIMINAMOS ANTERIOR
+
+                     Tb_Invoices headereliminar = dbkoncepto.Tb_Invoices.Find(ideliminar);
+                    dbkoncepto.Tb_Invoices.Remove(headereliminar);
+                    dbkoncepto.SaveChanges();
+
+
+                    var listtodelete = dbkoncepto.Tb_Invoices_Details.Where(a => a.ID_factura == ideliminar).ToList();
+                    dbkoncepto.Tb_Invoices_Details.RemoveRange(listtodelete);
+                    dbkoncepto.SaveChanges();
+
+
+
+
+
+
+                    //
+
+                    Tb_Invoices header = new Tb_Invoices();
+                    //guardamos cabecera
+                    header = headerInvoice.FirstOrDefault();
+
+
+                    if (header.BancoCheque == null) { header.BancoCheque = ""; }
+                    if (header.NumeroCheque == null) { header.NumeroCheque = ""; }
+                    if (header.TitularTarjeta == null) { header.TitularTarjeta = ""; }
+                    if (header.DocumentoTarjeta == null) { header.DocumentoTarjeta = ""; }
+                    if (header.NumeroTarjeta == null) { header.NumeroTarjeta = ""; }
+                    if (header.VoucherTarjeta == null) { header.VoucherTarjeta = ""; }
+
+                    header.Docentry = "";
+                    header.MensajeError = "";
+                    header.ID_sucursal = activeuser.ID_SalesPoint;
+                    header.Sucursal = activeuser.Assigned_SalesPoint;
+                    header.Estado = 1;
+                    dbkoncepto.Tb_Invoices.Add(header);
+                    dbkoncepto.SaveChanges();
+
+                    //guardamos detalles
+
+                    foreach (var item in detailsInvoice)
+                    {
+
+                        Tb_Invoices_Details newdetail = new Tb_Invoices_Details();
+                        newdetail = item;
+                        newdetail.MensajeError = "";
+                        newdetail.DocEntryDevolucion = "";
+
+                        newdetail.ID_factura = header.ID_factura;
+
+                    }
+
+                    dbkoncepto.Tb_Invoices_Details.AddRange(detailsInvoice);
+                    dbkoncepto.SaveChanges();
+
+                    ttresult = "SUCCESS";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+
+
+
+                ttresult = "No data";
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
+
+
+
+
+        [HttpPost]
+        public ActionResult Save_Pedido(List<Tb_Invoices_Details> detailsInvoice, List<Tb_Invoices> headerInvoice)
+        {
+            string ttresult = "";
+            try
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                if (detailsInvoice.Count > 0 && headerInvoice.Count > 0)
+                {
+
+
+                    Tb_Invoices header = new Tb_Invoices();
+                    //guardamos cabecera
+                    header = headerInvoice.FirstOrDefault();
+
+
+                    if (header.BancoCheque == null) { header.BancoCheque = ""; }
+                    if (header.NumeroCheque == null) { header.NumeroCheque = ""; }
+                    if (header.TitularTarjeta == null) { header.TitularTarjeta = ""; }
+                    if (header.DocumentoTarjeta == null) { header.DocumentoTarjeta = ""; }
+                    if (header.NumeroTarjeta == null) { header.NumeroTarjeta = ""; }
+                    if (header.VoucherTarjeta == null) { header.VoucherTarjeta = ""; }
+
+                    header.TipoDocumento = "";
+                    header.Cod_tipoDocumento = "";
+                    header.TipoPago = "";
+                    header.Cod_tipoPago = "";
+                    header.Docentry = "";
+                    header.MensajeError = "";
+                    header.ID_sucursal = activeuser.ID_SalesPoint;
+                    header.Sucursal = activeuser.Assigned_SalesPoint;
+                    header.Estado = 0;//pedido
+                    dbkoncepto.Tb_Invoices.Add(header);
+                    dbkoncepto.SaveChanges();
+
+                    //guardamos detalles
+
+                    foreach (var item in detailsInvoice)
+                    {
+
+                        Tb_Invoices_Details newdetail = new Tb_Invoices_Details();
+                        newdetail = item;
+                        newdetail.MensajeError = "";
+                        newdetail.DocEntryDevolucion = "";
+
+                        newdetail.ID_factura = header.ID_factura;
+
+                    }
+
+                    dbkoncepto.Tb_Invoices_Details.AddRange(detailsInvoice);
+                    dbkoncepto.SaveChanges();
+
+                    ttresult = "SUCCESS";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+
+
+
+                ttresult = "No data";
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
 
         public ActionResult Invoices_history(string fstartd, string fendd)
         {

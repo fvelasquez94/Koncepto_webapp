@@ -1,0 +1,998 @@
+﻿@model   List<Koncepto_webapp.Models.Tb_Invoices_Details>
+
+@{
+    ViewBag.Title = "Invoice_processEdit";
+
+}
+
+<!-- Site Content Wrapper -->
+<div class="dt-content-wrapper">
+
+    <!-- Site Content -->
+    <div class="dt-content">
+
+        <!-- Brand tool -->
+        <div class="dt-brand__tool mb-8 d-lg-none" data-toggle="main-sidebar">
+            <div class="hamburger-inner"></div>
+        </div>
+        <!-- /brand tool -->
+        <!-- Page Header -->
+        <div class="dt-page__header">
+            <h1 class="dt-page__title">Facturacion</h1>
+        </div>
+
+        <div class="alert alert-warning" id="alertaCreditos" style="display:none;" role="alert">
+            Cliente no cuenta con credito disponible.
+            <a href="javascript:void(0)" class="alert-link">
+                Ver historial
+            </a>
+
+        </div>
+
+        <!-- /page header -->
+        <!-- Grid -->
+        <div class="row">
+            <div class="col-xl-12">
+                <!-- Card -->
+                <div class="card dt-card-carousel">
+
+                    <!-- Card Body -->
+                    <div class="card-body p-0">
+                        <div class="row no-gutters h-100">
+                            <div class="col-sm-12 order-sm-1">
+                                <!-- Carousel -->
+                                <div class="owl-carousel owl-theme ">
+                                    <!-- Card Body -->
+                                    <div class="card-body disable-owl-swipe">
+
+                                        <!-- Card Title-->
+                                        <span class="d-block f-16 text-light-gray mb-2">Ingreso de Cliente</span>
+                                        <h2 class="card-title font-weight-normal">Busqueda por DUI, NRC o Nombre de Cliente</h2>
+                                        <!-- Card Title-->
+                                        <!-- Content Area -->
+                                        <div>
+
+                                            <select class="form-control js-example-responsive" id="cliente" style="width: 100%">
+                                                <option value="0">Seleccione Cliente</option>
+                                                @foreach (var customer in ViewBag.lstCustomers)
+    {
+        if (ViewBag.headerfactura.Cod_cliente == customer.Id_Cliente)
+        {
+                                            <option value="@customer.Id_Cliente" selected>DUI: @customer.DUI - NRC: @customer.NRC - NOMBRE: @customer.Nombre_Cliente</option>
+}
+else
+{
+                                            <option value="@customer.Id_Cliente">DUI: @customer.DUI - NRC: @customer.NRC - NOMBRE: @customer.Nombre_Cliente</option>
+}
+
+}
+
+                                            </select><br /><br />
+                                            <div class="float-right">
+                                                <button onclick="moveNext_slide()" class="btn btn-secondary">Siguiente</button>
+                                            </div>
+
+                                        </div>
+                                        <!-- /content area -->
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <div class="mb-3" id="clientenoexiste">
+                                            <a href="#" class="d-flex align-items-center" data-toggle="modal"
+                                               data-target="#form-modal">
+                                                <i class="icon icon-info mr-2"></i>
+                                                <span class="text-dark f-12">Click aqui si el cliente no existe</span>
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                    <!-- /card body -->
+                                    <!-- Card Body -->
+                                    <div class="card-body disable-owl-swipe">
+
+                                        <!-- Card Title-->
+                                        <span class="d-block f-16 text-light-gray mb-2">Seleccion de productos</span>
+                                        <h2 class="card-title font-weight-normal">Filtre los productos por categoria o realice la busqueda por SKU.</h2>
+                                        <!-- Card Title-->
+                                        <!-- Content Area -->
+                                        <!-- /content area -->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <input type="text" id="codigosku" placeholder="SKU" class="form-control" onkeypress="borrar1()" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="descripcionprod" placeholder="Nombre de producto" class="form-control" onkeypress="borrar2()" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="number" id="codigobarras" placeholder="Codigo de barras" class="form-control" pattern="\d*" onkeypress="borrar3()" />
+                                                <label class="d-flex align-items-center">
+
+                                                    <i class="icon icon-play-circle-o mr-2"></i>
+                                                    <span class="text-dark f-12">Coloque el cursor sobre la caja de texto y escanee el codigo de barras</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-secondary" onclick="buscarProducto()">Buscar producto</button><br /><br />
+
+                                        <h1>O busque aqui</h1>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <select class="form-control" style="width:100%;" onchange="filter_linea()" id="sel_grupo">
+                                                    <option value="0">Seleccione Grupo</option>
+                                                    @foreach (var grupoproducto in ViewBag.lstCategories)
+                                                    {
+                                                        <option value="@grupoproducto.id_grupo">@grupoproducto.grupo</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <select class="form-control" style="width:100%;" onchange="filter_marca()" id="sel_linea"></select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <select class="form-control" style="width:100%;" onchange="mostrar_productos()" id="sel_marca"></select>
+                                            </div>
+
+                                        </div>
+                                        <hr />
+                                        <br /><br />
+                                        <!-- Grid Item -->
+                                        <div class="row" id="listaproductos">
+
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="float-left">
+                                                    <a href="#" onclick="movePrev_slide()" class="text-dark">
+                                                        <i class="icon icon-arrow-left icon-fw icon-1x"></i><span class="display-6 align-middle ml-1">Volver</span>
+                                                    </a>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="float-right">
+                                                    <button onclick="moveNext_slidecheckout()" class="btn btn-secondary">Detalles</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- /card body -->
+                                    <!-- Card Body -->
+                                    <div class="card-body disable-owl-swipe">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="float-left">
+                                                    <a href="#" onclick="movePrev_slide()" class="text-dark">
+                                                        <i class="icon icon-arrow-left icon-fw icon-1x"></i><span class="display-6 align-middle ml-1">Volver</span>
+                                                    </a>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="float-right">
+                                                    <button onclick="moveNext_slide()" class="btn btn-secondary">Pagar</button>
+                                                </div>
+                                            </div>
+                                        </div><br /><br />
+                                        <!-- Card Title-->
+                                        <span class="d-block f-16 text-light-gray mb-2">Detalles</span>
+                                        <h2 class="card-title font-weight-normal">Factura</h2>
+
+                                        <!-- Grid -->
+                                        <div class="row">
+
+                                            <!-- Grid Item -->
+                                            <div class="col-xl-8">
+
+                                                <!-- Card -->
+                                                <div class="dt-card">
+
+                                                    <!-- Card Header -->
+                                                    <div class="dt-card__header">
+
+                                                        <!-- Card Heading -->
+                                                        <div class="dt-card__heading">
+                                                            <h3 class="dt-card__title">Datos</h3>
+                                                        </div>
+                                                        <!-- /card heading -->
+
+                                                    </div>
+                                                    <!-- /card header -->
+                                                    <!-- Card Body -->
+                                                    <div class="dt-card__body">
+
+                                                        <!-- Form -->
+                                                        <form>
+
+                                                            <!-- Form Group -->
+
+                                                            <div class="row">
+
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="email-1">Cliente</label>
+                                                                    <input type="text" id="codcliente_factura" class="form-control" hidden>
+                                                                    <input type="text" id="nombreCliente" class="form-control" readonly>
+                                                                </div>
+                                                                <div class="form-group col-md-3">
+                                                                    <label>Tipo de Cliente</label>
+                                                                    <input type="text" class="form-control" id="tipocliente" readonly>
+                                                                </div>
+                                                                <div class="form-group col-md-3">
+                                                                    <label>Tipo de Contribuyente</label>
+                                                                    <input type="text" class="form-control" id="tipocontribuyente" readonly>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <!-- /form group -->
+                                                            <!-- Form Group -->
+                                                            <div class="row">
+                                                                <div class="form-group col-md-4">
+                                                                    <label for="password-1">DUI</label>
+                                                                    <input type="text" class="form-control" id="duic" readonly>
+                                                                </div>
+                                                                <div class="form-group col-md-4">
+                                                                    <label for="password-1">NIT</label>
+                                                                    <input type="text" class="form-control" id="nitc" readonly>
+                                                                </div>
+                                                                <div class="form-group col-md-4">
+                                                                    <label for="password-1">NRC</label>
+                                                                    <input type="text" class="form-control" id="nrcc" readonly>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- /form group -->
+                                                            <div class="row">
+                                                                <div class="form-group col-md-6">
+                                                                    <label>Tipo de Documento</label>
+
+                                                                    <select class="form-control" id="tipodocumento">
+                                                                        <option>ANTICIPO</option>
+                                                                        <option>CREDITO FISCAL</option>
+                                                                        <option selected>FACTURA</option>
+                                                                    </select>
+                                                                </div>
+
+
+
+                                                                <div class="form-group col-md-6">
+                                                                    <label>Vendedor</label>
+
+                                                                    <select class="form-control" id="selvendedor">
+                                                                        @foreach (var vendedor in ViewBag.lstEmpleados)
+            {
+                                                            <option value="@vendedor.Id_Vendedor">@vendedor.Vendedor</option>
+}
+                                                                    </select>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </form>
+                                                        <!-- /form -->
+
+                                                    </div>
+                                                    <!-- /card body -->
+
+                                                </div>
+                                                <!-- /card -->
+
+                                            </div>
+                                            <!-- /grid item -->
+                                            <!-- Grid Item -->
+                                            <div class="col-xl-4">
+
+                                                <!-- Card -->
+                                                <div class="dt-card dt-card__full-height">
+
+                                                    <!-- Card Header -->
+                                                    <!-- /card header -->
+                                                    <!-- Card Body -->
+                                                    <div class="dt-card__body">
+
+                                                        <!-- Form -->
+                                                        <form>
+
+                                                            <!-- Form Group -->
+                                                            <div class="form-group form-row">
+                                                                <label class="col-xl-6 col-form-label text-sm-right">
+                                                                    Sub Total
+                                                                </label>
+                                                                <div class="input-group col-xl-6">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text" id="inputGroupPrepend2">$</span>
+                                                                    </div>
+                                                                    <input type="text" class="form-control" id="subtotalfac" style="text-align:right; font-size:16px;" readonly>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="form-group form-row">
+                                                                <label class="col-xl-6 col-form-label text-sm-right">
+                                                                    IVA (13%)
+                                                                </label>
+                                                                <div class="input-group col-xl-6">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text" id="inputGroupPrepend2">$</span>
+                                                                    </div>
+                                                                    <input type="text" class="form-control" style="text-align:right; font-size:16px;" id="ivafac" readonly>
+                                                                </div>
+
+                                                            </div>
+                                                            <!-- /form group -->
+                                                            <!-- Form Group -->
+                                                            <div class="form-group form-row">
+                                                                <label class="col-xl-6 col-form-label text-sm-right">
+                                                                    Descuentos
+                                                                </label>
+                                                                <div class="input-group col-xl-6">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text" id="inputGroupPrepend2">$</span>
+                                                                    </div>
+                                                                    <input type="text" class="form-control" style="text-align:right; font-size:16px;" id="descuentosfac" readonly>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /form group -->
+                                                            <div class="form-group form-row">
+                                                                <label class="col-xl-6 col-form-label text-sm-right">
+                                                                    Anticipo IVA (1%)
+                                                                </label>
+                                                                <div class="input-group col-xl-6">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text" id="inputGroupPrepend2">$</span>
+                                                                    </div>
+                                                                    <input type="text" class="form-control" style="text-align:right; font-size:16px;" id="anticipoivafac" readonly>
+
+                                                                </div>
+
+                                                            </div>
+                                                            <hr />
+                                                            <div class="form-group form-row">
+                                                                <label class="col-xl-6 col-form-label text-sm-right">
+                                                                    Total
+                                                                </label>
+                                                                <div class="input-group col-xl-6">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text" id="inputGroupPrepend2">$</span>
+                                                                    </div>
+                                                                    <input type="text" class="form-control" style="text-align:right; font-size:17px; font-weight:bold;" id="totalfac" readonly>
+                                                                </div>
+                                                            </div>
+
+
+                                                            <!-- /form group -->
+                                                            <!-- Form Group -->
+                                                            <!-- /form group -->
+
+                                                        </form>
+                                                        <!-- /form -->
+
+                                                    </div>
+                                                    <!-- /card body -->
+
+                                                </div>
+                                                <!-- /card -->
+
+                                            </div>
+                                            <!-- /grid item -->
+
+                                        </div>
+                                        <!-- /grid -->
+
+                                        <div class="table-responsive">
+                                            <table class="table table-striped" id="prodfacturar">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:100px;" scope="col">SKU</th>
+                                                        <th style="width:330px;" scope="col">Producto</th>
+                                                        <th scope="col">Cantidad</th>
+                                                        <th scope="col">Precio</th>
+                                                        <th scope="col">Descuento</th>
+                                                        <th scope="col">Precio/Desc</th>
+                                                        <th scope="col">Total</th>
+                                                        <th scope="col"></th>
+                                                        <th scope="col"></th>
+                                                    </tr>
+
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                        <br /><br />
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="float-left">
+                                                    <a href="#" onclick="movePrev_slide()" class="text-dark">
+                                                        <i class="icon icon-arrow-left icon-fw icon-1x"></i><span class="display-6 align-middle ml-1">Volver</span>
+                                                    </a>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="float-right">
+                                                    <button onclick="moveNext_slide()" class="btn btn-secondary">Pagar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /card body -->
+                                    <!-- Card Body -->
+                                    <div class="card-body disable-owl-swipe">
+
+                                        <!-- Card Title-->
+                                        <span class="d-block f-16 text-light-gray mb-2">Pago</span>
+                                        <h2 class="card-title font-weight-normal">Metodos de Pago</h2>
+
+                                        <!-- Content Area -->
+                                        <div class="row">
+                                            <div class="form-group col-md-4">
+                                                <label>Tipo de Documento</label>
+                                                <input type="text" class="form-control" id="texttipopago" value="FACTURA" readonly />
+                                            </div>
+                                            <div class="form-group col-md-8">
+                                                <label>Tipo de Pago</label>
+
+                                                <select class="form-control" id="tipopago">
+                                                    <option value="03">CHEQUE</option>
+                                                    <option value="02">CREDITO</option>
+                                                    <option selected value="01">EFECTIVO</option>
+                                                    <option value="04">TARJETA DE CREDITO</option>
+
+                                                </select>
+                                            </div>
+
+
+                                        </div>
+                                        <input type="text" id="CreditoActual" hidden/>
+                                        <div class="row">
+
+                                            <div class="col-md-4">
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Total a Pagar
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">$</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" style="text-align:right; font-size:20px;font-weight:bold" id="totalPagar" readonly>
+                                                    </div>
+                                                </div>
+                                                <div id="anticipodiv" style="display:none;">
+                                                    <div class="form-group form-row">
+                                                        <label class="col-xl-6 col-form-label text-sm-right">
+                                                            Anticipo
+                                                        </label>
+                                                        <div class="input-group col-xl-6">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text">$</span>
+                                                            </div>
+                                                            <input type="number" class="form-control" style="text-align:right; font-size:20px;" id="anticipo">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group form-row">
+                                                        <label class="col-xl-6 col-form-label text-sm-right">
+                                                            Pendiente
+                                                        </label>
+                                                        <div class="input-group col-xl-6">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text">$</span>
+                                                            </div>
+                                                            <input type="text" class="form-control" style="text-align:right; font-size:20px;" id="pendiente" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                            <div class="form-group col-md-8" id="div_efectivo">
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Efectivo recibido
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">$</span>
+                                                        </div>
+                                                        <input type="number" class="form-control" style="text-align:right; font-size:20px;" id="recibido1">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Cambio
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">$</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" style="text-align:right; font-size:20px;" value="0.00" id="cambio" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-md-10 col-form-label text-sm-right">
+
+                                                    </label>
+                                                    <div class="col-md-1">
+                                                        <button class="btn btn-secondary" onclick="Facturar()">Facturar</button>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-8" id="div_tarjeta" style="display:none;">
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Nombre de Titular
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"></span>
+                                                        </div>
+                                                        <input type="text" class="form-control" style="text-align:right; font-size:16px;" id="nombre_tarjeta" pattern="[a-zA-Z]+">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Documento
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">#</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" style="text-align:right; font-size:20px;" id="doc_tarjeta">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Numero de Tarjeta
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">#</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" style="text-align:right; font-size:20px;" id="numero_tarjeta">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Numero de Voucher
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">#</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" style="text-align:right; font-size:20px;" id="voucher_tarjeta">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-md-10 col-form-label text-sm-right">
+
+                                                    </label>
+                                                    <div class="col-md-1">
+                                                        <button class="btn btn-secondary" onclick="Facturar()">Facturar</button>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-8" id="div_cheque" style="display:none">
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Banco
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <select class="form-control" id="banco_cheque">
+                                                            <option>BANCO AGRICOLA</option>
+                                                            <option>BANCO AMERICA CENTRAL</option>
+                                                            <option>BANCO AZUL</option>
+                                                            <option>BANCO CUSCATLAN</option>
+                                                            <option>BANCO DAVIVIENDA</option>
+                                                            <option>BANCO G&T CONTINENTAL</option>
+                                                            <option>BANCO HIPOTECARIO</option>
+                                                            <option>BANCO INDUSTRIAL</option>
+                                                            <option>BANCO PROCREDIT</option>
+                                                            <option>BANCO PROMERICA</option>
+                                                            <option>CITIBANK</option>
+                                                            <option>SCOTIABANK</option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Numero de Cheque
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">#</span>
+                                                        </div>
+                                                        <input type="number" class="form-control" style="text-align:right; font-size:20px;" id="numero_cheque">
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-md-10 col-form-label text-sm-right">
+
+                                                    </label>
+                                                    <div class="col-md-1">
+                                                        <button class="btn btn-secondary" onclick="Facturar()">Facturar</button>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+ 
+
+                                        </div>
+
+
+
+
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="float-left">
+                                                    <a href="#" onclick="movePrev_slide()" class="text-dark">
+                                                        <i class="icon icon-arrow-left icon-fw icon-1x"></i><span class="display-6 align-middle ml-1">Volver</span>
+                                                    </a>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!-- /card body -->
+                                </div>
+                                <!-- /carousel -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /card body -->
+                    <!-- Theme Chooser -->
+                    <div class="dt-customizer-toggle">
+                        <a href="javascript:void(0)" data-toggle="customizer">
+                            <i class="icon icon-shopping-cart " id="iconshop"></i>
+                        </a>
+                    </div>
+                    <!-- /theme chooser -->
+                    <!-- Customizer Sidebar -->
+                    <aside class="dt-customizer dt-drawer position-right">
+                        <div class="dt-customizer__inner">
+
+                            <!-- Customizer Header -->
+                            <div class="dt-customizer__header">
+
+                                <!-- Customizer Title -->
+                                <div class="dt-customizer__title">
+                                    <h3 class="mb-0">Carrito de compras</h3>
+                                </div>
+                                <!-- /customizer title -->
+                                <!-- Close Button -->
+                                <button type="button" class="close" data-toggle="customizer">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <!-- /close button -->
+
+                            </div>
+                            <!-- /customizer header -->
+                            <!-- Customizer Body -->
+                            <div class="dt-customizer__body ps-custom-scrollbar">
+                                <!-- Customizer Body Inner  -->
+                                <div class="dt-customizer__body-inner">
+                                    <!-- Section -->
+                                    <section>
+                                        <h4>Sub total: $<label id="totalorden_shopcart">0.00</label></h4>
+
+
+                                    </section>
+                                    <!-- /section -->
+                                    <!-- Section -->
+                                    <section>
+                                        <h4>Productos</h4>
+
+                                        <!-- Widget -->
+                                        <div class="dt-widget dt-widget-hover-bg text-light-gray" id="widgetprincipal">
+
+
+                                        </div>
+
+
+                                    </section>
+                                    <!-- /section -->
+
+
+                                </div>
+                                <!-- /customizer body inner -->
+                            </div>
+                            <!-- /customizer body -->
+
+                        </div>
+                    </aside>
+                    <!-- /customizer sidebar -->
+
+                </div>
+                <!-- /card -->
+
+            </div>
+        </div>
+        <!-- /grid -->
+
+
+    </div>
+    <!-- /site content -->
+    <!-- Footer -->
+    @Html.Partial("~/Views/Shared/Footer.cshtml")
+    <!-- /footer -->
+
+</div>
+<!-- /site content wrapper -->
+<!-- Modal -->
+<div class="modal fade" id="form-modal" tabindex="-1" role="dialog"
+     aria-labelledby="model-8"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <!-- Modal Content -->
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title" id="model-8">Nuevo cliente</h3>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- /modal header -->
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="name"
+                           class="col-form-label">Nombre de cliente:</label>
+                    <input class="form-control" id="name" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="message-text"
+                           class="col-form-label">Grupo:</label>
+                    <select id="grupoCliente" class="form-control">
+                        @foreach (var item in ViewBag.grupoCliente)
+                        {
+                            if (item.id_grupo == 100)
+                            {
+                                <option value="@item.id_grupo" selected>@item.grupo</option>
+                            }
+                            else
+                            {
+                                <option value="@item.id_grupo">@item.grupo</option>
+                            }
+
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="email"
+                           class="col-form-label">Correo:</label>
+                    <input class="form-control" id="email" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="telephone"
+                           class="col-form-label">Telefono:</label>
+                    <input class="form-control" id="telephone" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="direccion"
+                           class="col-form-label">Direccion:</label>
+                    <input class="form-control" id="direccion" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="departamento"
+                           class="col-form-label">Departamento:</label>
+                    <select class="form-control" id="departamento">
+                        <optgroup label="Zona Occidental">
+                            <option>Ahuachapan</option>
+                            <option>Santa Ana</option>
+                            <option>Sonsonate</option>
+
+                        </optgroup>
+
+                        <optgroup label="Zona Central">
+                            <option>Cabañas</option>
+                            <option>Chalatenango</option>
+                            <option>Cuscatlán</option>
+                            <option>La Libertad</option>
+                            <option>La Paz</option>
+                            <option>San Salvador</option>
+                        </optgroup>
+                        <optgroup label="Zona Oriental">
+                            <option>La Union</option>
+                            <option>Morazan</option>
+                            <option>San Miguel</option>
+                            <option>San Vicente</option>
+                            <option>Usulutan</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tipoContribuyente"
+                           class="col-form-label">Tipo de Contribuyente:</label>
+                    <select class="form-control" id="tipoContribuyente" onchange="seleccionarContribuyente(this.value)">
+                        <option value="1" selected>Natural</option>
+                        <option value="2">Juridica</option>
+                    </select>
+                </div>
+                <div id="personaNatural">
+                    <div class="form-group">
+                        <label for="dui"
+                               class="col-form-label">DUI:</label>
+                        <input class="form-control" id="dui" type="text">
+                    </div>
+                </div>
+                <div id="personaJuridica" style="display:none">
+                    <div class="form-group">
+                        <label for="nrc"
+                               class="col-form-label">NRC:</label>
+                        <input class="form-control" id="nrc" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="contribuyente"
+                               class="col-form-label">Contribuyente:</label>
+                        <select class="form-control" id="contribuyente">
+
+                            <option value="02">Pequeno/Mediano</option>
+                            <option value="01">Grande</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="nit"
+                               class="col-form-label">NIT:</label>
+                        <input class="form-control" id="nit" type="text">
+                    </div>
+                </div>
+            </div>
+            <!-- /modal body -->
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm"
+                        data-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="enviarDatos()">
+                    Guardar
+                </button>
+            </div>
+            <!-- /modal footer -->
+
+        </div>
+        <!-- /modal content -->
+
+    </div>
+</div>
+<!-- /modal -->
+<!-- Modal -->
+<div class="modal fade" id="form-modalProducto" tabindex="-1" role="dialog"
+     aria-labelledby="model-8"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <!-- Modal Content -->
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title">Agregar producto</h3>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- /modal header -->
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div class="form-group">
+                    <label id="modal_titulo"></label><br />
+                    <label for="cantidad"
+                           class="col-form-label">Cantidad:</label>
+                    <input class="form-control" type="number" id="cantidad" min="1" value="1" style="font-size:26px" />
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">Descuento: (%)</label>
+                    <input class="form-control" type="number" id="descuento" min="0" value="0" style="font-size:26px" />
+                </div>
+                <br /><br />
+                <div class="form-group">
+                    <h3>SubTotal: $<label id="precio_modalsub"></label> x <label id="cantidad_modalsub">1</label> = $<label id="total_modalsub">0.00</label></h3>
+                    <h3>Descuento: $<label id="descuento_total">0.00</label></h3>
+                    <h3>Total: $<label id="precio_modal"></label> x <label id="cantidad_modal">1</label> = $<label id="total_modal">0.00</label></h3>
+
+                </div>
+                <input type="text" id="idproducto" hidden />
+                <input type="text" id="preciofijo" hidden />
+            </div>
+            <!-- /modal body -->
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-secondary btn-sm"
+                        data-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="agregarCarrito()">
+                    Agregar al carrito
+                </button>
+
+
+            </div>
+            <!-- /modal footer -->
+
+        </div>
+        <!-- /modal content -->
+
+    </div>
+</div>
+<!-- /modal -->
+<!-- Modal -->
+<div class="modal fade" id="form-modalProductoEditar" tabindex="-1" role="dialog"
+     aria-labelledby="model-8"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <!-- Modal Content -->
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title">Editar producto</h3>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- /modal header -->
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div class="form-group">
+                    <label id="modal_tituloEditar"></label><br />
+                    <label for="cantidad"
+                           class="col-form-label">Cantidad:</label>
+                    <input class="form-control" type="number" id="cantidadEditar" min="1"  style="font-size:26px" />
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">Descuento: (%)</label>
+                    <input class="form-control" type="number" id="descuentoEditar" min="0" style="font-size:26px" />
+                </div>
+                <br /><br />
+                <div class="form-group">
+                    <h3>SubTotal: $<label id="precio_modalsubEditar"></label> x <label id="cantidad_modalsubEditar">1</label> = $<label id="total_modalsubEditar">0.00</label></h3>
+                    <h3>Descuento: $<label id="descuento_totalEditar">0.00</label></h3>
+                    <h3>Total: $<label id="precio_modalEditar"></label> x <label id="cantidad_modalEditar">1</label> = $<label id="total_modalEditar">0.00</label></h3>
+
+                </div>
+                <input type="text" id="idproductoEditar" hidden />
+                <input type="text" id="preciofijoEditar" hidden />
+            </div>
+            <!-- /modal body -->
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-secondary btn-sm"
+                        data-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="editarCarrito()">
+                    Actualizar carrito
+                </button>
+
+
+            </div>
+            <!-- /modal footer -->
+
+        </div>
+        <!-- /modal content -->
+
+    </div>
+</div>
+<!-- /modal -->
