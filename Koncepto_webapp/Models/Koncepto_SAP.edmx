@@ -108,12 +108,15 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Dim_Productos' does not have a 
 warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Facturas_Detalle' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BI_Facturas_Detalle">
           <Key>
+            <PropertyRef Name="LineNum" />
             <PropertyRef Name="DocEntry" />
             <PropertyRef Name="UdM_Compra" />
           </Key>
+          <Property Name="LineNum" Type="int" Nullable="false" />
           <Property Name="DocEntry" Type="int" Nullable="false" />
           <Property Name="Id" Type="nvarchar" MaxLength="106" />
           <Property Name="Id_Producto" Type="nvarchar" MaxLength="50" />
+          <Property Name="Dscription" Type="nvarchar" MaxLength="100" />
           <Property Name="Unidades" Type="numeric" Precision="19" Scale="6" />
           <Property Name="UdM_Compra" Type="numeric" Precision="19" Scale="6" Nullable="false" />
           <Property Name="Unidades_Venta" Type="numeric" Precision="19" Scale="6" />
@@ -247,9 +250,11 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           </EntitySet>
           <EntitySet Name="BI_Facturas_Detalle" EntityType="Self.BI_Facturas_Detalle" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
+    [BI_Facturas_Detalle].[LineNum] AS [LineNum], 
     [BI_Facturas_Detalle].[DocEntry] AS [DocEntry], 
     [BI_Facturas_Detalle].[Id] AS [Id], 
     [BI_Facturas_Detalle].[Id_Producto] AS [Id_Producto], 
+    [BI_Facturas_Detalle].[Dscription] AS [Dscription], 
     [BI_Facturas_Detalle].[Unidades] AS [Unidades], 
     [BI_Facturas_Detalle].[UdM_Compra] AS [UdM_Compra], 
     [BI_Facturas_Detalle].[Unidades_Venta] AS [Unidades_Venta], 
@@ -411,6 +416,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <Key>
             <PropertyRef Name="DocEntry" />
             <PropertyRef Name="UdM_Compra" />
+            <PropertyRef Name="LineNum" />
           </Key>
           <Property Name="DocEntry" Type="Int32" Nullable="false" />
           <Property Name="Id" Type="String" MaxLength="106" FixedLength="false" Unicode="true" />
@@ -424,6 +430,8 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <Property Name="Precio_Venta" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="Descuento_Porcentaje" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="Precio_Sin_Desc" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Dscription" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LineNum" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="BI_Facturas_Encabezado">
           <Key>
@@ -563,6 +571,8 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <EntitySetMapping Name="BI_Facturas_Detalle">
             <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Facturas_Detalle">
               <MappingFragment StoreEntitySet="BI_Facturas_Detalle">
+                <ScalarProperty Name="LineNum" ColumnName="LineNum" />
+                <ScalarProperty Name="Dscription" ColumnName="Dscription" />
                 <ScalarProperty Name="Precio_Sin_Desc" ColumnName="Precio_Sin_Desc" />
                 <ScalarProperty Name="Descuento_Porcentaje" ColumnName="Descuento_Porcentaje" />
                 <ScalarProperty Name="Precio_Venta" ColumnName="Precio_Venta" />

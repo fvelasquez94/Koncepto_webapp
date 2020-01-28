@@ -1,0 +1,298 @@
+﻿@model Koncepto_webapp.Models.BI_Facturas_Encabezado
+@{
+    ViewBag.Title = "Invoice_anticipo";
+
+}
+
+<!-- Site Content Wrapper -->
+<div class="dt-content-wrapper">
+
+    <!-- Site Content -->
+    <div class="dt-content">
+
+        <!-- Brand tool -->
+        <div class="dt-brand__tool mb-8 d-lg-none" data-toggle="main-sidebar">
+            <div class="hamburger-inner"></div>
+        </div>
+        <!-- /brand tool -->
+        <!-- Page Header -->
+        <div class="dt-page__header">
+            <h1 class="dt-page__title">Anticipo</h1>
+        </div>
+
+        <div class="alert alert-warning" id="alertaCreditos" style="display:none;" role="alert">
+            Cliente no cuenta con credito disponible.
+            <a href="javascript:void(0)" class="alert-link">
+                Ver historial
+            </a>
+
+        </div>
+
+        <!-- /page header -->
+        <!-- Grid -->
+        <div class="row">
+            <div class="col-xl-12">
+                <!-- Card -->
+                <div class="card dt-card-carousel">
+
+                    <!-- Card Body -->
+                    <div class="card-body p-0">
+                        <div class="row no-gutters h-100">
+                            <div class="col-sm-12 order-sm-1">
+                                <!-- Carousel -->
+                                <div class="owl-carousel owl-theme ">
+
+                                    <!-- /card body -->
+                                    <!-- Card Body -->
+                                    <div class="card-body disable-owl-swipe">
+
+                                        <!-- Card Title-->
+                                        <span class="d-block f-16 text-light-gray mb-2">Pago</span>
+                                        <h2 class="card-title font-weight-normal">Metodos de Pago</h2>
+
+                                        <!-- Content Area -->
+                                        <div class="row">
+                                            <div class="form-group col-md-4">
+                                              
+                                            </div>
+                                            <div class="form-group col-md-8">
+                                                <label>Tipo de Pago</label>
+
+                                                <select class="form-control" id="tipopago">
+                                                    <option value="03">CHEQUE</option>
+                                                
+                                                    <option selected value="01">EFECTIVO</option>
+                                                    <option value="04">TARJETA DE CREDITO</option>
+
+                                                </select>
+                                            </div>
+
+
+                                        </div>
+                                        <input type="text" id="CreditoActual" hidden/>
+                                        <div class="row">
+                                            <input type="text" id="docnum" value="@Model.NoDoc" hidden />
+                                            <div class="col-md-4">
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Total a Pagar
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">$</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" value="@Model.Pendiente_Pago.Value.ToString("N2")"  style="text-align:right; font-size:20px;font-weight:bold" id="totalPagar" readonly>
+                                                    </div>
+                                                </div>
+                                                <div id="anticipodiv" >
+                                                    <div class="form-group form-row">
+                                                        <label class="col-xl-6 col-form-label text-sm-right">
+                                                            Abono
+                                                        </label>
+                                                        <div class="input-group col-xl-6">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text">$</span>
+                                                            </div>
+                                                            <input type="number" class="form-control" value="0.00" style="text-align:right; font-size:20px;" id="anticipo">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group form-row">
+                                                        <label class="col-xl-6 col-form-label text-sm-right">
+                                                            Pendiente
+                                                        </label>
+                                                        <div class="input-group col-xl-6">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text">$</span>
+                                                            </div>
+                                                            <input type="text" class="form-control" value="@Model.Pendiente_Pago.Value.ToString("N2")" style="text-align:right; font-size:20px;" id="pendiente" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                            <div class="form-group col-md-8" id="div_efectivo">
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Efectivo recibido
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">$</span>
+                                                        </div>
+                                                        <input type="number" class="form-control" style="text-align:right; font-size:20px;" id="recibido1">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Cambio
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">$</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" style="text-align:right; font-size:20px;" value="0.00" id="cambio" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-md-10 col-form-label text-sm-right">
+
+                                                    </label>
+                                                    <div class="col-md-1">
+                                                        <button class="btn btn-secondary" onclick="Facturar()">Pagar</button>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-8" id="div_tarjeta" style="display:none;">
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Nombre de Titular
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"></span>
+                                                        </div>
+                                                        <input type="text" class="form-control" style="text-align:right; font-size:16px;" id="nombre_tarjeta" pattern="[a-zA-Z]+">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Documento
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">#</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" style="text-align:right; font-size:20px;" id="doc_tarjeta">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Numero de Tarjeta
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">#</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" style="text-align:right; font-size:20px;" id="numero_tarjeta">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Numero de Voucher
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">#</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" style="text-align:right; font-size:20px;" id="voucher_tarjeta">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-md-10 col-form-label text-sm-right">
+
+                                                    </label>
+                                                    <div class="col-md-1">
+                                                        <button class="btn btn-secondary" onclick="Facturar()">Pagar</button>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-8" id="div_cheque" style="display:none">
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Banco
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <select class="form-control" id="banco_cheque">
+                                                            <option>BANCO AGRICOLA</option>
+                                                            <option>BANCO AMERICA CENTRAL</option>
+                                                            <option>BANCO AZUL</option>
+                                                            <option>BANCO CUSCATLAN</option>
+                                                            <option>BANCO DAVIVIENDA</option>
+                                                            <option>BANCO G&T CONTINENTAL</option>
+                                                            <option>BANCO HIPOTECARIO</option>
+                                                            <option>BANCO INDUSTRIAL</option>
+                                                            <option>BANCO PROCREDIT</option>
+                                                            <option>BANCO PROMERICA</option>
+                                                            <option>CITIBANK</option>
+                                                            <option>SCOTIABANK</option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-xl-6 col-form-label text-sm-right">
+                                                        Numero de Cheque
+                                                    </label>
+                                                    <div class="input-group col-xl-6">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">#</span>
+                                                        </div>
+                                                        <input type="number" class="form-control" style="text-align:right; font-size:20px;" id="numero_cheque">
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-group form-row">
+                                                    <label class="col-md-10 col-form-label text-sm-right">
+
+                                                    </label>
+                                                    <div class="col-md-1">
+                                                        <button class="btn btn-secondary" onclick="Facturar()">Pagar</button>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+ 
+
+                                        </div>
+
+
+
+
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="float-left">
+                                     
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!-- /card body -->
+                                </div>
+                                <!-- /carousel -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /card body -->
+                    <!-- Theme Chooser -->
+
+                    <!-- /theme chooser -->
+                    <!-- Customizer Sidebar -->
+
+                    <!-- /customizer sidebar -->
+
+                </div>
+                <!-- /card -->
+
+            </div>
+        </div>
+        <!-- /grid -->
+
+
+    </div>
+    <!-- /site content -->
+    <!-- Footer -->
+    @Html.Partial("~/Views/Shared/Footer.cshtml")
+    <!-- /footer -->
+
+</div>
+<!-- /site content wrapper -->

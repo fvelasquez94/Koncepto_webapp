@@ -243,7 +243,7 @@ else
                                         @foreach (var factura in ViewBag.lstinvoicesAzure)
                                     {
                                         <tr>
-                                            <td data-label="# FACTURA">@factura.Docentry</td>
+                                            <td data-label="# FACTURA">@factura.NFactura</td>
                                             <td data-label="FECHA">
                                                 @Convert.ToDateTime(factura.Fecha).ToShortDateString()
                             

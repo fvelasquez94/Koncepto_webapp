@@ -219,10 +219,16 @@
     <Compile Include="Models\Tb_Invoices.cs">
       <DependentUpon>Koncept_model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Tb_Invoices_Anticipos.cs">
+      <DependentUpon>Koncept_model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Tb_Invoices_Details.cs">
       <DependentUpon>Koncept_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Tb_newCustomers.cs">
+      <DependentUpon>Koncept_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_Returns_Details.cs">
       <DependentUpon>Koncept_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -13048,6 +13054,11 @@
     <Content Include="Views\Invoices\Invoice_process2.cshtml" />
     <Content Include="Views\Invoices\Invoice_processEdit.cshtml" />
     <Content Include="Views\Shared\Script_invoiceprocessEdit.cshtml" />
+    <Content Include="Views\Invoices\Invoice_return.cshtml" />
+    <Content Include="Views\Shared\Script_invoiceReturn.cshtml" />
+    <Content Include="Views\Invoices\NC_history.cshtml" />
+    <Content Include="Views\Invoices\Invoice_Anticipo.cshtml" />
+    <Content Include="Views\Shared\Script_invoiceAnticipo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

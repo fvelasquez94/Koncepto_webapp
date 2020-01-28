@@ -17,7 +17,7 @@
         <!-- /brand tool -->
         <!-- Page Header -->
         <div class="dt-page__header">
-            <h1 class="dt-page__title">Historial de Facturacion</h1>
+            <h1 class="dt-page__title">Historial de Devoluciones</h1>
         </div>
         <!-- /page header -->
 
@@ -54,9 +54,8 @@
                                             <th class="text-uppercase" scope="col">Cliente</th>
 
                                             <th class="text-uppercase" scope="col">Total</th>
-                                            <th class="text-uppercase" scope="col">Pagado</th>
-                                            <th class="text-uppercase" scope="col">Pendiente</th>
-                                            <th class="text-uppercase" scope="col"></th>
+
+                      
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -76,16 +75,8 @@ else
                                             </td>
                                             <td data-label="CLIENTE">@factura.Id_Cliente - @factura.Cliente</td>
 
-                                            <td data-label="TOTAL">$@factura.Total_Doc.Value.ToString("N2")</td>
-                                            <td data-label="PAGADO">$@factura.Total_Pagado.ToString("N2")</td>
-                                            <td data-label="PENDIENTE">@factura.Pendiente_Pago.Value.ToString("N2")</td>
-                                            <td data-label="">
-                                            <a href="@Url.Action("Invoice_return", "Invoices", new { factura=factura.NoDoc})" class="btn btn-primary mr-2 mb-2">Devolver</a>
-                                                @if (factura.Pendiente_Pago > 0) {
-                                                    <a href="@Url.Action("Invoice_Anticipo", "Invoices", new { factura=factura.NoDoc})"  class="btn btn-secondary mr-2 mb-2">Anticipo</a>
-                                                }
-                                            
-                                            </td>
+                                            <td data-label="TOTAL">$@((factura.Total_Doc.Value * -1).ToString("N2"))</td>
+
                                         </tr>
                         }
 

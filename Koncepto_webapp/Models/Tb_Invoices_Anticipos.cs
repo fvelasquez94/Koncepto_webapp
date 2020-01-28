@@ -12,22 +12,14 @@ namespace Koncepto_webapp.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Tb_Invoices
+    public partial class Tb_Invoices_Anticipos
     {
-        public int ID_factura { get; set; }
-        public string Cod_cliente { get; set; }
-        public string Cliente { get; set; }
+        public int ID_detail { get; set; }
+        public int Docnum { get; set; }
         public System.DateTime Fecha { get; set; }
-        public string Cod_tipoDocumento { get; set; }
-        public string TipoDocumento { get; set; }
         public string Cod_tipoPago { get; set; }
         public string TipoPago { get; set; }
-        public decimal SubTotal { get; set; }
-        public decimal Descuentos { get; set; }
-        public decimal IVA { get; set; }
-        public decimal AnticipoIVA { get; set; }
         public decimal Anticipo { get; set; }
-        public decimal TotalFactura { get; set; }
         public decimal TotalCancelado { get; set; }
         public decimal SaldoPendiente { get; set; }
         public string BancoCheque { get; set; }
@@ -39,11 +31,6 @@ namespace Koncepto_webapp.Models
         public string Docentry { get; set; }
         public string MensajeError { get; set; }
         public int Error { get; set; }
-        public string ID_sucursal { get; set; }
-        public string Sucursal { get; set; }
-        public int ID_Vendedor { get; set; }
-        public string Vendedor { get; set; }
         public int Estado { get; set; }
-        public string NFactura { get; set; }
     }
 }

@@ -1493,7 +1493,8 @@
 
         var BancoCheque = $("#banco_cheque").val();
         var NumeroCheque = $("#numero_cheque").val();
-
+        var numerodocumento = $("#numerodocumento").val();
+      
         var TitularTarjeta = $("#nombre_tarjeta").val();
         var DocumentoTarjeta = $("#doc_tarjeta").val();
         var NumeroTarjeta = $("#numero_tarjeta").val();
@@ -1514,6 +1515,12 @@
                 flag = 0;
             }
         }
+
+
+        if (numerodocumento == "" || numerodocumento== null) {
+            flag = 0;
+        }
+
         if (tipopago == "04") {//Tarjeta
             if (TitularTarjeta == "" || TitularTarjeta == null) {
                 flag = 0;
@@ -1612,7 +1619,8 @@
                 MensajeError: MensajeError,
                 Error: 0,
                 ID_Vendedor: $("#selvendedor").val(),
-                Vendedor: $("#selvendedor option:selected").text()
+                Vendedor: $("#selvendedor option:selected").text(),
+                NFactura: numerodocumento
 
             });
             var objects = [];

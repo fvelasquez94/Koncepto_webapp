@@ -29,5 +29,7 @@ namespace Koncepto_webapp.Models
         public virtual DbSet<Tb_newCustomers> Tb_newCustomers { get; set; }
         public virtual DbSet<Tb_Invoices> Tb_Invoices { get; set; }
         public virtual DbSet<Tb_Invoices_Details> Tb_Invoices_Details { get; set; }
+        public virtual DbSet<Tb_Returns_Details> Tb_Returns_Details { get; set; }
+        public virtual DbSet<Tb_Invoices_Anticipos> Tb_Invoices_Anticipos { get; set; }
     }
 }

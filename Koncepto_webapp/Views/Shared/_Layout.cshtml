@@ -159,7 +159,16 @@
 {
     @Html.Partial("~/Views/Shared/Script_invoiceprocessEdit.cshtml")
 }
+@if (ViewBag.Title == "Invoice_Return")
+{
+    @Html.Partial("~/Views/Shared/Script_invoiceReturn.cshtml")
+}
 
+
+@if (ViewBag.Title == "Invoice_anticipo")
+{
+    @Html.Partial("~/Views/Shared/Script_invoiceAnticipo.cshtml")
+}
 
 @if (ViewBag.Title == "Users")
 {

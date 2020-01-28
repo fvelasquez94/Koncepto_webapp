@@ -103,6 +103,34 @@ namespace Koncepto_webapp.Controllers
             }
         }
 
+
+        public ActionResult Invoice_Anticipo(int factura)
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                //PERMISOS
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //PUNTOS DE VENTA
+                List<string> puntosVenta = new List<string>(activeuser.ID_SalesPoint.Split(new string[] { "," }, StringSplitOptions.None));
+
+
+                var header = (from a in SAPkoncepto.BI_Facturas_Encabezado where (a.NoDoc == factura && a.Tipo == "FAC") select a).FirstOrDefault();
+
+                return View(header);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Signin", "Home", new { access = false });
+
+            }
+        }
+
         public ActionResult Invoice_processEdit(int factura)
         {
             if (generalClass.checkSession())
@@ -144,14 +172,74 @@ namespace Koncepto_webapp.Controllers
 
                 List<BI_Dim_Empleados> vendedores = new List<BI_Dim_Empleados>();
 
-                    vendedores = (from a in SAPkoncepto.BI_Dim_Empleados where (a.Id_Vendedor==header.ID_Vendedor) select a).ToList();
-                
+                vendedores = (from a in SAPkoncepto.BI_Dim_Empleados where (a.Id_Vendedor == header.ID_Vendedor) select a).ToList();
+
 
 
                 ViewBag.lstEmpleados = vendedores;
 
 
                 ViewBag.ideliminar = header.ID_factura;
+
+                return View(detalles);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Signin", "Home", new { access = false });
+
+            }
+        }
+
+
+        public ActionResult Invoice_return(int factura)
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                //PERMISOS
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //PUNTOS DE VENTA
+                List<string> puntosVenta = new List<string>(activeuser.ID_SalesPoint.Split(new string[] { "," }, StringSplitOptions.None));
+
+                //Necesario
+                //factura
+                //header
+                var header = (from a in SAPkoncepto.BI_Facturas_Encabezado where (a.NoDoc == factura && a.Tipo == "FAC") select a).FirstOrDefault();
+                //detalles
+                //Ocupamos la columna Error para almacenar temporalmente el LineNum 
+                var detalles = (from a in SAPkoncepto.BI_Facturas_Detalle where (a.Id == header.ID) select new Tb_Invoices_Details { ID_detalle=0, Cantidad=(int)a.Unidades_Venta,
+                CodigoProducto=a.Id_Producto, DocEntryDevolucion="", Error=a.LineNum, EstadoFila=0, ID_factura=0, MensajeError="", NombreProducto=a.Dscription, Precio=(decimal)a.Precio_Sin_Desc, Descuento=0,
+                Devolucion=false, PorcentajeDescuento=(decimal)a.Descuento_Porcentaje, PrecioDescuento=(decimal)a.Precio_Venta, TotalFila=(decimal) a.Total_Venta}).ToList();
+                //Enviamos cliente seleccionado
+
+                var cliente = (from b in SAPkoncepto.BI_Dim_Customers where (b.Id_Cliente == header.Id_Cliente) select b).FirstOrDefault();
+
+                ViewBag.nombreCliente = cliente.Nombre_Cliente;
+                ViewBag.duic = cliente.DUI;
+                ViewBag.nitc = cliente.NIT;
+                ViewBag.nrcc = cliente.NRC;
+                ViewBag.header = header;
+                if (cliente.Id_Tipo_Contribuyente == "01")
+                {
+                    ViewBag.tipocontribuyente = "GRANDE";
+                }
+                else if (cliente.Id_Tipo_Contribuyente == "02")
+                {
+                    ViewBag.tipocontribuyente = "PEQUENO/MEDIANO";
+                }
+
+                if (cliente.Id_Tipo_Contribuyente == "03")
+                {
+                    ViewBag.tipocliente = "PERSONA NATURAL";
+                }
+                else {
+                    ViewBag.tipocliente = "PERSONA JURIDICA";
+                }
 
                 return View(detalles);
 
@@ -530,6 +618,57 @@ namespace Koncepto_webapp.Controllers
 
 
         [HttpPost]
+        public ActionResult Save_InvoiceAnticipo(int Docnum, List<Tb_Invoices_Anticipos> headerInvoice)
+        {
+            string ttresult = "";
+            try
+            {
+             
+                if (headerInvoice.Count > 0)
+                {
+
+
+                    Tb_Invoices_Anticipos header = new Tb_Invoices_Anticipos();
+                    //guardamos cabecera
+                    header = headerInvoice.FirstOrDefault();
+
+                    if (header.BancoCheque == null) { header.BancoCheque = ""; }
+                    if (header.NumeroCheque == null) { header.NumeroCheque = ""; }
+                    if (header.TitularTarjeta == null) { header.TitularTarjeta = ""; }
+                    if (header.DocumentoTarjeta == null) { header.DocumentoTarjeta = ""; }
+                    if (header.NumeroTarjeta == null) { header.NumeroTarjeta = ""; }
+                    if (header.VoucherTarjeta == null) { header.VoucherTarjeta = ""; }
+
+                    header.Docentry = "";
+                    header.MensajeError = "";
+
+                    header.Estado = 0;
+                    dbkoncepto.Tb_Invoices_Anticipos.Add(header);
+                    dbkoncepto.SaveChanges();
+
+                    ttresult = "SUCCESS";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+
+
+
+                ttresult = "No data";
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
+
+
+        [HttpPost]
         public ActionResult Save_InvoiceDatafromPedido(int ideliminar,List<Tb_Invoices_Details> detailsInvoice, List<Tb_Invoices> headerInvoice)
         {
             string ttresult = "";
@@ -573,7 +712,7 @@ namespace Koncepto_webapp.Controllers
                     if (header.DocumentoTarjeta == null) { header.DocumentoTarjeta = ""; }
                     if (header.NumeroTarjeta == null) { header.NumeroTarjeta = ""; }
                     if (header.VoucherTarjeta == null) { header.VoucherTarjeta = ""; }
-
+                    header.NFactura = "";
                     header.Docentry = "";
                     header.MensajeError = "";
                     header.ID_sucursal = activeuser.ID_SalesPoint;
@@ -696,6 +835,63 @@ namespace Koncepto_webapp.Controllers
 
         }
 
+
+        [HttpPost]
+        public ActionResult Save_InvoiceReturn(List<Tb_Returns_Details> detailsInvoice, int Docnum)
+        {
+            string ttresult = "";
+            try
+            {
+         
+                if (detailsInvoice.Count > 0)
+                {
+                    //guardamos detalles
+                    List<Tb_Returns_Details> lsttosave = new List<Tb_Returns_Details>();
+                    foreach (var item in detailsInvoice)
+                    {
+
+                        Tb_Returns_Details newdetail = new Tb_Returns_Details();
+                        newdetail.Docnum = Docnum;
+                        newdetail.CodigoProducto = item.CodigoProducto;
+                        newdetail.NombreProducto = item.NombreProducto;
+                        newdetail.Cantidad = item.Cantidad;
+                        newdetail.PrecioDescuento = item.PrecioDescuento;
+                        newdetail.TotalFila = item.TotalFila;
+                        //db
+                        newdetail.EstadoFila = 0;
+                        newdetail.MensajeError = "";
+                        newdetail.DocEntryDevolucion = "";
+                        newdetail.Fecha = DateTime.UtcNow;
+                        newdetail.Error = 0;
+                        lsttosave.Add(newdetail);
+
+                    }
+
+                    dbkoncepto.Tb_Returns_Details.AddRange(lsttosave);
+                    dbkoncepto.SaveChanges();
+
+                    ttresult = "SUCCESS";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+
+
+
+                ttresult = "No data";
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
+
+
         public ActionResult Invoices_history(string fstartd, string fendd)
         {
             if (generalClass.checkSession())
@@ -745,5 +941,56 @@ namespace Koncepto_webapp.Controllers
 
             }
         }
+
+        public ActionResult NC_history(string fstartd, string fendd)
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                //PERMISOS
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //PUNTOS DE VENTA
+                List<string> puntosVenta = new List<string>(activeuser.ID_SalesPoint.Split(new string[] { "," }, StringSplitOptions.None));
+
+                ///
+                DateTime filtrostartdate;
+                DateTime filtroenddate;
+                //filtros de fecha (DIARIO)
+                //var sunday = DateTime.Today;
+                //var saturday = sunday.AddHours(23);
+                ////filtros de fecha (MENSUAL)
+                var sunday = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                var saturday = sunday.AddMonths(1).AddDays(-1);
+
+                var anteriorSunday = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-1);
+
+                var anteriorSaturday = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-1);
+
+                if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
+                if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
+
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+
+                //
+                var fechaactual = DateTime.Today;
+                fechaactual = fechaactual.AddDays(-365);
+                List<BI_Facturas_Encabezado> lstInvoices = (from d in SAPkoncepto.BI_Facturas_Encabezado
+                                                            where (puntosVenta.Contains(d.Id_Sucursal) && d.Tipo == "NC" && d.Fecha >= fechaactual)
+                                                            select d).ToList();
+                return View(lstInvoices);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Signin", "Home", new { access = false });
+
+            }
+        }
+
     }
 }

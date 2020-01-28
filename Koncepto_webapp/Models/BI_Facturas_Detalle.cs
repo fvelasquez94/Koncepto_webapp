@@ -26,5 +26,7 @@ namespace Koncepto_webapp.Models
         public Nullable<decimal> Precio_Venta { get; set; }
         public Nullable<decimal> Descuento_Porcentaje { get; set; }
         public Nullable<decimal> Precio_Sin_Desc { get; set; }
+        public string Dscription { get; set; }
+        public int LineNum { get; set; }
     }
 }

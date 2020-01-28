@@ -9,6 +9,8 @@
         <EntityTypeShape EntityType="Koncept_dbModel.Tb_newCustomers" Width="1.5" PointX="3.375" PointY="0.75" />
         <EntityTypeShape EntityType="Koncept_dbModel.Tb_Invoices" Width="1.5" PointX="5.75" PointY="0.75" />
         <EntityTypeShape EntityType="Koncept_dbModel.Tb_Invoices_Details" Width="1.5" PointX="0.75" PointY="5.75" />
+        <EntityTypeShape EntityType="Koncept_dbModel.Tb_Returns_Details" Width="1.5" PointX="8.375" PointY="0.75" />
+        <EntityTypeShape EntityType="Koncept_dbModel.Tb_Invoices_Anticipos" Width="1.5" PointX="3.375" PointY="8.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -1,0 +1,445 @@
+﻿@model  List<Koncepto_webapp.Models.Tb_Invoices_Details>
+
+@{
+    ViewBag.Title = "Invoice_Return";
+
+}
+
+<!-- Site Content Wrapper -->
+<div class="dt-content-wrapper">
+
+    <!-- Site Content -->
+    <div class="dt-content">
+
+        <!-- Brand tool -->
+        <div class="dt-brand__tool mb-8 d-lg-none" data-toggle="main-sidebar">
+            <div class="hamburger-inner"></div>
+        </div>
+        <!-- /brand tool -->
+        <!-- Page Header -->
+        <div class="dt-page__header">
+            <h1 class="dt-page__title">Devolucion</h1>
+        </div>
+
+        <div class="alert alert-warning" id="alertaCreditos" style="display:none;" role="alert">
+            Cliente no cuenta con credito disponible.
+            <a href="javascript:void(0)" class="alert-link">
+                Ver historial
+            </a>
+
+        </div>
+
+        <!-- /page header -->
+        <!-- Grid -->
+        <div class="row">
+            <div class="col-xl-12">
+                <!-- Card -->
+                <div class="card dt-card-carousel">
+
+                    <!-- Card Body -->
+                    <div class="card-body p-0">
+                        <div class="row no-gutters h-100">
+                            <div class="col-sm-12 order-sm-1">
+                                <!-- Carousel -->
+                                <div class="owl-carousel owl-theme ">
+
+
+                                    <!-- Card Body -->
+                                    <div class="card-body disable-owl-swipe">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="float-left">
+                                      
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                            
+                                            </div>
+                                        </div><br /><br />
+                                        <!-- Card Title-->
+                                        <span class="d-block f-16 text-light-gray mb-2">Detalles</span>
+                                        <h2 class="card-title font-weight-normal">Devolucion</h2>
+
+                                        <!-- Grid -->
+                                        <div class="row">
+
+                                            <!-- Grid Item -->
+                                            <div class="col-xl-8">
+
+                                                <!-- Card -->
+                                                <div class="dt-card">
+
+                                                    <!-- Card Header -->
+                                                    <div class="dt-card__header">
+
+                                                        <!-- Card Heading -->
+                                                        <div class="dt-card__heading">
+                                                            <h3 class="dt-card__title">Datos</h3>
+                                                        </div>
+                                                        <!-- /card heading -->
+
+                                                    </div>
+                                                    <!-- /card header -->
+                                                    <!-- Card Body -->
+                                                    <div class="dt-card__body">
+
+                                                        <!-- Form -->
+                                                        <form>
+
+                                                            <!-- Form Group -->
+
+                                                            <div class="row">
+
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="email-1">Cliente</label>
+                                                 
+                                                                    <input type="text" id="nombreCliente" value="@ViewBag.nombreCliente" class="form-control" readonly>
+                                                                </div>
+                                                                <div class="form-group col-md-3">
+                                                                    <label>Tipo de Cliente</label>
+                                                                    <input type="text" class="form-control" id="tipocliente" value="@ViewBag.tipocliente" readonly>
+                                                                </div>
+                                                                <div class="form-group col-md-3">
+                                                                    <label>Tipo de Contribuyente</label>
+                                                                    <input type="text" class="form-control" id="tipocontribuyente" value="@ViewBag.tipocontribuyente" readonly>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <!-- /form group -->
+                                                            <!-- Form Group -->
+                                                            <div class="row">
+                                                                <div class="form-group col-md-4">
+                                                                    <label for="password-1">DUI</label>
+                                                                    <input type="text" class="form-control" id="duic" value="@ViewBag.duic" readonly>
+                                                                </div>
+                                                                <div class="form-group col-md-4">
+                                                                    <label for="password-1">NIT</label>
+                                                                    <input type="text" class="form-control" id="nitc" value="@ViewBag.nitc" readonly>
+                                                                </div>
+                                                                <div class="form-group col-md-4">
+                                                                    <label for="password-1">NRC</label>
+                                                                    <input type="text" class="form-control" id="nrcc" value="@ViewBag.nrcc" readonly>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- /form group -->
+                                                            <div class="row">
+                                                                <div class="form-group col-md-6" style="display:none">
+                                                                    <label>Tipo de Documento</label>
+
+                                                                    <input type="text" class="form-control" value="@ViewBag.tipodocumento" id="tipodocumento" readonly>
+
+                                                                </div>
+
+
+
+                                                                <div class="form-group col-md-6">
+                                                                    <label>Vendedor</label>
+
+                                                                    <input class="form-control" id="selvendedor" value="@ViewBag.selvendedor" readonly>
+
+                                                                </div>
+
+                                                            </div>
+
+                                                        </form>
+                                                        <!-- /form -->
+
+                                                    </div>
+                                                    <!-- /card body -->
+
+                                                </div>
+                                                <!-- /card -->
+
+                                            </div>
+                                            <!-- /grid item -->
+                                            <!-- Grid Item -->
+                                            <div class="col-xl-4">
+
+                                                <!-- Card -->
+                                                <div class="dt-card dt-card__full-height">
+
+                                                    <!-- Card Header -->
+                                                    <!-- /card header -->
+                                                    <!-- Card Body -->
+                                                    <div class="dt-card__body">
+
+                                                        <!-- Form -->
+                                                        <form>
+
+                                                            <!-- Form Group -->
+                                                            <div class="form-group form-row">
+                                                                <label class="col-xl-6 col-form-label text-sm-right">
+                                                                    Sub Total
+                                                                </label>
+                                                                <div class="input-group col-xl-6">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text" id="inputGroupPrepend2">$</span>
+                                                                    </div>
+                                                                    <input type="text" class="form-control" id="subtotalfac" style="text-align:right; font-size:16px;" readonly>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="form-group form-row">
+                                                                <label class="col-xl-6 col-form-label text-sm-right">
+                                                                    IVA (13%)
+                                                                </label>
+                                                                <div class="input-group col-xl-6">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text" id="inputGroupPrepend2">$</span>
+                                                                    </div>
+                                                                    <input type="text" class="form-control" style="text-align:right; font-size:16px;" id="ivafac" readonly>
+                                                                </div>
+
+                                                            </div>
+                                                            <!-- /form group -->
+                                                            <!-- Form Group -->
+                                                            <div class="form-group form-row">
+                                                                <label class="col-xl-6 col-form-label text-sm-right">
+                                                                    Descuentos
+                                                                </label>
+                                                                <div class="input-group col-xl-6">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text" id="inputGroupPrepend2">$</span>
+                                                                    </div>
+                                                                    <input type="text" class="form-control" style="text-align:right; font-size:16px;" id="descuentosfac" readonly>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /form group -->
+                                                            <div class="form-group form-row">
+                                                                <label class="col-xl-6 col-form-label text-sm-right">
+                                                                    Anticipo IVA (1%)
+                                                                </label>
+                                                                <div class="input-group col-xl-6">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text" id="inputGroupPrepend2">$</span>
+                                                                    </div>
+                                                                    <input type="text" class="form-control" style="text-align:right; font-size:16px;" id="anticipoivafac" readonly>
+
+                                                                </div>
+
+                                                            </div>
+                                                            <hr />
+                                                            <div class="form-group form-row">
+                                                                <label class="col-xl-6 col-form-label text-sm-right">
+                                                                    Total
+                                                                </label>
+                                                                <div class="input-group col-xl-6">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text" id="inputGroupPrepend2">$</span>
+                                                                    </div>
+                                                                    <input type="text" class="form-control" style="text-align:right; font-size:17px; font-weight:bold;" id="totalfac" readonly>
+                                                                </div>
+                                                            </div>
+                                                            <hr />
+                                                            <div class="form-group form-row">
+                                                                <label class="col-xl-6 col-form-label text-sm-right">
+                                                                    Total a Devolver
+                                                                </label>
+                                                                <div class="input-group col-xl-6">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text" id="inputGroupPrepend2">$</span>
+                                                                    </div>
+                                                                    <input type="text" class="form-control" style="text-align:right; font-size:17px; font-weight:bold;" id="totalfacdevolver" readonly>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- /form group -->
+                                                            <!-- Form Group -->
+                                                            <!-- /form group -->
+
+                                                        </form>
+                                                        <!-- /form -->
+
+                                                    </div>
+                                                    <!-- /card body -->
+
+                                                </div>
+                                                <!-- /card -->
+
+                                            </div>
+                                            <!-- /grid item -->
+
+                                        </div>
+                                        <!-- /grid -->
+
+                                        <div class="table-responsive">
+                                            <table class="table table-striped" id="prodfacturar">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:100px;" scope="col">SKU</th>
+                                                        <th style="width:330px;" scope="col">Producto</th>
+                                                        <th scope="col">Cant</th>
+                                                        <th scope="col">Cant Dev</th>
+                                                        <th scope="col">Precio</th>
+                                                        <th scope="col">Desc</th>
+                                                        <th scope="col">Precio/Desc</th>
+                                                        <th scope="col">Total</th>
+                                                        <th scope="col"></th>
+                                                        <th scope="col" hidden></th>
+                                                    </tr>
+
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                        <br /><br />
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="float-left">
+                                              
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="float-right">
+                                                    <button onclick="GenerarDevolucion()" class="btn btn-secondary">Guardar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /card body -->
+
+                                </div>
+                                <!-- /carousel -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /card body -->
+                    <!-- /theme chooser -->
+                    <!-- Customizer Sidebar -->
+                    <aside class="dt-customizer dt-drawer position-right">
+                        <div class="dt-customizer__inner">
+
+                            <!-- Customizer Header -->
+                            <div class="dt-customizer__header">
+
+                                <!-- Customizer Title -->
+                                <div class="dt-customizer__title">
+                                    <h3 class="mb-0">Carrito de compras</h3>
+                                </div>
+                                <!-- /customizer title -->
+                                <!-- Close Button -->
+                                <button type="button" class="close" data-toggle="customizer">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <!-- /close button -->
+
+                            </div>
+                            <!-- /customizer header -->
+                            <!-- Customizer Body -->
+                            <div class="dt-customizer__body ps-custom-scrollbar">
+                                <!-- Customizer Body Inner  -->
+                                <div class="dt-customizer__body-inner">
+                                    <!-- Section -->
+                                    <section>
+                                        <h4>Sub total: $<label id="totalorden_shopcart">0.00</label></h4>
+
+
+                                    </section>
+                                    <!-- /section -->
+                                    <!-- Section -->
+                                    <section>
+                                        <h4>Productos</h4>
+
+                                        <!-- Widget -->
+                                        <div class="dt-widget dt-widget-hover-bg text-light-gray" id="widgetprincipal">
+
+
+                                        </div>
+
+
+                                    </section>
+                                    <!-- /section -->
+
+
+                                </div>
+                                <!-- /customizer body inner -->
+                            </div>
+                            <!-- /customizer body -->
+
+                        </div>
+                    </aside>
+                    <!-- /customizer sidebar -->
+
+
+                </div>
+                <!-- /card -->
+
+            </div>
+        </div>
+        <!-- /grid -->
+
+
+    </div>
+    <!-- /site content -->
+    <!-- Footer -->
+    @Html.Partial("~/Views/Shared/Footer.cshtml")
+    <!-- /footer -->
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="form-modalProductoEditar" tabindex="-1" role="dialog"
+     aria-labelledby="model-8"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <!-- Modal Content -->
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title">Devolver producto</h3>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- /modal header -->
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div class="form-group">
+                    <label id="modal_tituloEditar"></label><br />
+                    <label for="cantidad"
+                           class="col-form-label">Cantidad:</label>
+                    <input class="form-control" type="number" id="cantidadEditar" min="0" style="font-size:26px" />
+                </div>
+                <div class="form-group" style="display:none">
+                    <label class="col-form-label">Descuento: (%)</label>
+                    <input class="form-control" type="number" id="descuentoEditar" min="0" style="font-size:26px" />
+                </div>
+                <br /><br />
+                <div class="form-group" style="display:none">
+                    <h3>SubTotal: $<label id="precio_modalsubEditar"></label> x <label id="cantidad_modalsubEditar">1</label> = $<label id="total_modalsubEditar">0.00</label></h3>
+                    <h3>Descuento: $<label id="descuento_totalEditar">0.00</label></h3>
+                    <h3>Total: $<label id="precio_modalEditar"></label> x <label id="cantidad_modalEditar">1</label> = $<label id="total_modalEditar">0.00</label></h3>
+
+                </div>
+                <input type="text" id="idproductoEditar" hidden />
+                <input type="text" id="preciofijoEditar" hidden />
+            </div>
+            <!-- /modal body -->
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-secondary btn-sm"
+                        data-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="editarCarrito()">
+                    Actualizar producto
+                </button>
+
+
+            </div>
+            <!-- /modal footer -->
+
+        </div>
+        <!-- /modal content -->
+
+    </div>
+</div>
+<!-- /modal -->
