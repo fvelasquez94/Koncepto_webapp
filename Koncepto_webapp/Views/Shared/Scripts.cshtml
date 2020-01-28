@@ -33,3 +33,41 @@
 <script src="~/Content/assets/js/bootstrap-number-input.js"></script>
 <script src="~/Content/assets/js/custom/jquery.inputmask.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+
+
+<script>
+    var string = @Html.Raw(ViewBag.lstDepartments);
+    var roles = @Html.Raw(ViewBag.lstRoles);
+    string.forEach(function (element) {
+        if (element == "Ventas") {
+            document.getElementById("facturacionTitle").style.display = "block";
+            document.getElementById("facturacionDetails").style.display = "block";
+
+            roles.forEach(function (elementrol) {
+                if (elementrol == "Caja") {
+                    document.getElementById("devitem_menu").style.display = "block";
+                    document.getElementById("historialitem_menu").style.display = "block";
+                    document.getElementById("nuevafacitem_menu").style.display = "block";
+                }
+                if (elementrol == "Vendedor") {
+                    document.getElementById("nuevopedidoitem_menu").style.display = "block";
+                }
+
+            });
+        }
+
+        if (element == "Administracion") {
+            document.getElementById("facturacionTitle").style.display = "block";
+            document.getElementById("facturacionDetails").style.display = "block";
+            document.getElementById("devitem_menu").style.display = "block";
+            document.getElementById("historialitem_menu").style.display = "block";
+            document.getElementById("nuevafacitem_menu").style.display = "block";
+            //document.getElementById("nuevopedidoitem_menu").style.display = "block";
+            document.getElementById("confTitle").style.display = "block";
+            document.getElementById("confDetalle").style.display = "block";
+
+        }
+
+       
+    });
+</script>

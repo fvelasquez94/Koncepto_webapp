@@ -52,18 +52,52 @@ namespace Koncepto_webapp.Controllers
                 ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
 
                 //
-                List<BI_Facturas_Encabezado> lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate) 
-                                                            && puntosVenta.Contains(a.Id_Sucursal)) select a).ToList();
 
-                List<BI_Facturas_Encabezado> earlier_lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
-                                                                    where ((a.Fecha >= anteriorSunday && a.Fecha <= anteriorSaturday) && puntosVenta.Contains(a.Id_Sucursal))
-                                                                    select a).ToList();
-                ViewBag.earlier_lstInvoices = earlier_lstInvoices;
+                List<BI_Facturas_Encabezado> lstInvoices = new List<BI_Facturas_Encabezado>();
+                List<BI_Facturas_Encabezado> earlier_lstInvoices = new List<BI_Facturas_Encabezado>();
+                List<Tb_Invoices> lstInvoicesAzure = new List<Tb_Invoices>();
 
-                List<Tb_Invoices> lstInvoicesAzure = (from a in dbkoncepto.Tb_Invoices
-                                                      where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate) && puntosVenta.Contains(a.ID_sucursal))
-                                                      select a).ToList();
-                ViewBag.lstinvoicesAzure = lstInvoicesAzure;
+                if (s.Contains("Administracion"))
+                {
+                   
+                    lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
+                                   where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate)
+              )
+                                   select a).ToList();
+
+                  
+                    earlier_lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
+                                           where ((a.Fecha >= anteriorSunday && a.Fecha <= anteriorSaturday) )
+                                           select a).ToList();
+                    ViewBag.earlier_lstInvoices = earlier_lstInvoices;
+
+                 
+                    lstInvoicesAzure = (from a in dbkoncepto.Tb_Invoices
+                                        where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate))
+                                        select a).ToList();
+                    ViewBag.lstinvoicesAzure = lstInvoicesAzure;
+                }
+                else {
+      
+                    lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
+                                   where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate)
+              && puntosVenta.Contains(a.Id_Sucursal))
+                                   select a).ToList();
+
+
+                    earlier_lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
+                                           where ((a.Fecha >= anteriorSunday && a.Fecha <= anteriorSaturday) && puntosVenta.Contains(a.Id_Sucursal))
+                                           select a).ToList();
+                    ViewBag.earlier_lstInvoices = earlier_lstInvoices;
+
+
+                    lstInvoicesAzure = (from a in dbkoncepto.Tb_Invoices
+                                        where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate) && puntosVenta.Contains(a.ID_sucursal))
+                                        select a).ToList();
+                    ViewBag.lstinvoicesAzure = lstInvoicesAzure;
+                }
+
+
 
 
                 return View(lstInvoices);

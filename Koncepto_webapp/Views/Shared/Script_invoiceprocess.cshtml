@@ -1234,6 +1234,7 @@
                                 }
 
                                 $("#CreditoActual").val(nuevocliente.Limite_Credito);
+                                $("#credactlabel").html(nuevocliente.Limite_Credito);
                            
                                 if (nuevocliente.Limite_Credito < nuevocliente.Saldo || nuevocliente.Limite_Credito == 0) {
                                     $("#alertaCreditos").show();
@@ -1669,10 +1670,22 @@
 
                             toastsuccess({
                                 type: 'success',
-                                title: 'Factura creada exitosamente.'
+                                title: 'Factura creada exitosamente. Generando documento...'
                             });
 
-                            window.location.reload(true);
+
+
+                            setTimeout(function () {
+
+                                window.open('@Url.Action("InvoiceDocument", "Invoices",new { activityname = "InvoiceDocument" })', '_blank');
+                            }, 1000);
+
+
+
+                            //setTimeout(function () {
+
+                            //             window.location.reload(true); 
+                            //}, 1000);
 
                         } else {
                             var toastsuccess = swal.mixin({

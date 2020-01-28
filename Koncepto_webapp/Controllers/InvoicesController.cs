@@ -1,7 +1,11 @@
-﻿using Koncepto_webapp.Models;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Koncepto_webapp.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -90,9 +94,15 @@ namespace Koncepto_webapp.Controllers
 
                 ViewBag.lstEmpleados = vendedores;
 
+                if (s.Contains("Administracion"))
+                {
+                    ViewBag.mostrarboton = 0;
+                }
+                else {
+                    ViewBag.mostrarboton = 1;
+                }
 
-
-                return View();
+                    return View();
 
             }
             else
@@ -100,6 +110,68 @@ namespace Koncepto_webapp.Controllers
 
                 return RedirectToAction("Signin", "Home", new { access = false });
 
+            }
+        }
+
+        public static byte[] concatAndAddContent(List<byte[]> pdf)
+        {
+            byte[] all;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document doc = new Document();
+
+                PdfWriter writer = PdfWriter.GetInstance(doc, ms);
+
+                doc.SetPageSize(PageSize.LETTER);
+                doc.Open();
+                PdfContentByte cb = writer.DirectContent;
+                PdfImportedPage page;
+
+                PdfReader reader;
+                foreach (byte[] p in pdf)
+                {
+                    reader = new PdfReader(p);
+                    int pages = reader.NumberOfPages;
+
+                    // loop over document pages
+                    for (int i = 1; i <= pages; i++)
+                    {
+                        doc.SetPageSize(PageSize.LETTER);
+                        doc.NewPage();
+                        page = writer.GetImportedPage(reader, i);
+                        cb.AddTemplate(page, 0, 0);
+                    }
+                }
+
+                doc.Close();
+                all = ms.GetBuffer();
+                ms.Flush();
+                ms.Dispose();
+            }
+
+            return all;
+        }
+
+
+        public ActionResult InvoiceDocument(string activityname)
+        {
+            // retrieve byte array here
+            List<byte[]> myStream = TempData["Output"] as List<byte[]>;
+            //var filePathOriginal = Server.MapPath("/Reports/pdf");
+            //var path2 = Path.Combine(filePathOriginal, "Route_WHSInvoices.pdf");
+
+            var report = concatAndAddContent(myStream);
+            if (report != null)
+            {
+
+                //Con eso se descarga
+                //Response.AddHeader("Content-Disposition", "attachment; filename=" + "Route_WHSInvoices.pdf");
+                return File(report, System.Net.Mime.MediaTypeNames.Application.Pdf);
+            }
+            else
+            {
+                return new EmptyResult();
             }
         }
 
@@ -596,7 +668,101 @@ namespace Koncepto_webapp.Controllers
                     dbkoncepto.SaveChanges();
 
                     ttresult = "SUCCESS";
-                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+
+
+
+
+                    try
+                    {
+                        var so = detailsInvoice;
+                        var nit = "";
+                        var dui = "";
+                        var codint = 0;
+                        try {
+                            codint = Convert.ToInt32(header.Cod_cliente);
+                        }
+                        catch {
+                            codint = 0;
+                        }
+
+                        var cliente = (from a in dbkoncepto.Tb_newCustomers where (a.ID_customer == codint) select a).FirstOrDefault();
+                        if (cliente != null) {
+                            nit = cliente.NIT;
+                            dui = cliente.DUI;
+                        }
+
+                        var clienteSAP = (from a in SAPkoncepto.BI_Dim_Customers where (a.Id_Cliente == header.Cod_cliente) select a).FirstOrDefault();
+                        if (clienteSAP != null)
+                        {
+                            nit = clienteSAP.NIT;
+                            dui = clienteSAP.DUI;
+                        }
+
+                        if (nit == null) { nit = ""; }
+                        if (dui == null) { dui = ""; }
+
+                        if (so.Count > 0)
+                        {
+                            //Aca iria ciclo foreach
+
+                            MemoryStream finalStream = new MemoryStream();
+                            //PdfCopyFields copy = new PdfCopyFields(finalStream);
+                            List<byte[]> listafinal = new List<byte[]>();
+                     
+
+                                ReportDocument rd = new ReportDocument();
+
+                                rd.Load(Path.Combine(Server.MapPath("~/Reports"), "invoice_fac.rpt"));
+
+                                rd.SetDataSource(so);
+
+                            rd.SetParameterValue("Cliente", header.Cliente);
+                            rd.SetParameterValue("NIT", nit);
+                            rd.SetParameterValue("DUI", dui);
+                            rd.SetParameterValue("descuento", header.Descuentos);
+                            rd.SetParameterValue("Retencion", header.AnticipoIVA);
+                            rd.SetParameterValue("SubTotal", header.SubTotal);
+                            rd.SetParameterValue("Total", header.TotalFactura);
+
+                                Response.Buffer = false;
+                                Response.ClearContent();
+                                Response.ClearHeaders();
+                                Response.AppendHeader("Content-Disposition", "inline; filename=InvoiceDocument.pdf;");
+                                byte[] getBytes = null;
+                                Stream ms = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                                ms.Seek(0, SeekOrigin.Begin);
+                                getBytes = ReadFully(ms);
+                                listafinal.Add(getBytes);
+                                //para sacar la copia
+                                //listafinal.Add(getBytes);
+                                ms.Dispose();
+
+                            
+
+
+
+
+                            //Nueva descarga
+                            TempData["Output"] = listafinal;
+
+     
+                            return Json(ttresult, JsonRequestBehavior.AllowGet);
+
+                        }
+                        else
+                        {
+
+                            return Json("CountError", JsonRequestBehavior.AllowGet);
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //return Json(urlcontent);
+                        return Json("Error: " + ex.Message, JsonRequestBehavior.AllowGet);
+                    }
+
+
                 }
 
 
@@ -615,7 +781,14 @@ namespace Koncepto_webapp.Controllers
 
 
         }
-
+        public static byte[] ReadFully(Stream input)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                input.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
 
         [HttpPost]
         public ActionResult Save_InvoiceAnticipo(int Docnum, List<Tb_Invoices_Anticipos> headerInvoice)
@@ -928,9 +1101,21 @@ namespace Koncepto_webapp.Controllers
                 //
                 var fechaactual = DateTime.Today;
                 fechaactual = fechaactual.AddDays(-365);
-                List<BI_Facturas_Encabezado> lstInvoices = (from d in SAPkoncepto.BI_Facturas_Encabezado
-                                                            where (puntosVenta.Contains(d.Id_Sucursal) && d.Tipo=="FAC" && d.Fecha >= fechaactual)
-                                                            select d).ToList();
+                List<BI_Facturas_Encabezado> lstInvoices = new List<BI_Facturas_Encabezado>();
+
+                if (s.Contains("Administracion"))
+                {
+                    lstInvoices = (from d in SAPkoncepto.BI_Facturas_Encabezado
+                                   where (d.Tipo == "FAC" && d.Fecha >= fechaactual)
+                                   select d).ToList();
+                }
+                else {
+                    lstInvoices = (from d in SAPkoncepto.BI_Facturas_Encabezado
+                                   where (puntosVenta.Contains(d.Id_Sucursal) && d.Tipo == "FAC" && d.Fecha >= fechaactual)
+                                   select d).ToList();
+                }
+
+         
                 return View(lstInvoices);
 
             }

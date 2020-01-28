@@ -57,14 +57,14 @@
                     <i class="icon icon-dashboard3 icon-fw icon-lg"></i> <span class="dt-side-nav__text">Dashboard</span>
                 </a>
             </li>
-            <li class="dt-side-nav__item dt-side-nav__header">
+            <li class="dt-side-nav__item dt-side-nav__header" id="facturacionTitle" style="display:none;">
                 <span class="dt-side-nav__text">Facturacion</span>
             </li>
             <!-- /menu header -->
             <!-- Menu Item -->
 
 
-            <li class="dt-side-nav__item">
+            <li class="dt-side-nav__item" id="facturacionDetails" style="display:none;">
                 <a href="javascript:void(0)" class="dt-side-nav__link dt-side-nav__arrow">
                     <i class="icon icon-invoice-new icon-fw icon-lg"></i> <span class="dt-side-nav__text">Facturacion</span>
                 </a>
@@ -73,27 +73,27 @@
                 <ul class="dt-side-nav__sub-menu">
 
 
-                    <li class="dt-side-nav__item">
+                    <li class="dt-side-nav__item" id="devitem_menu" style="display:none;">
                         <a href="@Url.Action("NC_history", "Invoices")" class="dt-side-nav__link">
                             <i class="icon icon-forms-basic icon-fw icon-lg"></i> <span class="dt-side-nav__text">Devoluciones</span>
                         </a>
                     </li>
 
-                    <li class="dt-side-nav__item">
+                    <li class="dt-side-nav__item" id="historialitem_menu" style="display:none;">
                         <a href="@Url.Action("Invoices_history","Invoices")" class="dt-side-nav__link">
                             <i class="icon icon-datatable icon-fw icon-lg"></i>
                             <span class="dt-side-nav__text">Historial</span>
                         </a>
                     </li>
 
-                    <li class="dt-side-nav__item">
+                    <li class="dt-side-nav__item" id="nuevafacitem_menu" style="display:none;">
                         <a href="@Url.Action("Invoice_process","Invoices")" class="dt-side-nav__link">
                             <i class="icon icon-addnew icon-fw icon-lg"></i> <span class="dt-side-nav__text">Nueva Factura</span>
                         </a>
                     </li>
 
 
-                    <li class="dt-side-nav__item">
+                    <li class="dt-side-nav__item" id="nuevopedidoitem_menu" style="display:none;">
                         <a href="@Url.Action("Invoice_process2","Invoices")" class="dt-side-nav__link">
                             <i class="icon icon-addnew icon-fw icon-lg"></i> <span class="dt-side-nav__text">Nuevo Pedido</span>
                         </a>
@@ -106,12 +106,12 @@
 
             <!-- /menu item -->
             <!-- Menu Header -->
-            <li class="dt-side-nav__item dt-side-nav__header">
+            <li class="dt-side-nav__item dt-side-nav__header" id="confTitle" style="display:none;">
                 <span class="dt-side-nav__text">Configuracion</span>
             </li>
             <!-- /menu header -->
             <!-- Menu Item -->
-            <li class="dt-side-nav__item">
+            <li class="dt-side-nav__item" id="confDetalle" style="display:none;">
                 <a href="javascript:void(0)" class="dt-side-nav__link dt-side-nav__arrow">
                     <i class="icon icon-settings icon-fw icon-lg"></i> <span class="dt-side-nav__text">Mantenimiento</span>
                 </a>

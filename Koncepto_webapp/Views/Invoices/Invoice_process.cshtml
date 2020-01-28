@@ -20,11 +20,7 @@
         </div>
 
         <div class="alert alert-warning" id="alertaCreditos" style="display:none;" role="alert">
-            Cliente no cuenta con credito disponible.
-            <a href="javascript:void(0)" class="alert-link">
-                Ver historial
-            </a>
-
+            Cliente no cuenta con credito disponible. Credito actual: <label class="alert-link" id="credactlabel"></label>.
         </div>
 
         <!-- /page header -->
@@ -507,7 +503,10 @@
 
                                                     </label>
                                                     <div class="col-md-1">
-                                                        <button class="btn btn-secondary" onclick="Facturar()">Facturar</button>
+                                                        @if (@ViewBag.mostrarboton == 1) {
+                                                             <button class="btn btn-secondary" onclick="Facturar()">Facturar</button>
+                                                        }
+                                                       
                                                     </div>
 
 
@@ -563,7 +562,10 @@
 
                                                     </label>
                                                     <div class="col-md-1">
-                                                        <button class="btn btn-secondary" onclick="Facturar()">Facturar</button>
+                                                        @if (@ViewBag.mostrarboton == 1)
+    {
+                                                    <button class="btn btn-secondary" onclick="Facturar()">Facturar</button>
+}
                                                     </div>
 
 
@@ -609,7 +611,10 @@
 
                                                     </label>
                                                     <div class="col-md-1">
-                                                        <button class="btn btn-secondary" onclick="Facturar()">Facturar</button>
+                                                        @if (@ViewBag.mostrarboton == 1)
+    {
+                                                    <button class="btn btn-secondary" onclick="Facturar()">Facturar</button>
+}
                                                     </div>
 
 
