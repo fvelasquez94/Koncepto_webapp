@@ -283,8 +283,14 @@ namespace Koncepto_webapp.Controllers
                 //header
                 var header = (from a in SAPkoncepto.BI_Facturas_Encabezado where (a.NoDoc == factura && a.Tipo == "FAC") select a).FirstOrDefault();
                 //detalles
+
+                var productosdev = (from a in dbkoncepto.Tb_Returns_Details where (a.Docnum == factura) select a.CodigoProducto).ToArray();
+
+
+
+
                 //Ocupamos la columna Error para almacenar temporalmente el LineNum 
-                var detalles = (from a in SAPkoncepto.BI_Facturas_Detalle where (a.Id == header.ID) select new Tb_Invoices_Details { ID_detalle=0, Cantidad=(int)a.Unidades_Venta,
+                var detalles = (from a in SAPkoncepto.BI_Facturas_Detalle where (a.Id == header.ID && !productosdev.Contains(a.Id_Producto)) select new Tb_Invoices_Details { ID_detalle=0, Cantidad=(int)a.Unidades_Venta,
                 CodigoProducto=a.Id_Producto, DocEntryDevolucion="", Error=a.LineNum, EstadoFila=0, ID_factura=0, MensajeError="", NombreProducto=a.Dscription, Precio=(decimal)a.Precio_Sin_Desc, Descuento=0,
                 Devolucion=false, PorcentajeDescuento=(decimal)a.Descuento_Porcentaje, PrecioDescuento=(decimal)a.Precio_Venta, TotalFila=(decimal) a.Total_Venta}).ToList();
                 //Enviamos cliente seleccionado
@@ -390,7 +396,7 @@ namespace Koncepto_webapp.Controllers
             newCustomer.Contribuyente = contribuyente;
             newCustomer.Creation_date = DateTime.UtcNow;
             newCustomer.ID_SAP = "";
-
+            
 
 
 
@@ -642,7 +648,7 @@ namespace Koncepto_webapp.Controllers
                     if (header.DocumentoTarjeta == null) { header.DocumentoTarjeta = ""; }
                     if (header.NumeroTarjeta == null) { header.NumeroTarjeta = ""; }
                     if (header.VoucherTarjeta == null) { header.VoucherTarjeta = ""; }
-
+                    header.Fecha = DateTime.UtcNow;
                     header.Docentry = "";
                     header.MensajeError = "";
                     header.ID_sucursal = activeuser.ID_SalesPoint;
@@ -811,7 +817,7 @@ namespace Koncepto_webapp.Controllers
                     if (header.DocumentoTarjeta == null) { header.DocumentoTarjeta = ""; }
                     if (header.NumeroTarjeta == null) { header.NumeroTarjeta = ""; }
                     if (header.VoucherTarjeta == null) { header.VoucherTarjeta = ""; }
-
+                    header.Fecha = DateTime.UtcNow;
                     header.Docentry = "";
                     header.MensajeError = "";
 
@@ -891,6 +897,7 @@ namespace Koncepto_webapp.Controllers
                     header.ID_sucursal = activeuser.ID_SalesPoint;
                     header.Sucursal = activeuser.Assigned_SalesPoint;
                     header.Estado = 1;
+                    header.Fecha = DateTime.UtcNow;
                     dbkoncepto.Tb_Invoices.Add(header);
                     dbkoncepto.SaveChanges();
 
@@ -967,6 +974,7 @@ namespace Koncepto_webapp.Controllers
                     header.ID_sucursal = activeuser.ID_SalesPoint;
                     header.Sucursal = activeuser.Assigned_SalesPoint;
                     header.Estado = 0;//pedido
+                    header.Fecha = DateTime.UtcNow;
                     dbkoncepto.Tb_Invoices.Add(header);
                     dbkoncepto.SaveChanges();
 

@@ -74,13 +74,28 @@ else
                     </div>
                     <div class="flex-1">
                         <div class="d-flex align-items-center mb-2">
-                            <span class="h2 mb-0 font-weight-500 mr-2">%50</span>
+                            @if (ViewBag.meta == null)
+        {
+                    <span class="h2 mb-0 font-weight-500 mr-2">0%</span>
+}
+else
+{
+                    <span class="h2 mb-0 font-weight-500 mr-2">@(((Model.Sum(c => c.Total_Doc).Value / ViewBag.meta.Venta_Meta) * 100).ToString("N0"))%</span>
+}
+
                             <span class="d-inline-flex text-danger">
                                 <i class="icon icon-loss icon-fw"></i>
                             </span>
                         </div>
                         <div class="h5 mb-2">Ventas vs Meta</div>
-                        <p class="card-text text-light-gray f-12">Anterior: </p>
+                        @if (ViewBag.meta == null)
+    {
+                    <p class="card-text text-light-gray f-12">Meta: $0.00</p>
+}
+else
+{
+                    <p class="card-text text-light-gray f-12">Meta: $@ViewBag.meta.Venta_Meta.ToString("N2")</p>
+}
                     </div>
                 </div>
                 <!-- /card body -->
@@ -210,13 +225,17 @@ else
                             <h3 class="dt-entry__title">Historial de facturacion</h3>
                         </div>
                         <!-- /entry heading -->
-                        <div class="dt-card__tools">
-                           <select class="form-control" id="table-filter" onchange="filtrarTabla()">
-                               <option value="">Ver todos</option>
-                               <option value="1">Facturados</option>
-                               <option value="0">Pendientes de Pago</option>
-                           </select>
-                        </div>
+                        @if (ViewBag.esvendedor == 0)
+    {
+                    <div class="dt-card__tools">
+                        <select class="form-control" id="table-filter" onchange="filtrarTabla()">
+                            <option value="">Ver todos</option>
+                            <option value="1">Facturados</option>
+                            <option value="0">Pendientes de Pago</option>
+                        </select>
+                    </div>
+}
+
                     </div>
                     <!-- /entry header -->
                     <!-- Card -->

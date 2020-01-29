@@ -18,6 +18,18 @@ namespace Koncepto_webapp.Controllers
         //CLASS GENERAL
         private clsGeneral generalClass = new clsGeneral();
 
+
+        public class Bi_metas
+        {
+            public Int64 ID { get; set; }
+            public DateTime Fecha { get; set; }
+            public string Id_Vendedor { get; set; }
+            public string Id_Sucursal { get; set; }
+            public decimal Venta_Meta { get; set; }
+
+        }
+
+
         public ActionResult Index(string fstartd, string fendd)
         {
             if (generalClass.checkSession())
@@ -42,9 +54,11 @@ namespace Koncepto_webapp.Controllers
                 var saturday = sunday.AddMonths(1).AddDays(-1);
 
                 var anteriorSunday = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-1);
-        
+
+
+
                 var anteriorSaturday = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-1);
-         
+
                 if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
                 if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
 
@@ -57,28 +71,34 @@ namespace Koncepto_webapp.Controllers
                 List<BI_Facturas_Encabezado> earlier_lstInvoices = new List<BI_Facturas_Encabezado>();
                 List<Tb_Invoices> lstInvoicesAzure = new List<Tb_Invoices>();
 
+                ViewBag.esvendedor = 0;
+
+                if (r.Contains("Vendedor")) {
+                    ViewBag.esvendedor = 1;
+                }
+
                 if (s.Contains("Administracion"))
                 {
-                   
+
                     lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
                                    where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate)
               )
                                    select a).ToList();
 
-                  
+
                     earlier_lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
-                                           where ((a.Fecha >= anteriorSunday && a.Fecha <= anteriorSaturday) )
+                                           where ((a.Fecha >= anteriorSunday && a.Fecha <= anteriorSaturday))
                                            select a).ToList();
                     ViewBag.earlier_lstInvoices = earlier_lstInvoices;
 
-                 
+
                     lstInvoicesAzure = (from a in dbkoncepto.Tb_Invoices
                                         where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate))
                                         select a).ToList();
                     ViewBag.lstinvoicesAzure = lstInvoicesAzure;
                 }
                 else {
-      
+
                     lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
                                    where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate)
               && puntosVenta.Contains(a.Id_Sucursal))
@@ -98,8 +118,19 @@ namespace Koncepto_webapp.Controllers
                 }
 
 
+                Bi_metas lstmetas = new Bi_metas();
 
+                if (r.Contains("Vendedor"))
+                {
+                    lstmetas = SAPkoncepto.Database.SqlQuery<Bi_metas>("SELECT * FROM BI_Metas WHERE Fecha between '" + filtrostartdate + "' and '" + filtroenddate + "' and Id_Sucursal='" + activeuser.ID_SalesPoint + "' and Id_Vendedor ='" + activeuser.ID_SalesRep + "'").FirstOrDefault();
 
+                }
+                else {
+                    lstmetas = SAPkoncepto.Database.SqlQuery<Bi_metas>("SELECT * FROM BI_Metas WHERE Fecha between '" + filtrostartdate + "' and '" + filtroenddate + "' and Id_Sucursal='" + activeuser.ID_SalesPoint + "'").FirstOrDefault();
+
+                }
+                
+                ViewBag.meta = lstmetas;
                 return View(lstInvoices);
 
             }
@@ -130,6 +161,10 @@ namespace Koncepto_webapp.Controllers
 
                 var puntossventa = (from b in SAPkoncepto.C_SUCURSALES select b).ToList();
                 ViewBag.puntosventa = puntossventa;
+
+                var empleadosforID = (from c in SAPkoncepto.BI_Dim_Empleados where (c.Activo == "Y") select c).ToList();
+                ViewBag.empleadosID = empleadosforID;
+
                 return View(lstusers);
 
             }
@@ -224,6 +259,22 @@ namespace Koncepto_webapp.Controllers
                 if (User.Telephone == null)
                 {
                     User.Telephone = "";
+                }
+
+
+                if (User.Roles == "Administrador") {
+                    User.Departments = "Administracion";
+                    User.ID_SalesRep = 0;
+                    User.ID_SalesPoint = "";
+                }
+                if (User.Roles == "Caja")
+                {
+                    User.Departments = "Ventas";
+                    User.ID_SalesRep = 0;
+                }
+                if (User.Roles == "Vendedor")
+                {
+                    User.Departments = "Ventas";
                 }
 
                 User.Active = true;

@@ -350,7 +350,7 @@
         t.row(row).column(0).nodes().to$().attr("data-label", "SKU");
         t.row(row).column(1).nodes().to$().attr("data-label", "PRODUCTO");
         t.row(row).column(2).nodes().to$().attr("data-label", "CANT");
-        t.row(row).column(2).nodes().to$().attr("data-label", "CANT DEV");
+        t.row(row).column(3).nodes().to$().attr("data-label", "CANT DEV");
         t.row(row).column(4).nodes().to$().attr("data-label", "PRECIO");
         t.row(row).column(5).nodes().to$().attr("data-label", "DESC");
         t.row(row).column(6).nodes().to$().attr("data-label", "PRECIO/DESC");
@@ -385,7 +385,11 @@
         //Agregar a listado final
         var row = "#row_" + idproducto;
 
-
+        if (cantidad > 0) {
+            $(row).css("background-color", "#f7f7e6");
+        } else {
+            $(row).css("background-color", "#fff");
+        }
 
         //$(row).find('td').eq(2).text(cantidad);
         $(row).find('td').eq(3).text(cantidad);

@@ -20,11 +20,7 @@
         </div>
 
         <div class="alert alert-warning" id="alertaCreditos" style="display:none;" role="alert">
-            Cliente no cuenta con credito disponible.
-            <a href="javascript:void(0)" class="alert-link">
-                Ver historial
-            </a>
-
+            Cliente no cuenta con credito disponible. Credito actual: <label class="alert-link" id="credactlabel"></label>.
         </div>
 
         <!-- /page header -->
@@ -51,11 +47,11 @@
                                         <div>
 
                                             <select class="form-control js-example-responsive" id="cliente" style="width: 100%">
-                                            <option value="0">Seleccione Cliente</option>
+                                                <option value="0">Seleccione Cliente</option>
                                                 @foreach (var customer in ViewBag.lstCustomers)
-    {
-                                            <option value="@customer.Id_Cliente">DUI: @customer.DUI - NRC: @customer.NRC - NOMBRE: @customer.Nombre_Cliente</option>
-}
+                                            {
+                                                <option value="@customer.Id_Cliente">DUI: @customer.DUI - NRC: @customer.NRC - NOMBRE: @customer.Nombre_Cliente</option>
+                                        }
 
                                             </select><br /><br />
                                             <div class="float-right">
@@ -110,9 +106,9 @@
                                                 <select class="form-control" style="width:100%;" onchange="filter_linea()" id="sel_grupo">
                                                     <option value="0">Seleccione Grupo</option>
                                                     @foreach (var grupoproducto in ViewBag.lstCategories)
-                                                    {
-                                                        <option value="@grupoproducto.id_grupo">@grupoproducto.grupo</option>
-                                                    }
+                                                {
+                                                    <option value="@grupoproducto.id_grupo">@grupoproducto.grupo</option>
+                                            }
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
@@ -244,9 +240,9 @@
 
                                                                     <select class="form-control" id="selvendedor">
                                                                         @foreach (var vendedor in ViewBag.lstEmpleados)
-            {
-                                                            <option value="@vendedor.Id_Vendedor">@vendedor.Vendedor</option>
-}
+                                                                    {
+                                                                        <option value="@vendedor.Id_Vendedor">@vendedor.Vendedor</option>
+                                                                }
                                                                     </select>
                                                                 </div>
 

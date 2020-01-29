@@ -132,10 +132,12 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Facturas_Encabezado' does not h
         <EntityType Name="BI_Facturas_Encabezado">
           <Key>
             <PropertyRef Name="DocEntry" />
+            <PropertyRef Name="FacturaCredito" />
             <PropertyRef Name="Tipo" />
             <PropertyRef Name="Total_Pagado" />
           </Key>
           <Property Name="DocEntry" Type="int" Nullable="false" />
+          <Property Name="FacturaCredito" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="ID" Type="nvarchar" MaxLength="106" />
           <Property Name="Fecha" Type="datetime" />
           <Property Name="NoDoc" Type="int" />
@@ -269,6 +271,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <EntitySet Name="BI_Facturas_Encabezado" EntityType="Self.BI_Facturas_Encabezado" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [BI_Facturas_Encabezado].[DocEntry] AS [DocEntry], 
+    [BI_Facturas_Encabezado].[FacturaCredito] AS [FacturaCredito], 
     [BI_Facturas_Encabezado].[ID] AS [ID], 
     [BI_Facturas_Encabezado].[Fecha] AS [Fecha], 
     [BI_Facturas_Encabezado].[NoDoc] AS [NoDoc], 
@@ -438,6 +441,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
             <PropertyRef Name="DocEntry" />
             <PropertyRef Name="Tipo" />
             <PropertyRef Name="Total_Pagado" />
+            <PropertyRef Name="FacturaCredito" />
           </Key>
           <Property Name="DocEntry" Type="Int32" Nullable="false" />
           <Property Name="ID" Type="String" MaxLength="106" FixedLength="false" Unicode="true" />
@@ -463,6 +467,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <Property Name="TipoDoc_Interno" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
           <Property Name="Cliente" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Hora_Fac" Type="Int16" />
+          <Property Name="FacturaCredito" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="C_SUCURSALES">
           <Key>
@@ -591,6 +596,7 @@ warning 6002: The table/view 'DB_KONCEPTO.dbo.BI_Series' does not have a primary
           <EntitySetMapping Name="BI_Facturas_Encabezado">
             <EntityTypeMapping TypeName="DB_KONCEPTOModel.BI_Facturas_Encabezado">
               <MappingFragment StoreEntitySet="BI_Facturas_Encabezado">
+                <ScalarProperty Name="FacturaCredito" ColumnName="FacturaCredito" />
                 <ScalarProperty Name="Hora_Fac" ColumnName="Hora_Fac" />
                 <ScalarProperty Name="Cliente" ColumnName="Cliente" />
                 <ScalarProperty Name="TipoDoc_Interno" ColumnName="TipoDoc_Interno" />

@@ -49,7 +49,8 @@
                                 <table class="table table-striped" id="table_facturas">
                                     <thead>
                                         <tr>
-                                            <th class="text-uppercase" scope="col"># Factura</th>
+                                            <th class="text-uppercase" scope="col">#Credito</th>
+                                            <th class="text-uppercase" scope="col">#Factura</th>
                                             <th class="text-uppercase" scope="col">Fecha</th>
                                             <th class="text-uppercase" scope="col">Cliente</th>
 
@@ -62,7 +63,8 @@
                                         @foreach (var factura in Model)
                                     {
                                         <tr>
-                                            <td data-label="# FACTURA">@factura.NoDoc</td>
+                                            <td data-label="# CREDITO">@factura.NoDoc</td>
+                                            <td data-label="# FACTURA">@factura.FacturaCredito</td>
                                             <td data-label="FECHA">
                                                 @factura.Fecha.Value.ToString("dd/MM/yyyy")
                                                 @if (Convert.ToString(factura.Hora_Fac).Length > 3)

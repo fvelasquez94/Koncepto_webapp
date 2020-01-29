@@ -1,6 +1,7 @@
 ﻿
 @{
     Layout = null;
+    Koncepto_webapp.Models.Sys_Users activeuser = Session["activeUser"] as Koncepto_webapp.Models.Sys_Users;
 }
 <!-- sidebar -->
 <aside id="main-sidebar" class="dt-sidebar">
@@ -33,9 +34,9 @@
                 <!-- Dropdown Link -->
                 <div class="dt-avatar-wrapper text-white">
                   
-                    <img class="dt-avatar" src="https://via.placeholder.com/150x150" >
+                    <img class="dt-avatar" src="~/Content/assets/images/unnamed.png" >
                     <span class="dt-avatar-info">
-                        <span class="dt-avatar-name">Nombre de usuario</span>
+                        <span class="dt-avatar-name">@activeuser.Name</span>
                     </span>
                 </div>
                 <!-- /dropdown link -->

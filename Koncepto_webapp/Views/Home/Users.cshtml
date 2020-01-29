@@ -148,8 +148,6 @@ else
                         <label class="col-form-label">Nombre:</label>
                         <input type="text" class="form-control" id="nameUserC" name="nameUserC" required>
 
-                        <label class="col-form-label">CODIGO SAP:</label>
-                        <input type="text" class="form-control" id="codigoUserC" name="codigoUserC" required>
 
 
                         <label class="col-form-label">Correo:</label>
@@ -161,31 +159,42 @@ else
                         <label class="col-form-label">Telefono:</label>
                         <input type="text" class="form-control" id="telephoneUserC" name="telephoneUserC" required>
 
-                        <label class="col-form-label">Sucursal:</label>
-                        <select class="form-control" id="SucursalUserC" name="SucursalUserC">
-                            @foreach (var item in ViewBag.puntosventa)
-    {
-                        <option value="@item.Code">@item.Name</option>
-}
-                        </select>
-
-
-                        <label class="col-form-label">Departamentos:</label>
-                        <select type="text" class="form-control" id="departmentsUserC" name="departmentsUserC" style="width:100%;">
-                            <option>Administracion</option>
-                            <option>Ventas</option>
-                        </select>
-
                         <label class="col-form-label">Roles:</label>
                         <select type="text" class="form-control" id="rolesUserC" name="rolesUserC" style="width:100%;">
                             <optgroup label="Administracion">
-                                <option>Administrador</option>
+                                <option selected>Administrador</option>
                             </optgroup>
                             <optgroup label="Ventas">
                                 <option>Caja</option>
                                 <option>Vendedor</option>
                             </optgroup>
                         </select>
+
+
+                        <label class="col-form-label" id="labelVendedor">Vendedor:</label>
+                        <select class="form-control" id="codigoUserC" name="codigoUserC">
+                            @foreach (var codigo in ViewBag.empleadosID)
+        {
+                    <option value="@codigo.Id_Vendedor">@codigo.Vendedor</option>
+}
+                        </select>
+
+                        <label class="col-form-label" id="labelsucursal">Sucursal:</label>
+                        <select class="form-control" id="SucursalUserC" name="SucursalUserC">
+                            @foreach (var item in ViewBag.puntosventa)
+        {
+                    <option value="@item.Code">@item.Name</option>
+}
+                        </select>
+
+
+                        <label class="col-form-label" id="labeldepartamentos">Departamentos:</label>
+                        <select type="text" class="form-control" id="departmentsUserC" name="departmentsUserC" style="width:100%;">
+                            <option>Administracion</option>
+                            <option>Ventas</option>
+                        </select>
+
+
 
                     </div>
 
@@ -224,8 +233,8 @@ else
                         <label class="col-form-label">Nombre:</label>
                         <input type="text" class="form-control" id="nameUserEdit" name="nameUserEdit" required>
 
-                        <label class="col-form-label">CODIGO SAP:</label>
-                        <input type="text" class="form-control" id="codigoUserEdit" name="codigoUserEdit" required>
+
+
 
 
                         <label class="col-form-label">Correo:</label>
@@ -237,20 +246,6 @@ else
                         <label class="col-form-label">Telefono:</label>
                         <input type="text" class="form-control" id="telephoneUserEdit" name="telephoneUserEdit" required>
 
-                        <label class="col-form-label">Sucursal:</label>
-
-                        <select class="form-control" id="SucursalUserEdit" name="SucursalUserEdit">
-                            @foreach (var item in ViewBag.puntosventa) {
-                                <option value="@item.Code">@item.Name</option>
-                            }
-                        </select>
-                       
-                        <label class="col-form-label">Departamentos:</label>
-                        <select type="text" class="form-control" id="departmentsUserEdit" name="departmentsUserEdit" style="width:100%;">
-                            <option>Administracion</option>
-                            <option>Ventas</option>
-                        </select>
-
                         <label class="col-form-label">Roles:</label>
                         <select type="text" class="form-control" id="rolesUserEdit" name="rolesUserEdit" style="width:100%;">
                             <optgroup label="Administracion">
@@ -261,6 +256,34 @@ else
                                 <option>Vendedor</option>
                             </optgroup>
                         </select>
+
+
+                        <label class="col-form-label" id="labelvendedorEdit">Vendedor:</label>
+                        <select class="form-control" id="codigoUserEdit" name="codigoUserEdit">
+                            @foreach (var codigo in ViewBag.empleadosID)
+        {
+                    <option value="@codigo.Id_Vendedor">@codigo.Vendedor</option>
+}
+                        </select>
+
+
+
+                        <label class="col-form-label" id="labelsucursalEdit">Sucursal:</label>
+
+                        <select class="form-control" id="SucursalUserEdit" name="SucursalUserEdit">
+                            @foreach (var item in ViewBag.puntosventa)
+        {
+                    <option value="@item.Code">@item.Name</option>
+}
+                        </select>
+
+                        <label class="col-form-label" id="labelDepartamentosEdit">Departamentos:</label>
+                        <select type="text" class="form-control" id="departmentsUserEdit" name="departmentsUserEdit" style="width:100%;">
+                            <option>Administracion</option>
+                            <option>Ventas</option>
+                        </select>
+
+
 
                     </div>
 
@@ -281,21 +304,94 @@ else
 
 <script>
     window.onload = function () {
+
+
+        $("#labelVendedor").hide();
+        $("#labelsucursal").hide();
+        $("#labeldepartamentos").hide();
+        $("#codigoUserC").hide();
+        $("#SucursalUserC").hide();
+        $("#departmentsUserC").hide();
+
+
+        $("#rolesUserC").on("change", function () {
+            if (this.value == "Administrador") {
+                $("#labelVendedor").hide();
+                $("#labelsucursal").hide();
+                $("#labeldepartamentos").hide();
+                $("#codigoUserC").hide();
+                $("#SucursalUserC").hide();
+                $("#departmentsUserC").hide();
+            }
+            if (this.value == "Caja") {
+                $("#labelVendedor").hide();
+                $("#labelsucursal").show();
+                $("#labeldepartamentos").hide();
+                $("#codigoUserC").hide();
+                $("#SucursalUserC").show();
+                $("#departmentsUserC").hide();
+            }
+            if (this.value == "Vendedor") {
+                $("#labelVendedor").show();
+                $("#labelsucursal").show();
+                $("#labeldepartamentos").hide();
+                $("#codigoUserC").show();
+                $("#SucursalUserC").show();
+                $("#departmentsUserC").hide();
+            }
+
+        });
+
+
+        $("#rolesUserEdit").on("change", function () {
+            if (this.value == "Administrador") {
+                $("#labelvendedorEdit").hide();
+                $("#labelsucursalEdit").hide();
+                $("#labelDepartamentosEdit").hide();
+                $("#codigoUserEdit").hide();
+                $("#SucursalUserEdit").hide();
+                $("#departmentsUserEdit").hide();
+            }
+            if (this.value == "Caja") {
+                $("#labelvendedorEdit").hide();
+                $("#labelsucursalEdit").show();
+                $("#labelDepartamentosEdit").hide();
+                $("#codigoUserEdit").hide();
+                $("#SucursalUserEdit").show();
+                $("#departmentsUserEdit").hide();
+            }
+            if (this.value == "Vendedor") {
+                $("#labelvendedorEdit").show();
+                $("#labelsucursalEdit").show();
+                $("#labelDepartamentosEdit").hide();
+                $("#codigoUserEdit").show();
+                $("#SucursalUserEdit").show();
+                $("#departmentsUserEdit").hide();
+            }
+
+        });
+
+
+
+
+
         $('#form-modal').submit(function (event) {
             event.preventDefault();
 
         
 
-            var selMulti = $.map($("#departmentsUserC option:selected"), function (el, i) {
-                return $(el).text();
-            });
-            var deps = selMulti.join(",");
+            //var selMulti = $.map($("#departmentsUserC option:selected"), function (el, i) {
+            //    return $(el).text();
+            //});
+            //var deps = selMulti.join(",");
+            var deps = $("#departmentsUserC").val();
 
 
-            var selMulti2 = $.map($("#rolesUserC option:selected"), function (el, i) {
-                return $(el).text();
-            });
-            var roles = selMulti2.join(",");
+            //var selMulti2 = $.map($("#rolesUserC option:selected"), function (el, i) {
+            //    return $(el).text();
+            //});
+            //var roles = selMulti2.join(",");
+            var roles = $("#rolesUserC").val();
 
             $.ajax({
                 url: '/Home/CreateUser',
@@ -336,35 +432,40 @@ else
             });
         })
 
-        $("#departmentsUserC").select2({
-            multiple: true
-        });
-        $("#rolesUserC").select2({
-            multiple: true
-        });
+        //$("#departmentsUserC").select2({
+        //    multiple: true
+        //});
+        //$("#rolesUserC").select2({
+        //    multiple: true
+        //});
 
-        $("#rolesUserEdit").select2({
-            multiple: true
-        });
+        //$("#rolesUserEdit").select2({
+        //    multiple: true
+        //});
 
-        $("#rolesUserC").val(-1).trigger("change");
-        $("#departmentsUserC").val(-1).trigger("change");
-        $("#rolesReps").val(-2).trigger("change");
+        //$("#rolesUserC").val(-1).trigger("change");
+        //$("#departmentsUserC").val(-1).trigger("change");
+        //$("#rolesReps").val(-2).trigger("change");
 
         $('#editUserForm').submit(function (event) {
             event.preventDefault();
             $('#editUserForm').modal('hide');
 
-            var selMulti = $.map($("#departmentsUserEdit option:selected"), function (el, i) {
-                return $(el).text();
-            });
-            var deps2 = selMulti.join(",");
+            //var selMulti = $.map($("#departmentsUserEdit option:selected"), function (el, i) {
+            //    return $(el).text();
+            //});
 
 
-            var selMulti2 = $.map($("#rolesUserEdit option:selected"), function (el, i) {
-                return $(el).text();
-            });
-            var roles2 = selMulti2.join(",");
+
+            //var deps2 = selMulti.join(",");
+            var deps2 = $("#departmentsUserEdit").val();
+
+
+            //var selMulti2 = $.map($("#rolesUserEdit option:selected"), function (el, i) {
+            //    return $(el).text();
+            //});
+            //var roles2 = selMulti2.join(",");
+            var roles2 = $("#rolesUserEdit").val();
 
 
             $.ajax({

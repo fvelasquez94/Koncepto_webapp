@@ -38,5 +38,6 @@ namespace Koncepto_webapp.Models
         public string TipoDoc_Interno { get; set; }
         public string Cliente { get; set; }
         public Nullable<short> Hora_Fac { get; set; }
+        public string FacturaCredito { get; set; }
     }
 }

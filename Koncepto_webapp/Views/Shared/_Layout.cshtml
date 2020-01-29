@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kocepto Web - @ViewBag.Title </title>
     @Html.Partial("~/Views/Shared/Head.cshtml")
+
+    @if (ViewBag.Title == "Invoice_Return")
+    {
+    <style>
+        @@media (max-width: 575.98px) {
+            #prodfacturar {
+                width: 316px !important;
+            }
+        }
+    </style>
+    }
 </head>
 <body class="dt-sidebar--fixed dt-sidebar--folded">
     <!-- Loader -->

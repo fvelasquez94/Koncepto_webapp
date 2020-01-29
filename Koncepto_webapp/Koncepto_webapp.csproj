@@ -305,6 +305,7 @@
     <Content Include="Content\assets\images\patterns\pattern4.png" />
     <Content Include="Content\assets\images\patterns\pattern5.png" />
     <Content Include="Content\assets\images\placeholder.jpg" />
+    <Content Include="Content\assets\images\unnamed.png" />
     <Content Include="Content\assets\images\widget\camera.jpg" />
     <Content Include="Content\assets\images\widget\gedget.jpg" />
     <Content Include="Content\assets\images\widget\icon-building.png" />
