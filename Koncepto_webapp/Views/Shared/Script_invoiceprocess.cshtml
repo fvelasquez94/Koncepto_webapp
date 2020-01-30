@@ -1678,14 +1678,18 @@
                             setTimeout(function () {
 
                                 window.open('@Url.Action("InvoiceDocument", "Invoices",new { activityname = "InvoiceDocument" })', '_blank');
+
+
+                                               setTimeout(function () {
+                                                   window.location.reload(true); 
+                                         
+                            }, 1000);
+                              
                             }, 1000);
 
 
 
-                            //setTimeout(function () {
-
-                            //             window.location.reload(true); 
-                            //}, 1000);
+             
 
                         } else {
                             var toastsuccess = swal.mixin({
