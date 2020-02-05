@@ -70,7 +70,9 @@ namespace Koncepto_webapp.Controllers
                 List<BI_Facturas_Encabezado> lstInvoices = new List<BI_Facturas_Encabezado>();
                 List<BI_Facturas_Encabezado> earlier_lstInvoices = new List<BI_Facturas_Encabezado>();
                 List<Tb_Invoices> lstInvoicesAzure = new List<Tb_Invoices>();
-
+                var clientesantes = 0;
+                var clientesactual = 0;
+                var totalporc = 0;
                 ViewBag.esvendedor = 0;
 
                 if (r.Contains("Vendedor")) {
@@ -96,25 +98,105 @@ namespace Koncepto_webapp.Controllers
                                         where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate))
                                         select a).ToList();
                     ViewBag.lstinvoicesAzure = lstInvoicesAzure;
+
+                    //Clientes nuevos
+                    clientesantes = (from a in dbkoncepto.Tb_newCustomers where (a.Creation_date >= anteriorSunday && a.Creation_date <= anteriorSaturday) select a).Count();
+                    clientesactual = (from a in dbkoncepto.Tb_newCustomers where (a.Creation_date >= filtrostartdate && a.Creation_date <= filtroenddate) select a).Count();
+
+                    if (clientesantes == 0) {
+                        totalporc = 0;
+                    }
+                    else
+                    {
+
+                        totalporc = 1 - ((clientesactual / clientesantes) * 100);
+                    }
+                 
+                
+                //
+
+
                 }
                 else {
 
-                    lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
-                                   where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate)
-              && puntosVenta.Contains(a.Id_Sucursal))
-                                   select a).ToList();
+
+                    if (r.Contains("Vendedor"))
+                    {
 
 
-                    earlier_lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
-                                           where ((a.Fecha >= anteriorSunday && a.Fecha <= anteriorSaturday) && puntosVenta.Contains(a.Id_Sucursal))
-                                           select a).ToList();
+                        lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
+                                       where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate)
+                  && puntosVenta.Contains(a.Id_Sucursal) && a.Id_Vendedor== activeuser.ID_SalesRep)
+                                       select a).ToList();
+
+
+                        earlier_lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
+                                               where ((a.Fecha >= anteriorSunday && a.Fecha <= anteriorSaturday) && puntosVenta.Contains(a.Id_Sucursal) && a.Id_Vendedor==activeuser.ID_SalesRep)
+                                               select a).ToList();
+
+
+                        lstInvoicesAzure = (from a in dbkoncepto.Tb_Invoices
+                                            where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate) && puntosVenta.Contains(a.ID_sucursal) && a.ID_Vendedor==activeuser.ID_SalesRep)
+                                            select a).ToList();
+
+
+                        //Clientes nuevos
+                        clientesantes = (from a in dbkoncepto.Tb_newCustomers where (a.Creation_date >= anteriorSunday && a.Creation_date <= anteriorSaturday && a.ID_Sucursal==activeuser.ID_SalesPoint && a.ID_vendedor==activeuser.ID_SalesRep) select a).Count();
+                        clientesactual = (from a in dbkoncepto.Tb_newCustomers where (a.Creation_date >= filtrostartdate && a.Creation_date <= filtroenddate && a.ID_Sucursal == activeuser.ID_SalesPoint && a.ID_vendedor == activeuser.ID_SalesRep) select a).Count();
+
+                        if (clientesantes == 0)
+                        {
+                            totalporc = 0;
+                        }
+                        else
+                        {
+
+                            totalporc = 1 - ((clientesactual / clientesantes) * 100);
+                        }
+
+                    }
+                    else if (r.Contains("Caja"))
+                    {
+
+
+                        lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
+                                       where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate)
+                  && puntosVenta.Contains(a.Id_Sucursal))
+                                       select a).ToList();
+
+
+
+                        earlier_lstInvoices = (from a in SAPkoncepto.BI_Facturas_Encabezado
+                                               where ((a.Fecha >= anteriorSunday && a.Fecha <= anteriorSaturday) && puntosVenta.Contains(a.Id_Sucursal))
+                                               select a).ToList();
+
+
+                        lstInvoicesAzure = (from a in dbkoncepto.Tb_Invoices
+                                            where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate) && puntosVenta.Contains(a.ID_sucursal))
+                                            select a).ToList();
+
+                        //Clientes nuevos
+                        clientesantes = (from a in dbkoncepto.Tb_newCustomers where (a.Creation_date >= anteriorSunday && a.Creation_date <= anteriorSaturday && a.ID_Sucursal == activeuser.ID_SalesPoint) select a).Count();
+                        clientesactual = (from a in dbkoncepto.Tb_newCustomers where (a.Creation_date >= filtrostartdate && a.Creation_date <= filtroenddate && a.ID_Sucursal == activeuser.ID_SalesPoint) select a).Count();
+
+                        if (clientesantes == 0)
+                        {
+                            totalporc = 0;
+                        }
+                        else
+                        {
+
+                            totalporc = 1 - ((clientesactual / clientesantes) * 100);
+                        }
+
+                    }
+
                     ViewBag.earlier_lstInvoices = earlier_lstInvoices;
-
-
-                    lstInvoicesAzure = (from a in dbkoncepto.Tb_Invoices
-                                        where ((a.Fecha >= filtrostartdate && a.Fecha <= filtroenddate) && puntosVenta.Contains(a.ID_sucursal))
-                                        select a).ToList();
                     ViewBag.lstinvoicesAzure = lstInvoicesAzure;
+                    ViewBag.clientesantes = clientesantes;
+                    ViewBag.clientesactual = clientesactual;
+                    ViewBag.totalporcentajeclientes = totalporc;
+
                 }
 
 
@@ -125,8 +207,23 @@ namespace Koncepto_webapp.Controllers
                     lstmetas = SAPkoncepto.Database.SqlQuery<Bi_metas>("SELECT * FROM BI_Metas WHERE Fecha between '" + filtrostartdate + "' and '" + filtroenddate + "' and Id_Sucursal='" + activeuser.ID_SalesPoint + "' and Id_Vendedor ='" + activeuser.ID_SalesRep + "'").FirstOrDefault();
 
                 }
-                else {
-                    lstmetas = SAPkoncepto.Database.SqlQuery<Bi_metas>("SELECT * FROM BI_Metas WHERE Fecha between '" + filtrostartdate + "' and '" + filtroenddate + "' and Id_Sucursal='" + activeuser.ID_SalesPoint + "'").FirstOrDefault();
+                else if (r.Contains("Caja")) {
+                    var lstmetaslista = SAPkoncepto.Database.SqlQuery<Bi_metas>("SELECT * FROM BI_Metas WHERE Fecha between '" + filtrostartdate + "' and '" + filtroenddate + "' and Id_Sucursal='" + activeuser.ID_SalesPoint + "'").ToList();
+                    lstmetas.ID = 0;
+                    lstmetas.Id_Sucursal = activeuser.ID_SalesPoint;
+                    lstmetas.Id_Vendedor = "0";
+                    lstmetas.Fecha = DateTime.UtcNow;
+                    lstmetas.Venta_Meta = lstmetaslista.Select(c => c.Venta_Meta).Sum();
+                }
+                else
+                {
+                    var lstmetaslista = SAPkoncepto.Database.SqlQuery<Bi_metas>("SELECT * FROM BI_Metas WHERE Fecha between '" + filtrostartdate + "' and '" + filtroenddate + "'").ToList();
+                    lstmetas.ID = 0;
+                    lstmetas.Id_Sucursal = "0";
+                    lstmetas.Id_Vendedor = "0";
+                    lstmetas.Fecha = DateTime.UtcNow;
+                    lstmetas.Venta_Meta = lstmetaslista.Select(c => c.Venta_Meta).Sum();
+
 
                 }
                 
@@ -210,6 +307,23 @@ namespace Koncepto_webapp.Controllers
                 if (User.Telephone == null)
                 {
                     User.Telephone = "";
+                }
+
+
+                if (User.Roles == "Administrador")
+                {
+                    User.Departments = "Administracion";
+                    User.ID_SalesRep = 0;
+                    User.ID_SalesPoint = "";
+                }
+                if (User.Roles == "Caja")
+                {
+                    User.Departments = "Ventas";
+                    User.ID_SalesRep = 0;
+                }
+                if (User.Roles == "Vendedor")
+                {
+                    User.Departments = "Ventas";
                 }
 
                 dbkoncepto.Entry(User).State = EntityState.Modified;

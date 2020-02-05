@@ -381,8 +381,10 @@ namespace Koncepto_webapp.Controllers
         }
 
 
-        public ActionResult Save_newCustomer(string nombre, string correo, string telefono, string direccion, string departamento, int tipocontribuyente, string dui, string nrc, string nit, string contribuyente)
+        public ActionResult Save_newCustomer(string nombre, string correo, string telefono, string direccion, string departamento, int tipocontribuyente, string dui, string nrc, string nit, string contribuyente, int idgrupocliente, string grupocliente)
         {
+
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
             Tb_newCustomers newCustomer = new Tb_newCustomers();
             newCustomer.Nombre = nombre;
             newCustomer.Correo = correo;
@@ -396,9 +398,10 @@ namespace Koncepto_webapp.Controllers
             newCustomer.Contribuyente = contribuyente;
             newCustomer.Creation_date = DateTime.UtcNow;
             newCustomer.ID_SAP = "";
-            
-
-
+            newCustomer.ID_grupoCliente = idgrupocliente;
+            newCustomer.GrupoCliente = grupocliente;
+            newCustomer.ID_vendedor = Convert.ToInt32(activeuser.ID_SalesRep);
+            newCustomer.ID_Sucursal = activeuser.ID_SalesPoint;
 
 
 
@@ -648,6 +651,8 @@ namespace Koncepto_webapp.Controllers
                     if (header.DocumentoTarjeta == null) { header.DocumentoTarjeta = ""; }
                     if (header.NumeroTarjeta == null) { header.NumeroTarjeta = ""; }
                     if (header.VoucherTarjeta == null) { header.VoucherTarjeta = ""; }
+                    if (header.NFactura == null) { header.NFactura = ""; }
+
                     header.Fecha = DateTime.UtcNow;
                     header.Docentry = "";
                     header.MensajeError = "";
@@ -787,6 +792,135 @@ namespace Koncepto_webapp.Controllers
 
 
         }
+
+
+        public ActionResult Print_InvoiceData(int idfactura)
+        {
+
+            List<Tb_Invoices_Details> detailsInvoice = new List<Tb_Invoices_Details>();
+            List<Tb_Invoices> headerInvoice = new List<Tb_Invoices>();
+            string ttresult = "";
+            try
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                detailsInvoice = dbkoncepto.Tb_Invoices_Details.Where(a => a.ID_factura == idfactura).ToList();
+                headerInvoice = dbkoncepto.Tb_Invoices.Where(a => a.ID_factura == idfactura).ToList();
+
+                if (detailsInvoice.Count > 0 && headerInvoice.Count > 0)
+                {
+
+
+                    Tb_Invoices header = new Tb_Invoices();
+                    //guardamos cabecera
+                    header = headerInvoice.FirstOrDefault();
+
+                    ttresult = "SUCCESS";
+
+                    try
+                    {
+                        var so = detailsInvoice;
+                        var nit = "";
+                        var dui = "";
+                        var codint = 0;
+                        try
+                        {
+                            codint = Convert.ToInt32(header.Cod_cliente);
+                        }
+                        catch
+                        {
+                            codint = 0;
+                        }
+
+                        var cliente = (from a in dbkoncepto.Tb_newCustomers where (a.ID_customer == codint) select a).FirstOrDefault();
+                        if (cliente != null)
+                        {
+                            nit = cliente.NIT;
+                            dui = cliente.DUI;
+                        }
+
+                        var clienteSAP = (from a in SAPkoncepto.BI_Dim_Customers where (a.Id_Cliente == header.Cod_cliente) select a).FirstOrDefault();
+                        if (clienteSAP != null)
+                        {
+                            nit = clienteSAP.NIT;
+                            dui = clienteSAP.DUI;
+                        }
+
+                        if (nit == null) { nit = ""; }
+                        if (dui == null) { dui = ""; }
+
+
+                            //Aca iria ciclo foreach
+
+                            MemoryStream finalStream = new MemoryStream();
+                            //PdfCopyFields copy = new PdfCopyFields(finalStream);
+                            List<byte[]> listafinal = new List<byte[]>();
+
+
+                            ReportDocument rd = new ReportDocument();
+
+                            rd.Load(Path.Combine(Server.MapPath("~/Reports"), "invoice_fac.rpt"));
+
+                            rd.SetDataSource(so);
+
+                            rd.SetParameterValue("Cliente", header.Cliente);
+                            rd.SetParameterValue("NIT", nit);
+                            rd.SetParameterValue("DUI", dui);
+                            rd.SetParameterValue("descuento", header.Descuentos);
+                            rd.SetParameterValue("Retencion", header.AnticipoIVA);
+                            rd.SetParameterValue("SubTotal", header.SubTotal);
+                            rd.SetParameterValue("Total", header.TotalFactura);
+
+                            Response.Buffer = false;
+                            Response.ClearContent();
+                            Response.ClearHeaders();
+                            Response.AppendHeader("Content-Disposition", "inline; filename=InvoiceDocument.pdf;");
+                            byte[] getBytes = null;
+                            Stream ms = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                            ms.Seek(0, SeekOrigin.Begin);
+                            getBytes = ReadFully(ms);
+                            listafinal.Add(getBytes);
+                            //para sacar la copia
+                            //listafinal.Add(getBytes);
+                            ms.Dispose();
+
+                            var report = concatAndAddContent(listafinal);
+
+                                //Con eso se descarga
+                                //Response.AddHeader("Content-Disposition", "attachment; filename=" + "Route_WHSInvoices.pdf");
+                                return File(report, System.Net.Mime.MediaTypeNames.Application.Pdf);
+     
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //return Json(urlcontent);
+                        return RedirectToAction("Index", "Home", null);
+                    }
+
+
+                }
+
+
+
+                ttresult = "No data";
+                return RedirectToAction("Index","Home", null);
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return RedirectToAction("Index", "Home", null);
+            }
+
+
+
+
+        }
+
+
+
         public static byte[] ReadFully(Stream input)
         {
             using (MemoryStream ms = new MemoryStream())
@@ -891,7 +1025,7 @@ namespace Koncepto_webapp.Controllers
                     if (header.DocumentoTarjeta == null) { header.DocumentoTarjeta = ""; }
                     if (header.NumeroTarjeta == null) { header.NumeroTarjeta = ""; }
                     if (header.VoucherTarjeta == null) { header.VoucherTarjeta = ""; }
-                    header.NFactura = "";
+                    //header.NFactura = "";
                     header.Docentry = "";
                     header.MensajeError = "";
                     header.ID_sucursal = activeuser.ID_SalesPoint;
@@ -964,7 +1098,7 @@ namespace Koncepto_webapp.Controllers
                     if (header.DocumentoTarjeta == null) { header.DocumentoTarjeta = ""; }
                     if (header.NumeroTarjeta == null) { header.NumeroTarjeta = ""; }
                     if (header.VoucherTarjeta == null) { header.VoucherTarjeta = ""; }
-
+                    if (header.NFactura == null) { header.NFactura = ""; }
                     header.TipoDocumento = "";
                     header.Cod_tipoDocumento = "";
                     header.TipoPago = "";
@@ -1118,9 +1252,27 @@ namespace Koncepto_webapp.Controllers
                                    select d).ToList();
                 }
                 else {
-                    lstInvoices = (from d in SAPkoncepto.BI_Facturas_Encabezado
-                                   where (puntosVenta.Contains(d.Id_Sucursal) && d.Tipo == "FAC" && d.Fecha >= fechaactual)
-                                   select d).ToList();
+
+                    if (r.Contains("Vendedor"))
+                    {
+
+
+                        lstInvoices = (from d in SAPkoncepto.BI_Facturas_Encabezado
+                                       where (puntosVenta.Contains(d.Id_Sucursal) && d.Tipo == "FAC" && d.Fecha >= fechaactual && d.Id_Vendedor==activeuser.ID_SalesRep)
+                                       select d).ToList();
+
+                    }
+                    else if (r.Contains("Caja"))
+                    {
+
+
+                        lstInvoices = (from d in SAPkoncepto.BI_Facturas_Encabezado
+                                       where (puntosVenta.Contains(d.Id_Sucursal) && d.Tipo == "FAC" && d.Fecha >= fechaactual)
+                                       select d).ToList();
+                    }
+
+
+
                 }
 
          

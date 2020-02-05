@@ -22,11 +22,7 @@
         </div>
 
         <div class="alert alert-warning" id="alertaCreditos" style="display:none;" role="alert">
-            Cliente no cuenta con credito disponible.
-            <a href="javascript:void(0)" class="alert-link">
-                Ver historial
-            </a>
-
+            Cliente no cuenta con credito disponible. Credito actual: <label class="alert-link" id="credactlabel"></label>.
         </div>
 
         <!-- /page header -->
@@ -55,17 +51,17 @@
                                             <select class="form-control js-example-responsive" id="cliente" style="width: 100%">
                                                 <option value="0">Seleccione Cliente</option>
                                                 @foreach (var customer in ViewBag.lstCustomers)
-    {
-        if (ViewBag.headerfactura.Cod_cliente == customer.Id_Cliente)
-        {
-                                            <option value="@customer.Id_Cliente" selected>DUI: @customer.DUI - NRC: @customer.NRC - NOMBRE: @customer.Nombre_Cliente</option>
-}
-else
-{
-                                            <option value="@customer.Id_Cliente">DUI: @customer.DUI - NRC: @customer.NRC - NOMBRE: @customer.Nombre_Cliente</option>
-}
+                                            {
+                                                if (ViewBag.headerfactura.Cod_cliente == customer.Id_Cliente)
+                                                {
+                                                    <option value="@customer.Id_Cliente" selected>DUI: @customer.DUI - NRC: @customer.NRC - NOMBRE: @customer.Nombre_Cliente</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@customer.Id_Cliente">DUI: @customer.DUI - NRC: @customer.NRC - NOMBRE: @customer.Nombre_Cliente</option>
+                                        }
 
-}
+                                    }
 
                                             </select><br /><br />
                                             <div class="float-right">
@@ -120,9 +116,9 @@ else
                                                 <select class="form-control" style="width:100%;" onchange="filter_linea()" id="sel_grupo">
                                                     <option value="0">Seleccione Grupo</option>
                                                     @foreach (var grupoproducto in ViewBag.lstCategories)
-                                                    {
-                                                        <option value="@grupoproducto.id_grupo">@grupoproducto.grupo</option>
-                                                    }
+                                                {
+                                                    <option value="@grupoproducto.id_grupo">@grupoproducto.grupo</option>
+                                            }
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
@@ -245,7 +241,7 @@ else
 
                                                             <!-- /form group -->
                                                             <div class="row">
-                                                                <div class="form-group col-md-6">
+                                                                <div class="form-group col-md-4">
                                                                     <label>Tipo de Documento</label>
 
                                                                     <select class="form-control" id="tipodocumento">
@@ -255,9 +251,12 @@ else
                                                                     </select>
                                                                 </div>
 
+                                                                <div class="form-group col-md-3">
+                                                                    <label>Numero de Documento</label>
+                                                                    <input type="text" class="form-control" id="numerodocumento" />
+                                                                </div>
 
-
-                                                                <div class="form-group col-md-6">
+                                                                <div class="form-group col-md-5">
                                                                     <label>Vendedor</label>
 
                                                                     <select class="form-control" id="selvendedor">
@@ -444,7 +443,7 @@ else
 
 
                                         </div>
-                                        <input type="text" id="CreditoActual" hidden/>
+                                        <input type="text" id="CreditoActual" hidden />
                                         <div class="row">
 
                                             <div class="col-md-4">
@@ -623,7 +622,7 @@ else
                                                 </div>
                                             </div>
 
- 
+
 
                                         </div>
 

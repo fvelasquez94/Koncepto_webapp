@@ -27,5 +27,9 @@ namespace Koncepto_webapp.Models
         public string Contribuyente { get; set; }
         public string ID_SAP { get; set; }
         public System.DateTime Creation_date { get; set; }
+        public int ID_grupoCliente { get; set; }
+        public string GrupoCliente { get; set; }
+        public int ID_vendedor { get; set; }
+        public string ID_Sucursal { get; set; }
     }
 }

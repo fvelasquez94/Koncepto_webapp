@@ -118,6 +118,10 @@
           <Property Name="Contribuyente" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="ID_SAP" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="Creation_date" Type="datetime" Nullable="false" />
+          <Property Name="ID_grupoCliente" Type="int" Nullable="false" />
+          <Property Name="GrupoCliente" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="ID_vendedor" Type="int" Nullable="false" />
+          <Property Name="ID_Sucursal" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Tb_Returns_Details">
           <Key>
@@ -190,6 +194,10 @@
           <Property Name="Contribuyente" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="ID_SAP" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="Creation_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ID_grupoCliente" Type="Int32" Nullable="false" />
+          <Property Name="GrupoCliente" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="ID_vendedor" Type="Int32" Nullable="false" />
+          <Property Name="ID_Sucursal" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Tb_Invoices">
           <Key>
@@ -314,6 +322,10 @@
           <EntitySetMapping Name="Tb_newCustomers">
             <EntityTypeMapping TypeName="Koncept_dbModel.Tb_newCustomers">
               <MappingFragment StoreEntitySet="Tb_newCustomers">
+                <ScalarProperty Name="ID_Sucursal" ColumnName="ID_Sucursal" />
+                <ScalarProperty Name="ID_vendedor" ColumnName="ID_vendedor" />
+                <ScalarProperty Name="GrupoCliente" ColumnName="GrupoCliente" />
+                <ScalarProperty Name="ID_grupoCliente" ColumnName="ID_grupoCliente" />
                 <ScalarProperty Name="Creation_date" ColumnName="Creation_date" />
                 <ScalarProperty Name="ID_SAP" ColumnName="ID_SAP" />
                 <ScalarProperty Name="Contribuyente" ColumnName="Contribuyente" />

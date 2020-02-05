@@ -2,6 +2,10 @@
 @{
     ViewBag.Title = "Dashboard";
     List<Koncepto_webapp.Models.BI_Facturas_Encabezado> lstInvoices_Ant = ViewBag.earlier_lstInvoices;
+    var existe = 0;
+    if (lstInvoices_Ant.Count > 0) {
+        existe = 1;
+    }
 }
 
 <!-- Site Content Wrapper -->
@@ -37,20 +41,37 @@
                         <div class="flex-1">
                             <div class="d-flex align-items-center mb-2">
                                 <span class="h2 mb-0 font-weight-500 mr-2">$@Model.Sum(c => c.Total_Doc).Value.ToString("N2")</span>
-                                @if (((((Model.Sum(c => c.Total_Doc).Value / lstInvoices_Ant.Sum(c => c.Total_Doc).Value) * 100) - 100)) < 0)
-        {
+                                @if (existe == 1)
+                                {
+                                    if (((((Model.Sum(c => c.Total_Doc).Value / lstInvoices_Ant.Sum(c => c.Total_Doc).Value) * 100) - 100)) < 0)
+                                    {
+                            <span class="d-inline-flex text-danger">
+
+                                <i class="icon icon-loss icon-fw"></i>  @((((Model.Sum(c => c.Total_Doc).Value / lstInvoices_Ant.Sum(c => c.Total_Doc).Value) * 100) - 100).ToString("N0"))%
+                            </span>
+                                    }
+                                    else
+                                    {
+                            <span class="d-inline-flex text-success">
+
+                                <i class="icon icon-profit icon-fw"></i>  @((((Model.Sum(c => c.Total_Doc).Value / lstInvoices_Ant.Sum(c => c.Total_Doc).Value) * 100) - 100).ToString("N0"))%
+                            </span>
+                                    }
+                                }
+                                else {
+
+
+
                         <span class="d-inline-flex text-danger">
 
-                            <i class="icon icon-loss icon-fw"></i>  @((((Model.Sum(c => c.Total_Doc).Value / lstInvoices_Ant.Sum(c => c.Total_Doc).Value) * 100) - 100).ToString("N0"))%
+                            <i class="icon icon-loss icon-fw"></i> 0%
                         </span>
-}
-else
-{
-                        <span class="d-inline-flex text-success">
 
-                            <i class="icon icon-profit icon-fw"></i>  @((((Model.Sum(c => c.Total_Doc).Value / lstInvoices_Ant.Sum(c => c.Total_Doc).Value) * 100) - 100).ToString("N0"))%
-                        </span>
-}
+
+
+                                }
+
+
                             </div>
                             <div class="h5 mb-2">Total de Venta</div>
                             <p class="card-text text-light-gray f-12">Anterior: $@lstInvoices_Ant.Sum(c => c.Total_Doc).Value.ToString("N2")</p>
@@ -75,17 +96,57 @@ else
                     <div class="flex-1">
                         <div class="d-flex align-items-center mb-2">
                             @if (ViewBag.meta == null)
-        {
-                    <span class="h2 mb-0 font-weight-500 mr-2">0%</span>
+    {
+                        <span class="h2 mb-0 font-weight-500 mr-2">0%</span>
 }
 else
 {
-                    <span class="h2 mb-0 font-weight-500 mr-2">@(((Model.Sum(c => c.Total_Doc).Value / ViewBag.meta.Venta_Meta) * 100).ToString("N0"))%</span>
+if (ViewBag.meta.Venta_Meta > 0)
+{
+                        <span class="h2 mb-0 font-weight-500 mr-2">@(((Model.Sum(c => c.Total_Doc).Value / ViewBag.meta.Venta_Meta) * 100).ToString("N0"))%</span>
+}
+else
+{
+
+                        <span class="h2 mb-0 font-weight-500 mr-2">0%</span>
 }
 
-                            <span class="d-inline-flex text-danger">
-                                <i class="icon icon-loss icon-fw"></i>
-                            </span>
+}                                                    
+                            @if (ViewBag.meta == null)
+    {
+
+                        <span class="d-inline-flex text-danger">
+                            <i class="icon icon-loss icon-fw"></i>
+                        </span>
+}
+else
+{
+
+if (ViewBag.meta.Venta_Meta > 0)
+{
+    if (((Model.Sum(c => c.Total_Doc).Value / ViewBag.meta.Venta_Meta) * 100) < 100)
+    {
+                        <span class="d-inline-flex text-danger">
+                            <i class="icon icon-loss icon-fw"></i>
+                        </span>
+}
+else
+{
+                        <span class="d-inline-flex text-success">
+                            <i class="icon icon-profit icon-fw"></i>
+                        </span>
+}
+}
+else
+{
+                        <span class="d-inline-flex text-danger">
+                            <i class="icon icon-loss icon-fw"></i>
+                        </span>
+
+}
+
+}
+
                         </div>
                         <div class="h5 mb-2">Ventas vs Meta</div>
                         @if (ViewBag.meta == null)
@@ -116,13 +177,23 @@ else
                     </div>
                     <div class="flex-1">
                         <div class="d-flex align-items-center mb-2">
-                            <span class="h2 mb-0 font-weight-500 mr-2">58</span>
-                            <span class="d-inline-flex text-danger">
-                                <i class="icon icon-loss icon-fw"></i>-5%
-                            </span>
+                            <span class="h2 mb-0 font-weight-500 mr-2">@ViewBag.clientesactual</span>
+                            @if (ViewBag.totalporcentajeclientes > 0)
+    {
+                        <span class="d-inline-flex text-success">
+                            <i class="icon icon-profit icon-fw"></i>@ViewBag.totalporcentajeclientes.ToString("N0")%
+                        </span>
+}
+else
+{
+                        <span class="d-inline-flex text-danger">
+                            <i class="icon icon-loss icon-fw"></i>@ViewBag.totalporcentajeclientes.ToString("N0")%
+                        </span>
+}
+
                         </div>
                         <div class="h5 mb-2">Clientes nuevos</div>
-                        <p class="card-text text-light-gray f-12">Anterior: </p>
+                        <p class="card-text text-light-gray f-12">Anterior: @ViewBag.clientesantes</p>
                     </div>
                 </div>
                 <!-- /card body -->
@@ -145,18 +216,32 @@ else
                         <div class="d-flex align-items-center mb-2">
                             <span class="h2 mb-0 font-weight-500 mr-2">@Model.Select(c => c.Id_Cliente).Distinct().Count()</span>
 
-                            @if ((((Convert.ToDecimal(Model.Select(c => c.Id_Cliente).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.Id_Cliente).Distinct().Count())) * 100) - 100) < 0)
-        {
+                            @if (existe == 1)
+                            {
+                        if ((((Convert.ToDecimal(Model.Select(c => c.Id_Cliente).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.Id_Cliente).Distinct().Count())) * 100) - 100) < 0)
+                        {
+                        <span class="d-inline-flex text-danger">
+                            <i class="icon icon-loss icon-fw"></i> @((((Convert.ToDecimal(Model.Select(c => c.Id_Cliente).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.Id_Cliente).Distinct().Count())) * 100) - 100).ToString("N0"))%
+                        </span>
+                        }
+                        else
+                        {
+                        <span class="d-inline-flex text-success">
+                            <i class="icon icon-profit icon-fw"></i> @((((Convert.ToDecimal(Model.Select(c => c.Id_Cliente).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.Id_Cliente).Distinct().Count())) * 100) - 100).ToString("N0"))%
+                        </span>
+                        }
+                            }
+                            else {
+
+
                     <span class="d-inline-flex text-danger">
-                        <i class="icon icon-loss icon-fw"></i> @((((Convert.ToDecimal(Model.Select(c => c.Id_Cliente).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.Id_Cliente).Distinct().Count())) * 100) - 100).ToString("N0"))%
+                        <i class="icon icon-loss icon-fw"></i> 0%
                     </span>
-}
-else
-{
-                    <span class="d-inline-flex text-success">
-                        <i class="icon icon-profit icon-fw"></i> @((((Convert.ToDecimal(Model.Select(c => c.Id_Cliente).Distinct().Count()) / Convert.ToDecimal(lstInvoices_Ant.Select(c => c.Id_Cliente).Distinct().Count())) * 100) - 100).ToString("N0"))%
-                    </span>
-}
+
+
+                            }
+
+
 
                         </div>
                         <div class="h5 mb-2">Clientes</div>
@@ -183,19 +268,28 @@ else
                     <div class="flex-1">
                         <div class="d-flex align-items-center mb-2">
                             <span class="h2 mb-0 font-weight-500 mr-2">@Model.Count()</span>
-
-                            @if ((((Convert.ToDecimal(Model.Count()) / Convert.ToDecimal(lstInvoices_Ant.Count())) * 100) - 100) < 0)
-    {
+                            @if (existe == 1)
+                            {
+                                if ((((Convert.ToDecimal(Model.Count()) / Convert.ToDecimal(lstInvoices_Ant.Count())) * 100) - 100) < 0)
+                                {
                         <span class="d-inline-flex text-danger">
                             <i class="icon icon-loss icon-fw"></i> @((((Convert.ToDecimal(Model.Count()) / Convert.ToDecimal(lstInvoices_Ant.Count())) * 100) - 100).ToString("N0"))%
                         </span>
-}
-else
-{
+                                }
+                                else
+                                {
                         <span class="d-inline-flex text-success">
                             <i class="icon icon-profit icon-fw"></i> @((((Convert.ToDecimal(Model.Count()) / Convert.ToDecimal(lstInvoices_Ant.Count())) * 100) - 100).ToString("N0"))%
                         </span>
-}
+                                }
+                            }
+                            else {
+                                         <span class="d-inline-flex text-danger">
+                            <i class="icon icon-loss icon-fw"></i> 0%
+                        </span>
+
+                            }
+
 
                         </div>
                         <div class="h5 mb-2">Total de facturas</div>
@@ -274,9 +368,25 @@ else
                                     <td data-label="TOTAL">$@factura.TotalFactura.ToString("N2")</td>
                                     <td hidden>@factura.Estado</td>
                                     <td data-label="">
-                                        @if (factura.Estado == 0) {
-                                            <a href="@Url.Action("Invoice_processEdit","Invoices", new { factura=factura.ID_factura})" class="btn btn-primary mr-2 mb-2">Facturar</a>
-                                        }
+                                       
+                                            @if (ViewBag.esvendedor == 1)
+                                            {
+                                                   <a href="@Url.Action("Print_InvoiceData","Invoices", new { idfactura=factura.ID_factura})" target="_blank" class="btn btn-primary mr-2 mb-2">Ver</a>
+                                            }
+                                            else {
+
+                                                 if (factura.Estado == 0)
+                                                 {
+                                                     <a href="@Url.Action("Invoice_processEdit","Invoices", new { factura=factura.ID_factura})"  class="btn btn-primary mr-2 mb-2">Facturar</a>
+                                                 }
+                                                 else {
+                                                     <a href="@Url.Action("Print_InvoiceData","Invoices", new { idfactura=factura.ID_factura})" target="_blank" class="btn btn-primary mr-2 mb-2">Ver</a>
+                                                 }
+
+                                                   
+                                            }
+                                         
+                                        
                                             
                                     </td>
                                 </tr>

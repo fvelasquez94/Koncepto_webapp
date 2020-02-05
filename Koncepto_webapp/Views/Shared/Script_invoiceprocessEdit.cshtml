@@ -25,6 +25,8 @@
         var correo = $("#email").val();
         var telefono = $("#telephone").val();
         var direccion = $("#direccion").val();
+        var ID_Grupocliente = $("#grupoCliente").val();
+        var grupocliente = $("#grupoCliente option:selected").text();
         var departamento = $("#departamento").val();
         var tipoContribuyente = $("#tipoContribuyente").val();
 
@@ -75,7 +77,9 @@
                         dui: dui,
                         nrc: nrc,
                         contribuyente: contribuyente,
-                        nit: nit
+                        nit: nit,
+                        idgrupocliente: ID_Grupocliente,
+                        grupocliente: grupocliente
                     }),
                     success: function (result) {
                         //result.flag - result.lstNuevoCliente
@@ -1344,7 +1348,10 @@
                                 }
 
                                 $("#CreditoActual").val(nuevocliente.Limite_Credito);
-                           
+                                $("#credactlabel").html(nuevocliente.Limite_Credito);
+
+
+
                                 if (nuevocliente.Limite_Credito < nuevocliente.Saldo || nuevocliente.Limite_Credito == 0) {
                                     $("#alertaCreditos").show();
                                     $("#tipopago option[value='" + "02" + "']").attr('disabled', true); 
@@ -1608,7 +1615,7 @@
         var DocumentoTarjeta = $("#doc_tarjeta").val();
         var NumeroTarjeta = $("#numero_tarjeta").val();
         var VoucherTarjeta = $("#voucher_tarjeta").val();
-
+        var numerodocumento = $("#numerodocumento").val();
         var tipopago = $("#tipopago").val();
         if (tipopago == "01") {//Efectivo
             var recibido = $("#recibido1").val();
@@ -1638,7 +1645,9 @@
                 flag = 0;
             }
         }
-
+        if (numerodocumento == "" || numerodocumento == null) {
+            flag = 0;
+        }
    
         if ($("#selvendedor").val() == "-1") {//Vendedor NO valido
 
@@ -1722,8 +1731,8 @@
                 MensajeError: MensajeError,
                 Error: 0,
                 ID_Vendedor: $("#selvendedor").val(),
-                Vendedor: $("#selvendedor option:selected").text()
-
+                Vendedor: $("#selvendedor option:selected").text(),
+                   NFactura: numerodocumento
             });
             var objects = [];
 

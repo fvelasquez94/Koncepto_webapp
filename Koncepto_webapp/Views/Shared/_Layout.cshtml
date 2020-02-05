@@ -286,19 +286,9 @@
                         $("#codigoUserEdit").val(userdata.ID_SalesRep);
                         $("#SucursalUserC").val(userdata.ID_SalesPoint);
 
+                        $("#departmentsUserEdit").val(userdata.Departments);
+                        $("#rolesUserEdit").val(userdata.Roles).trigger("change");;
 
-
-                        $("#departmentsUserEdit").select2({
-                            multiple: true
-                        });
-                        $("#rolesUserEdit").select2({
-                            multiple: true
-                        });
-                        var array = userdata.Departments.split(',');
-                        $('#departmentsUserEdit').select2('val', [array]);
-
-                        var array2 = userdata.Roles.split(',');
-                        $('#rolesUserEdit').select2('val', [array2]);
                     });
 
 

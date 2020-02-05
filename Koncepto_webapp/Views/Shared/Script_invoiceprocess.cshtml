@@ -24,6 +24,8 @@
         var nombre = $("#name").val();
         var correo = $("#email").val();
         var telefono = $("#telephone").val();
+        var ID_Grupocliente = $("#grupoCliente").val();
+        var grupocliente = $("#grupoCliente option:selected").text();
         var direccion = $("#direccion").val();
         var departamento = $("#departamento").val();
         var tipoContribuyente = $("#tipoContribuyente").val();
@@ -75,7 +77,9 @@
                         dui: dui,
                         nrc: nrc,
                         contribuyente: contribuyente,
-                        nit: nit
+                        nit: nit,
+                        idgrupocliente: ID_Grupocliente,
+                        grupocliente: grupocliente
                     }),
                     success: function (result) {
                         //result.flag - result.lstNuevoCliente
@@ -1670,20 +1674,20 @@
 
                             toastsuccess({
                                 type: 'success',
-                                title: 'Factura creada exitosamente. Generando documento...'
+                                title: 'Factura creada exitosamente.'
                             });
 
 
 
                             setTimeout(function () {
-
-                                window.open('@Url.Action("InvoiceDocument", "Invoices",new { activityname = "InvoiceDocument" })', '_blank');
+                                window.location.reload(true); 
+                                @*window.open('Url.Action("InvoiceDocument", "Invoices",new { activityname = "InvoiceDocument" })', '_blank');
 
 
                                                setTimeout(function () {
                                                    window.location.reload(true); 
                                          
-                            }, 1000);
+                            }, 1000);*@
                               
                             }, 1000);
 
@@ -1796,7 +1800,8 @@
                 MensajeError: MensajeError,
                 Error: 0,
                 ID_Vendedor: $("#selvendedor").val(),
-                Vendedor: $("#selvendedor option:selected").text()
+                Vendedor: $("#selvendedor option:selected").text(),
+                NFactura: ""
 
             });
             var objects = [];
